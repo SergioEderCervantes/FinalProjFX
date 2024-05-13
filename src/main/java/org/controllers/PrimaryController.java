@@ -23,14 +23,12 @@ public class PrimaryController{
     private final ArrayList<Circle> teclasEnPantalla = new ArrayList<>();
     public static final Color[] ColoresPosibles = 
             {Color.RED, Color.BLUE, Color.YELLOW, Color.GREEN, Color.ORANGE};
-    private long time;
     public PrimaryController(Pane root) {
         this.prueba = TestGraph.RealizarTest();
         this.timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> print()));
         this.root = root;
         this.aux = prueba.getTeclas_pulsadas().getVertice(0);
         this.timeline.setCycleCount((int)prueba.getDuracion());
-        this.time = System.nanoTime() ;
     }
 
     public void setRoot(Pane root) {
@@ -42,12 +40,6 @@ public class PrimaryController{
         int xDef = 0;
         root.getChildren().clear();
         Tecla lastTecla = null;
-        long time2 = System.nanoTime();
-        float dt = (float) (time2 - time) / 1000000000.0f;
-        time = time2;
-        
-        System.out.println(dt);
-
 
         //Primero desplaza todas las que ya existen hacia abajo
         for (Circle circulo : teclasEnPantalla){
