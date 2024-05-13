@@ -47,7 +47,7 @@ public class Tecla {
         this.tiempoInicio = tiempoInicio;
         this.tiempoFin = tiempoInicio +1;
         this.tipo = "c";
-        this.numColor = tecla_ID % 5;
+        this.numColor = (int)(Math.random() * 5);
         this.color = ColoresPosibles[numColor];
         this.aristasAdyacentes = new ArrayList<>();
 

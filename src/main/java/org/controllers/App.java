@@ -26,6 +26,7 @@ public class App extends Application {
         stage.setScene(scene);
         PrimaryController controller = new PrimaryController(root);
         stage.show();
+        controller.setT_inicio(System.currentTimeMillis());
         controller.timeline.play();
 
 

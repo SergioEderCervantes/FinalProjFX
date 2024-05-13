@@ -2,6 +2,7 @@ package org.controllers;
 
 
 
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -20,16 +21,24 @@ public class PrimaryController{
     private final ArrayList<Circle> teclasEnPantalla = new ArrayList<>();
     public static final Color[] ColoresPosibles = 
             {Color.RED, Color.BLUE, Color.YELLOW, Color.GREEN, Color.ORANGE};
+    private long t_inicio;
+
+
     public PrimaryController(Pane root) {
         this.prueba = TestGraph.RealizarTest();
-        this.timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> print()));
+        this.timeline = new Timeline(new KeyFrame(Duration.millis(16), event -> print()));
         this.root = root;
         this.aux = prueba.getTeclas_pulsadas().getVertice(0);
-        this.timeline.setCycleCount((int)prueba.getDuracion());
+        this.timeline.setCycleCount(Timeline.INDEFINITE);
+        this.t_inicio = System.currentTimeMillis();
     }
 
     public void setRoot(Pane root) {
         this.root = root;
+    }
+
+    public void setT_inicio(long t_inicio) {
+        this.t_inicio = t_inicio;
     }
 
     private void print() {
@@ -37,10 +46,13 @@ public class PrimaryController{
         int xDef = 0;
         root.getChildren().clear();
         Tecla lastTecla = null;
+        long t_final = System.currentTimeMillis();
+        long dt = t_final-t_inicio;     //Esto sera en milisegundos
+        
 
         //Primero desplaza todas las que ya existen hacia abajo
         for (Circle circulo : teclasEnPantalla){
-            circulo.setCenterY(circulo.getCenterY() + circulo.getRadius()*3);
+            circulo.setCenterY(circulo.getCenterY() + 5);
             if (circulo.getCenterY() < 600){
                 root.getChildren().add(circulo);
             }
@@ -50,34 +62,39 @@ public class PrimaryController{
         
         //Agregamos las nuevas teclas que deben de aparecer
         if (aux.getNumAristasAdyacentes() != 0){
-            for (Arista i : aux.getAristasAdyacentes()){
+            System.out.println(dt);
+            if (dt >= aux.getDtSiguiente()) {
+                t_inicio = t_final;
+                for (Arista i : aux.getAristasAdyacentes()){
 
-                switch (i.destino().numColor){
-                    case 0:
-                        xDef = 50;
-                        break;
-                    case 1:
-                        xDef = 100;
-                        break;
-                    case 2:
-                        xDef = 150;
-                        break;
-                    case 3:
-                        xDef = 200;
-                        break;
-                    case 4:
-                        xDef = 250;
-                        break;
-                    case 5:
-                        xDef = 300;
-                        break;
+                    switch (i.destino().numColor){
+                        case 0:
+                            xDef = 50;
+                            break;
+                        case 1:
+                            xDef = 100;
+                            break;
+                        case 2:
+                            xDef = 150;
+                            break;
+                        case 3:
+                            xDef = 200;
+                            break;
+                        case 4:
+                            xDef = 250;
+                            break;
+                        case 5:
+                            xDef = 300;
+                            break;
+                    }
+                    Circle circle = new Circle(xDef,30,20,ColoresPosibles[i.destino().numColor]);
+                    root.getChildren().add(circle);
+                    teclasEnPantalla.add(circle);
+                    lastTecla = i.destino();
                 }
-                Circle circle = new Circle(xDef,30,20,ColoresPosibles[i.destino().numColor]);
-                root.getChildren().add(circle);
-                teclasEnPantalla.add(circle);
-                lastTecla = i.destino();
+                aux = lastTecla;
             }
-            aux = lastTecla;
+
         }
     }
 }

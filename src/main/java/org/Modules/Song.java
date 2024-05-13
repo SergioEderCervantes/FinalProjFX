@@ -50,7 +50,6 @@ public class Song {
     }
 
     public void ConstruirGrafo(ArrayList<Tecla> teclas){
-        long tInicio = System.nanoTime();
         teclas_pulsadas.agregarVertice(0);  //Agregando Vertice inicial
         //Conectando los vertices en si
         ArrayList<Tecla> teclas_siguientes;
@@ -58,7 +57,7 @@ public class Song {
         int ID_ANTERIOR = 0,LAST_ID = 0;
         double TIEMPO_ANTERIOR = 0;
         while(band){
-            teclas_siguientes = nextTeclas(teclas);
+            teclas_siguientes = this.nextTeclas(teclas);
             band = !teclas_siguientes.isEmpty();
             //El tiempo entre la ultima y la siguiente
             if (band){
@@ -84,13 +83,10 @@ public class Song {
         }
         teclas_pulsadas.agregarVertice(Integer.MAX_VALUE);
         teclas_pulsadas.agregarArista(ID_ANTERIOR,Integer.MAX_VALUE,duracion - TIEMPO_ANTERIOR);
-        long tFinal = System.nanoTime();
-        double dt = (tFinal - tInicio) / 1000000000.0;
-        System.out.println(dt);
     }
     private ArrayList<Tecla> nextTeclas(ArrayList<Tecla> teclas){
         ArrayList<Tecla> teclas_siguientes = new ArrayList<>();
-        double menor = 100000;
+        double menor = 100000000;
         for (Tecla tecla : teclas) {
             if (tecla.tiempoInicio < menor) {
                 //Si encuentra un valor menor, se limpia la lista y su nuevo elemento es i
