@@ -52,7 +52,7 @@ public class PrimaryController{
 
         //Primero desplaza todas las que ya existen hacia abajo
         for (Circle circulo : teclasEnPantalla){
-            circulo.setCenterY(circulo.getCenterY() + 5);
+            circulo.setCenterY(circulo.getCenterY() + 3);
             if (circulo.getCenterY() < 600){
                 root.getChildren().add(circulo);
             }
@@ -62,7 +62,6 @@ public class PrimaryController{
         
         //Agregamos las nuevas teclas que deben de aparecer
         if (aux.getNumAristasAdyacentes() != 0){
-            System.out.println(dt);
             if (dt >= aux.getDtSiguiente()) {
                 t_inicio = t_final;
                 for (Arista i : aux.getAristasAdyacentes()){
