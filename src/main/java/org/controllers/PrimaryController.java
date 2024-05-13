@@ -9,10 +9,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.util.Duration;
-import org.Modules.Arista;
-import org.Modules.Song;
-import org.Modules.Tecla;
-import org.Modules.TestGraph;
+import org.Modules.*;
 
 public class PrimaryController{
 
