@@ -1,3 +1,7 @@
+org\Modules\Grafo.class
 org\controllers\PrimaryController.class
+org\Modules\Song.class
+org\Modules\Tecla.class
+org\Modules\TestGraph.class
 org\controllers\App.class
-org\controllers\SecondaryController.class
+org\Modules\Arista.class
