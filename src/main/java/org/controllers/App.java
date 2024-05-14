@@ -6,9 +6,10 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 
 
-import javafx.stage.Stage;
 
+import javafx.stage.Stage;
 import java.io.IOException;
+import javafx.scene.Parent;
 
 /**
  * JavaFX App
@@ -22,15 +23,10 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-
         Pane root = loadFXML("juego");
         scene = new Scene(root, WINDOW_WIDTH, WINDOW_HEIGHT);
         stage.setScene(scene);
-        PrimaryController controller = new PrimaryController(root);
         stage.show();
-        controller.setT_inicio(System.currentTimeMillis());
-        controller.timeline.play();
-
     }
 
     static void setRoot(String fxml) throws IOException {

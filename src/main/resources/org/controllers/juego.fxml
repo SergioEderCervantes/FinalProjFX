@@ -6,17 +6,17 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.shape.Rectangle?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="principal" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.controllers.juegoController">
    <children>
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#42484e" height="606.0" stroke="BLACK" strokeType="OUTSIDE" strokeWidth="3.0" width="300.0" AnchorPane.bottomAnchor="600.0" AnchorPane.leftAnchor="-3.0" AnchorPane.rightAnchor="300.0" AnchorPane.topAnchor="-3.0" />
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#42484e" height="606.0" layoutX="903.0" stroke="BLACK" strokeType="OUTSIDE" strokeWidth="3.0" width="300.0" AnchorPane.bottomAnchor="603.0" AnchorPane.topAnchor="-3.0" />
       <Pane layoutX="300.0" layoutY="500.0" prefHeight="40.0" prefWidth="600.0" style="-fx-background-color: #454545;">
          <children>
-            <Button layoutX="60.0" layoutY="4.0" mnemonicParsing="false" prefWidth="80.0" />
-            <Button layoutX="160.0" layoutY="4.0" mnemonicParsing="false" prefWidth="80.0" />
-            <Button layoutX="260.0" layoutY="4.0" mnemonicParsing="false" prefWidth="80.0" />
-            <Button layoutX="360.0" layoutY="4.0" mnemonicParsing="false" prefWidth="80.0" />
-            <Button layoutX="460.0" layoutY="4.0" mnemonicParsing="false" prefWidth="80.0" />
+            <Button fx:id="RedButton" layoutX="60.0" layoutY="4.0" mnemonicParsing="false" onAction="#btnRActivado" prefWidth="80.0" />
+            <Button fx:id="BlueButton" layoutX="160.0" layoutY="4.0" mnemonicParsing="false" onAction="#btnBActivado" prefWidth="80.0" />
+            <Button fx:id="YellowButton" layoutX="260.0" layoutY="4.0" mnemonicParsing="false" onAction="#btnYActivado" prefWidth="80.0" />
+            <Button fx:id="GreenButton" layoutX="360.0" layoutY="4.0" mnemonicParsing="false" onAction="#btnGActivado" prefWidth="80.0" />
+            <Button fx:id="OrangeButton" layoutX="460.0" layoutY="4.0" mnemonicParsing="false" onAction="#btnOActivado" prefWidth="80.0" />
          </children>
       </Pane>
       <Line endY="500.0" layoutX="400.0" />

@@ -3,5 +3,7 @@ org\controllers\PrimaryController.class
 org\Modules\Song.class
 org\Modules\Tecla.class
 org\Modules\TestGraph.class
+org\controllers\PrimaryController$1.class
+org\controllers\pruebaController.class
 org\controllers\App.class
 org\Modules\Arista.class
