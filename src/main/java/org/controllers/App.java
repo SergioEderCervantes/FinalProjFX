@@ -23,7 +23,7 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        Pane root = loadFXML("juego");
+        Pane root = loadFXML("Menu");
         scene = new Scene(root, WINDOW_WIDTH, WINDOW_HEIGHT);
         stage.setScene(scene);
         stage.show();
@@ -33,7 +33,7 @@ public class App extends Application {
         scene.setRoot(loadFXML(fxml));
     }
 
-    private static Pane loadFXML(String fxml) throws IOException {
+    public static Pane loadFXML(String fxml) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource( fxml + ".fxml"));
         return fxmlLoader.load();
     }
