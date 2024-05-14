@@ -25,7 +25,7 @@ public class Tecla {
 
     public Tecla(int id) {
         this.tecla_ID = id;
-        numColor = (int)(Math.random() * 5);
+        numColor = (int)(Math.random() * 4);
         color = ColoresPosibles[numColor];
         tiempoInicio = 0;
         tiempoFin = 0;

@@ -16,13 +16,15 @@ import java.io.IOException;
 public class App extends Application {
 
     private static Scene scene;
+    public static final int WINDOW_WIDTH = 1200;
+    public static final int WINDOW_HEIGHT = 600;
 
 
     @Override
     public void start(Stage stage) throws IOException {
 
         Pane root = loadFXML("juego");
-        scene = new Scene(root, 500, 500);
+        scene = new Scene(root, WINDOW_WIDTH, WINDOW_HEIGHT);
         stage.setScene(scene);
         PrimaryController controller = new PrimaryController(root);
         stage.show();

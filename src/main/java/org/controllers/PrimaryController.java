@@ -29,7 +29,6 @@ public class PrimaryController{
         this.root = root;
         this.aux = prueba.getTeclas_pulsadas().getVertice(0);
         this.timeline.setCycleCount(Timeline.INDEFINITE);
-        this.t_inicio = System.currentTimeMillis();
     }
 
     public void setRoot(Pane root) {
@@ -41,58 +40,56 @@ public class PrimaryController{
     }
 
     private void print() {
-        
+
         int xDef = 0;
-        root.getChildren().clear();
+
         Tecla lastTecla = null;
         long t_final = System.currentTimeMillis();
-        long dt = t_final-t_inicio;     //Esto sera en milisegundos
-        
+        long dt = t_final - t_inicio;     //Esto sera en milisegundos
 
-        //Primero desplaza todas las que ya existen hacia abajo
-        for (Circle circulo : teclasEnPantalla){
-            circulo.setCenterY(circulo.getCenterY() + 3);
-            if (circulo.getCenterY() < 600){
-                root.getChildren().add(circulo);
+
+        //Primero desplaza todas las que ya existen hacia abajo y Eliminamos del ArrayList las teclas que ya no se ven
+        try{
+            for (Circle circulo : teclasEnPantalla) {
+                circulo.setCenterY(circulo.getCenterY() + 3);
+                if (circulo.getCenterY() > 600) {
+
+                    teclasEnPantalla.remove(circulo);
+                    root.getChildren().remove(circulo);
+                }
             }
-        }
-        //Eliminamos del ArrayList las teclas que ya no se ven
-        teclasEnPantalla.removeIf(circle -> circle.getCenterY() > 600);
-        
+        }catch (Exception e){}
+
         //Agregamos las nuevas teclas que deben de aparecer
-        if (aux.getNumAristasAdyacentes() != 0){
+        if (aux.getNumAristasAdyacentes() != 0) {
             if (dt >= aux.getDtSiguiente()) {
                 t_inicio = t_final;
-                for (Arista i : aux.getAristasAdyacentes()){
+                for (Arista i : aux.getAristasAdyacentes()) {
 
-                    switch (i.destino().numColor){
+                    switch (i.destino().numColor) {
                         case 0:
-                            xDef = 50;
+                            xDef = 400;
                             break;
                         case 1:
-                            xDef = 100;
+                            xDef = 500;
                             break;
                         case 2:
-                            xDef = 150;
+                            xDef = 600;
                             break;
                         case 3:
-                            xDef = 200;
+                            xDef = 700;
                             break;
                         case 4:
-                            xDef = 250;
-                            break;
-                        case 5:
-                            xDef = 300;
+                            xDef = 800;
                             break;
                     }
-                    Circle circle = new Circle(xDef,30,20,ColoresPosibles[i.destino().numColor]);
+                    Circle circle = new Circle(xDef, 30, 20, ColoresPosibles[i.destino().numColor]);
                     root.getChildren().add(circle);
                     teclasEnPantalla.add(circle);
                     lastTecla = i.destino();
                 }
                 aux = lastTecla;
             }
-
         }
     }
 }
