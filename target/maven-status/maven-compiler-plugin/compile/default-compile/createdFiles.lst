@@ -1,6 +1,7 @@
 org\Modules\Tecla.class
 org\controllers\editorController.class
 org\controllers\jugadorController.class
+org\Modules\CheckColitions.class
 org\controllers\App.class
 org\Modules\Grafo.class
 org\Modules\Song.class

@@ -18,6 +18,8 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
+import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import org.Modules.*;
 
@@ -45,6 +47,18 @@ public class juegoController implements Initializable {
     Button GreenButton;
     @FXML
     Button OrangeButton;
+    @FXML
+    Rectangle HorizontalRect;
+    @FXML
+    Line l1;
+    @FXML
+    Line l2;
+    @FXML
+    Line l3;
+    @FXML
+    Line l4;
+    @FXML
+    Line l5;
 
 
     @Override
@@ -67,6 +81,7 @@ public class juegoController implements Initializable {
         Tecla lastTecla = null;
         long t_final = System.currentTimeMillis();
         long dt = t_final - t_inicio;     //Esto sera en milisegundos
+        
 
 
         //Primero desplaza todas las que ya existen hacia abajo y elimina del ArrayList y el Panel las teclas que ya no se ven
@@ -106,10 +121,13 @@ public class juegoController implements Initializable {
                     Circle circle = new Circle(xDef, 30, 20, ColoresPosibles[i.destino().numColor]);
                     principal.getChildren().add(circle);
                     teclasEnPantalla.add(circle);
-                    lastTecla = i.destino();
+                    circle.toBack();
+                     lastTecla = i.destino();
                 }
                 aux = lastTecla;
             }
+            this.setPositions();
+
         }
     }
 
@@ -119,6 +137,11 @@ public class juegoController implements Initializable {
      * darle focus al boton, accionarlo y realizar la animacion de que se pulsó (pulsado y liberado)
      */
     private void iniciaTeclado(){
+        this.RedButton.toFront();
+        this.BlueButton.toFront();
+        this.YellowButton.toFront();
+        this.GreenButton.toFront();
+        this.OrangeButton.toFront();
         this.principal.addEventHandler(KeyEvent.KEY_PRESSED, keyEvent -> {
             KeyCode code = keyEvent.getCode();
 
@@ -128,7 +151,6 @@ public class juegoController implements Initializable {
                         this.RedButton.setFocusTraversable(true);
                         this.RedButton.fire();
                         this.RedButton.arm();
-
                         this.releaseButton(RedButton);
 
                         break;
@@ -165,6 +187,8 @@ public class juegoController implements Initializable {
     @FXML
     private void btnRActivado(){
         System.out.println("TECLA ROJA");
+        Rectangle rect = this.makeRect(RedButton);
+
     }
     @FXML
     private void btnBActivado(){ 
@@ -180,12 +204,27 @@ public class juegoController implements Initializable {
     }
     @FXML
     private void btnOActivado(){
-        System.out.println("TECLAROJA");
+        System.out.println("TECLA NARANJA ");
     }
 
     private void releaseButton(Button button){
         PauseTransition pause = new PauseTransition(Duration.millis(48));
         pause.setOnFinished(actionEvent -> button.disarm());
         pause.play();
+    }
+
+    private Rectangle makeRect(Button btn){
+        return new Rectangle(btn.getLayoutX(), btn.getLayoutY(), btn.getWidth(), btn.getHeight());
+    }
+
+
+//    private void checkColitions
+    private void setPositions(){
+        this.HorizontalRect.toBack();
+        this.l1.toBack();
+        this.l2.toBack();
+        this.l3.toBack();
+        this.l4.toBack();
+        this.l5.toBack();
     }
 }
