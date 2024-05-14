@@ -1,7 +1,8 @@
 org\Modules\Grafo.class
-org\controllers\PrimaryController.class
 org\Modules\Song.class
 org\Modules\Tecla.class
+org\controllers\juegoController$1.class
 org\Modules\TestGraph.class
+org\controllers\juegoController.class
 org\controllers\App.class
 org\Modules\Arista.class
