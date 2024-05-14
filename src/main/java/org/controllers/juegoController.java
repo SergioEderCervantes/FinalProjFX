@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import javafx.animation.KeyFrame;
+import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -111,33 +112,51 @@ public class juegoController implements Initializable {
         }
     }
 
-
+    /**
+     * KeyListener para los eventos del teclado, cuando se presiona una tecla realiza un switch para ver si se
+     * Presiono una tecla de interes, en caso de que si, acciona los eventos de la GUI Necesarios, los cuales son
+     * darle focus al boton, accionarlo y realizar la animacion de que se pulsó (pulsado y liberado)
+     */
     private void iniciaTeclado(){
-        //KeyListener para los eventos del teclado, cuando se presiona una tecla realiza un switch para ver si se
-        //Presiono una tecla de interes, en caso de que si, acciona los eventos de la GUI Necesarios
+
+
+
         this.principal.addEventHandler(KeyEvent.KEY_PRESSED, keyEvent -> {
             KeyCode code = keyEvent.getCode();
+
 
             switch (code){
                 case Q:
                     this.RedButton.setFocusTraversable(true);
                     this.RedButton.fire();
+                    this.RedButton.arm();
+
+                    this.releaseButton(RedButton);
+
                     break;
                 case W:
                     this.BlueButton.setFocusTraversable(true);
                     this.BlueButton.fire();
+                    this.BlueButton.arm();
+                    this.releaseButton(BlueButton);
                     break;
                 case E:
                     this.YellowButton.setFocusTraversable(true);
                     this.YellowButton.fire();
+                    this.YellowButton.arm();
+                    this.releaseButton(YellowButton);
                     break;
                 case R:
                     this.GreenButton.setFocusTraversable(true);
                     this.GreenButton.fire();
+                    this.GreenButton.arm();
+                    this.releaseButton(GreenButton);
                     break;
                 case T:
                     this.OrangeButton.setFocusTraversable(true);
                     this.OrangeButton.fire();
+                    this.OrangeButton.arm();
+                    this.releaseButton(OrangeButton);
                     break;
                 default:
                     break;
@@ -149,7 +168,7 @@ public class juegoController implements Initializable {
         System.out.println("TECLA ROJA");
     }
     @FXML
-    private void btnBActivado(){
+    private void btnBActivado(){ 
         System.out.println("TECLA AZUL");
     }
     @FXML
@@ -163,5 +182,11 @@ public class juegoController implements Initializable {
     @FXML
     private void btnOActivado(){
         System.out.println("TECLAROJA");
+    }
+
+    private void releaseButton(Button button){
+        PauseTransition pause = new PauseTransition(Duration.millis(48));
+        pause.setOnFinished(actionEvent -> button.disarm());
+        pause.play();
     }
 }
