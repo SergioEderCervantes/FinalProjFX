@@ -2,6 +2,7 @@ package org.controllers;
 
 
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -9,22 +10,30 @@ import java.util.ResourceBundle;
 import javafx.animation.KeyFrame;
 import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.Modules.*;
+import javafx.scene.layout.Pane;
+
+import static org.controllers.App.loadFXML;
 
 public class juegoController implements Initializable {
     public static final Color[] ColoresPosibles =
             {Color.RED, Color.BLUE, Color.YELLOW, Color.GREEN, Color.ORANGE};
 
-
+    private Stage stage;
+    private Scene scene;
     private Song prueba;
     public Timeline timeline;
     private Tecla aux;
@@ -44,6 +53,8 @@ public class juegoController implements Initializable {
     Button GreenButton;
     @FXML
     Button OrangeButton;
+    @FXML
+    Pane PausePane;
 
 
     @Override
@@ -116,6 +127,7 @@ public class juegoController implements Initializable {
      * KeyListener para los eventos del teclado, cuando se presiona una tecla realiza un switch para ver si se
      * Presiono una tecla de interes, en caso de que si, acciona los eventos de la GUI Necesarios, los cuales son
      * darle focus al boton, accionarlo y realizar la animacion de que se pulsó (pulsado y liberado)
+     * si se pulsa la tecla ESC
      */
     private void iniciaTeclado(){
 
@@ -158,10 +170,37 @@ public class juegoController implements Initializable {
                     this.OrangeButton.arm();
                     this.releaseButton(OrangeButton);
                     break;
+                case ESCAPE:
+
+                    pause();
+
+                    break;
                 default:
                     break;
             }
         });
+    }
+    private void pause(){
+        timeline.pause();
+        PausePane.setVisible(true);
+        PausePane.toFront();
+
+
+    }
+    @FXML
+    public void continuar() {
+        PausePane.setVisible(false);
+        timeline.play();
+    }
+    @FXML
+    public void back(ActionEvent event) throws IOException {
+        Pane root = loadFXML("Menu");
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+
+
     }
     @FXML
     private void btnRActivado(){
