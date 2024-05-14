@@ -6,6 +6,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
+import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
@@ -118,48 +119,46 @@ public class juegoController implements Initializable {
      * darle focus al boton, accionarlo y realizar la animacion de que se pulsó (pulsado y liberado)
      */
     private void iniciaTeclado(){
-
-
-
         this.principal.addEventHandler(KeyEvent.KEY_PRESSED, keyEvent -> {
             KeyCode code = keyEvent.getCode();
 
+            if(this.timeline.getStatus() == Animation.Status.RUNNING) {
+                switch (code) {
+                    case Q:
+                        this.RedButton.setFocusTraversable(true);
+                        this.RedButton.fire();
+                        this.RedButton.arm();
 
-            switch (code){
-                case Q:
-                    this.RedButton.setFocusTraversable(true);
-                    this.RedButton.fire();
-                    this.RedButton.arm();
+                        this.releaseButton(RedButton);
 
-                    this.releaseButton(RedButton);
-
-                    break;
-                case W:
-                    this.BlueButton.setFocusTraversable(true);
-                    this.BlueButton.fire();
-                    this.BlueButton.arm();
-                    this.releaseButton(BlueButton);
-                    break;
-                case E:
-                    this.YellowButton.setFocusTraversable(true);
-                    this.YellowButton.fire();
-                    this.YellowButton.arm();
-                    this.releaseButton(YellowButton);
-                    break;
-                case R:
-                    this.GreenButton.setFocusTraversable(true);
-                    this.GreenButton.fire();
-                    this.GreenButton.arm();
-                    this.releaseButton(GreenButton);
-                    break;
-                case T:
-                    this.OrangeButton.setFocusTraversable(true);
-                    this.OrangeButton.fire();
-                    this.OrangeButton.arm();
-                    this.releaseButton(OrangeButton);
-                    break;
-                default:
-                    break;
+                        break;
+                    case W:
+                        this.BlueButton.setFocusTraversable(true);
+                        this.BlueButton.fire();
+                        this.BlueButton.arm();
+                        this.releaseButton(BlueButton);
+                        break;
+                    case E:
+                        this.YellowButton.setFocusTraversable(true);
+                        this.YellowButton.fire();
+                        this.YellowButton.arm();
+                        this.releaseButton(YellowButton);
+                        break;
+                    case R:
+                        this.GreenButton.setFocusTraversable(true);
+                        this.GreenButton.fire();
+                        this.GreenButton.arm();
+                        this.releaseButton(GreenButton);
+                        break;
+                    case T:
+                        this.OrangeButton.setFocusTraversable(true);
+                        this.OrangeButton.fire();
+                        this.OrangeButton.arm();
+                        this.releaseButton(OrangeButton);
+                        break;
+                    default:
+                        break;
+                }
             }
         });
     }
