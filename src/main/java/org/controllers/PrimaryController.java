@@ -12,23 +12,26 @@ import javafx.util.Duration;
 import org.Modules.*;
 
 public class PrimaryController{
+    public static final Color[] ColoresPosibles =
+            {Color.RED, Color.BLUE, Color.YELLOW, Color.GREEN, Color.ORANGE};
 
     private Pane root;
     private final Song prueba;
     public Timeline timeline;
     private Tecla aux;
     private final ArrayList<Circle> teclasEnPantalla = new ArrayList<>();
-    public static final Color[] ColoresPosibles = 
-            {Color.RED, Color.BLUE, Color.YELLOW, Color.GREEN, Color.ORANGE};
     private long t_inicio;
+    //Dicta la frecuencia de refresco de la animacion, mientas menor sea el numero mayor seran los fps del juego
+    //Aproximadamente, 50 dan 20fps, 33 son 30 fps, 16 son 60fps
+    private final int REPETITION_MILIS = 16;
 
 
     public PrimaryController(Pane root) {
         this.prueba = TestGraph.RealizarTest();
-        this.timeline = new Timeline(new KeyFrame(Duration.millis(16), event -> print()));
+        this.timeline = new Timeline(new KeyFrame(Duration.millis(REPETITION_MILIS), event -> print()));    //Animacion
         this.root = root;
         this.aux = prueba.getTeclas_pulsadas().getVertice(0);
-        this.timeline.setCycleCount(Timeline.INDEFINITE);
+        this.timeline.setCycleCount(Timeline.INDEFINITE);   //Ciclos que durara la animacion
     }
 
     public void setRoot(Pane root) {
@@ -42,13 +45,12 @@ public class PrimaryController{
     private void print() {
 
         int xDef = 0;
-
         Tecla lastTecla = null;
         long t_final = System.currentTimeMillis();
         long dt = t_final - t_inicio;     //Esto sera en milisegundos
 
 
-        //Primero desplaza todas las que ya existen hacia abajo y Eliminamos del ArrayList las teclas que ya no se ven
+        //Primero desplaza todas las que ya existen hacia abajo y elimina del ArrayList y el Panel las teclas que ya no se ven
         try{
             for (Circle circulo : teclasEnPantalla) {
                 circulo.setCenterY(circulo.getCenterY() + 3);
@@ -60,13 +62,12 @@ public class PrimaryController{
             }
         }catch (Exception e){}
 
-        //Agregamos las nuevas teclas que deben de aparecer
+        //Agregamos las nuevas teclas si deben de aparecer
         if (aux.getNumAristasAdyacentes() != 0) {
             if (dt >= aux.getDtSiguiente()) {
                 t_inicio = t_final;
                 for (Arista i : aux.getAristasAdyacentes()) {
-
-                    switch (i.destino().numColor) {
+                    switch (i.destino().numColor) { //Dependiendo del color se inician en coordenadas en X diferentes
                         case 0:
                             xDef = 400;
                             break;
