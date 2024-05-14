@@ -2,16 +2,19 @@ package org.controllers;
 
 
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
-
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -20,14 +23,19 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.Modules.*;
+import javafx.scene.layout.Pane;
+
+import static org.controllers.App.loadFXML;
 
 public class juegoController implements Initializable {
     public static final Color[] ColoresPosibles =
             {Color.RED, Color.BLUE, Color.YELLOW, Color.GREEN, Color.ORANGE};
 
-
+    private Stage stage;
+    private Scene scene;
     private Song prueba;
     public Timeline timeline;
     private Tecla aux;
@@ -47,6 +55,8 @@ public class juegoController implements Initializable {
     Button GreenButton;
     @FXML
     Button OrangeButton;
+    @FXML
+    Pane PausePane;
     @FXML
     Rectangle HorizontalRect;
     @FXML
@@ -81,7 +91,6 @@ public class juegoController implements Initializable {
         Tecla lastTecla = null;
         long t_final = System.currentTimeMillis();
         long dt = t_final - t_inicio;     //Esto sera en milisegundos
-        
 
 
         //Primero desplaza todas las que ya existen hacia abajo y elimina del ArrayList y el Panel las teclas que ya no se ven
@@ -135,6 +144,7 @@ public class juegoController implements Initializable {
      * KeyListener para los eventos del teclado, cuando se presiona una tecla realiza un switch para ver si se
      * Presiono una tecla de interes, en caso de que si, acciona los eventos de la GUI Necesarios, los cuales son
      * darle focus al boton, accionarlo y realizar la animacion de que se pulsó (pulsado y liberado)
+     * si se pulsa la tecla ESC
      */
     private void iniciaTeclado(){
         this.RedButton.toFront();
@@ -153,36 +163,64 @@ public class juegoController implements Initializable {
                         this.RedButton.arm();
                         this.releaseButton(RedButton);
 
-                        break;
-                    case W:
-                        this.BlueButton.setFocusTraversable(true);
-                        this.BlueButton.fire();
-                        this.BlueButton.arm();
-                        this.releaseButton(BlueButton);
-                        break;
-                    case E:
-                        this.YellowButton.setFocusTraversable(true);
-                        this.YellowButton.fire();
-                        this.YellowButton.arm();
-                        this.releaseButton(YellowButton);
-                        break;
-                    case R:
-                        this.GreenButton.setFocusTraversable(true);
-                        this.GreenButton.fire();
-                        this.GreenButton.arm();
-                        this.releaseButton(GreenButton);
-                        break;
-                    case T:
-                        this.OrangeButton.setFocusTraversable(true);
-                        this.OrangeButton.fire();
-                        this.OrangeButton.arm();
-                        this.releaseButton(OrangeButton);
-                        break;
-                    default:
-                        break;
+                    break;
+                case W:
+                    this.BlueButton.setFocusTraversable(true);
+                    this.BlueButton.fire();
+                    this.BlueButton.arm();
+                    this.releaseButton(BlueButton);
+                    break;
+                case E:
+                    this.YellowButton.setFocusTraversable(true);
+                    this.YellowButton.fire();
+                    this.YellowButton.arm();
+                    this.releaseButton(YellowButton);
+                    break;
+                case R:
+                    this.GreenButton.setFocusTraversable(true);
+                    this.GreenButton.fire();
+                    this.GreenButton.arm();
+                    this.releaseButton(GreenButton);
+                    break;
+                case T:
+                    this.OrangeButton.setFocusTraversable(true);
+                    this.OrangeButton.fire();
+                    this.OrangeButton.arm();
+                    this.releaseButton(OrangeButton);
+                    break;
+                case ESCAPE:
+
+                    pause();
+
+                    break;
+                default:
+                    break;
                 }
             }
         });
+    }
+
+    private void pause(){
+        timeline.pause();
+        PausePane.setVisible(true);
+        PausePane.toFront();
+
+
+    }
+    @FXML
+    public void continuar() {
+        PausePane.setVisible(false);
+        timeline.play();
+    }
+    @FXML
+    public void back(ActionEvent event) throws IOException {
+        Pane root = loadFXML("Menu");
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+
+
     }
     @FXML
     private void btnRActivado(){
@@ -228,3 +266,4 @@ public class juegoController implements Initializable {
         this.l5.toBack();
     }
 }
+
