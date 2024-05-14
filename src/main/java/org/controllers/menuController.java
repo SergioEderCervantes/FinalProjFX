@@ -21,7 +21,6 @@ import static org.controllers.App.loadFXML;
 public class menuController {
     private Stage stage;
     private Scene scene;
-    private Pane root;
 
     public void switchToMenu(ActionEvent event) throws IOException {
         Pane root = loadFXML("Menu");
