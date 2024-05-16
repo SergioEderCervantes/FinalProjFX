@@ -303,11 +303,17 @@ public class juegoController implements Initializable {
                 if(cont>=4 && cont<8){
                     multiplicador=2;
                 }
-                else if (cont >=8 && cont <12){
-                    multiplicador=4;
-                } else if(cont >= 12){
-                    multiplicador = 8;
+                else {
+                    if (cont >= 8 && cont < 12) {
+                        multiplicador = 4;
+                    }
+                    else {
+                        if (cont >= 12) {
+                            multiplicador = 8;
+                        }
+                    }
                 }
+
                 //TODO sprite de explosion de circulo, aumentar el marcador
                 circle.setVisible(false);   //Esto es mil veces mejor que destruirlo aqui
                 System.out.println("Score: "+puntaje);
