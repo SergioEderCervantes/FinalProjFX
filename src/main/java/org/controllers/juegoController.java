@@ -13,9 +13,12 @@ import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
@@ -27,6 +30,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.Modules.*;
 import javafx.scene.layout.Pane;
+
 
 import static org.controllers.App.loadFXML;
 
@@ -71,8 +75,10 @@ public class juegoController implements Initializable {
     Line l5;
 
 
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
         //Dicta la frecuencia de refresco de la animacion, mientas menor sea el numero mayor seran los fps del juego
         //Aproximadamente, 50 dan 20fps, 33 son 30 fps, 16 son 60fps
         int REPETITION_MILIS = 16;
@@ -81,8 +87,12 @@ public class juegoController implements Initializable {
         this.aux = prueba.getTeclas_pulsadas().getVertice(0);
         this.timeline.setCycleCount(Timeline.INDEFINITE);   //Ciclos que durara la animacion
         this.t_inicio = System.currentTimeMillis();
+
+        this.initKeyboard();
+        this.initButtons();
+
+
         this.timeline.play();
-        this.iniciaTeclado();
     }
 
     private void print() {
@@ -127,7 +137,7 @@ public class juegoController implements Initializable {
                             xDef = 800;
                             break;
                     }
-                    Circle circle = new Circle(xDef, 30, 20, ColoresPosibles[i.destino().numColor]);
+                    Circle circle = new Circle(xDef, -30, 30, ColoresPosibles[i.destino().numColor]);
                     principal.getChildren().add(circle);
                     teclasEnPantalla.add(circle);
                     circle.toBack();
@@ -137,6 +147,8 @@ public class juegoController implements Initializable {
             }
             this.setPositions();
 
+        }else {
+            //TODO cuando acabe la cancion de ejecutarse, salir al menu principal
         }
     }
 
@@ -146,12 +158,8 @@ public class juegoController implements Initializable {
      * darle focus al boton, accionarlo y realizar la animacion de que se pulsó (pulsado y liberado)
      * si se pulsa la tecla ESC
      */
-    private void iniciaTeclado(){
-        this.RedButton.toFront();
-        this.BlueButton.toFront();
-        this.YellowButton.toFront();
-        this.GreenButton.toFront();
-        this.OrangeButton.toFront();
+    private void initKeyboard(){
+
         this.principal.addEventHandler(KeyEvent.KEY_PRESSED, keyEvent -> {
             KeyCode code = keyEvent.getCode();
 
@@ -160,44 +168,44 @@ public class juegoController implements Initializable {
                     case Q:
                         this.RedButton.setFocusTraversable(true);
                         this.RedButton.fire();
-                        this.RedButton.arm();
-                        this.releaseButton(RedButton);
-
                     break;
                 case W:
                     this.BlueButton.setFocusTraversable(true);
                     this.BlueButton.fire();
-                    this.BlueButton.arm();
-                    this.releaseButton(BlueButton);
                     break;
                 case E:
                     this.YellowButton.setFocusTraversable(true);
                     this.YellowButton.fire();
-                    this.YellowButton.arm();
-                    this.releaseButton(YellowButton);
                     break;
-                case R:
+                case O:
                     this.GreenButton.setFocusTraversable(true);
                     this.GreenButton.fire();
-                    this.GreenButton.arm();
-                    this.releaseButton(GreenButton);
                     break;
-                case T:
+                case P:
                     this.OrangeButton.setFocusTraversable(true);
                     this.OrangeButton.fire();
-                    this.OrangeButton.arm();
-                    this.releaseButton(OrangeButton);
                     break;
                 case ESCAPE:
-
                     pause();
-
                     break;
                 default:
                     break;
                 }
             }
         });
+    }
+
+    private void initButtons(){
+        this.RedButton.toFront();
+        this.BlueButton.toFront();
+        this.YellowButton.toFront();
+        this.GreenButton.toFront();
+        this.OrangeButton.toFront();
+        Sprite.setStylesButton(RedButton,"..\\..\\images\\RedButton.png");
+        Sprite.setStylesButton(BlueButton, "..\\..\\images\\BlueButton.png");
+        Sprite.setStylesButton(YellowButton, "..\\..\\images\\YellowButton.png");
+        Sprite.setStylesButton(GreenButton, "..\\..\\images\\GreenButton.png");
+        Sprite.setStylesButton(OrangeButton, "..\\..\\images\\OrangeButton.png");
     }
 
     private void pause(){
@@ -239,34 +247,42 @@ public class juegoController implements Initializable {
     private void btnBActivado(){
         Rectangle rect = this.makeRect(BlueButton);
         checkColitions(rect);
+        Sprite sprite = new Sprite((ImageView) BlueButton.getGraphic(),4,4,32,32);
+        sprite.setCycleCount(1);
+        sprite.setOnFinished(actionEvent -> {sprite.resetAnimation();});
+        sprite.play();
     }
     @FXML
     private void btnYActivado(){
         Rectangle rect = this.makeRect(YellowButton);
         checkColitions(rect);
+        Sprite sprite = new Sprite((ImageView) YellowButton.getGraphic(),4,4,32,32);
+        sprite.setCycleCount(1);
+        sprite.setOnFinished(actionEvent -> {sprite.resetAnimation();});
+        sprite.play();
     }
     @FXML
     private void btnGActivado(){
         Rectangle rect = this.makeRect(GreenButton);
         checkColitions(rect);
+        Sprite sprite = new Sprite((ImageView) GreenButton.getGraphic(),4,4,32,32);
+        sprite.setCycleCount(1);
+        sprite.setOnFinished(actionEvent -> {sprite.resetAnimation();});
+        sprite.play();
     }
     @FXML
     private void btnOActivado(){
         Rectangle rect = this.makeRect(OrangeButton);
         checkColitions(rect);
-    }
-
-    private void releaseButton(Button button){
-        PauseTransition pause = new PauseTransition(Duration.millis(48));
-        pause.setOnFinished(actionEvent -> button.disarm());
-        pause.play();
+        Sprite sprite = new Sprite((ImageView) OrangeButton.getGraphic(),4,4,32,32);
+        sprite.setCycleCount(1);
+        sprite.setOnFinished(actionEvent -> {sprite.resetAnimation();});
+        sprite.play();
     }
 
     private Rectangle makeRect(Button btn){
         return new Rectangle(btn.getLayoutX(), btn.getLayoutY(), btn.getWidth(), btn.getHeight());
     }
-
-
 
     private void setPositions(){
         this.HorizontalRect.toBack();
