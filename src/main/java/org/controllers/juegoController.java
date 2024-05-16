@@ -96,8 +96,8 @@ public class juegoController implements Initializable {
         //Primero desplaza todas las que ya existen hacia abajo y elimina del ArrayList y el Panel las teclas que ya no se ven
         try{
             for (Circle circulo : teclasEnPantalla) {
-                circulo.setCenterY(circulo.getCenterY() + 3);
-                if (circulo.getCenterY() > 600) {
+                circulo.setCenterY(circulo.getCenterY() + 5);
+                if (circulo.getCenterY() > 620) {
 
                     teclasEnPantalla.remove(circulo);
                     principal.getChildren().remove(circulo);
@@ -202,14 +202,22 @@ public class juegoController implements Initializable {
 
     private void pause(){
         timeline.pause();
+        RedButton.setDisable(true);
+        BlueButton.setDisable(true);
+        YellowButton.setDisable(true);
+        GreenButton.setDisable(true);
+        OrangeButton.setDisable(true);
         PausePane.setVisible(true);
         PausePane.toFront();
-
-
     }
     @FXML
     public void continuar() {
         PausePane.setVisible(false);
+        RedButton.setDisable(false);
+        BlueButton.setDisable(false);
+        YellowButton.setDisable(false);
+        GreenButton.setDisable(false);
+        OrangeButton.setDisable(false);
         timeline.play();
     }
     @FXML
@@ -224,25 +232,28 @@ public class juegoController implements Initializable {
     }
     @FXML
     private void btnRActivado(){
-        System.out.println("TECLA ROJA");
         Rectangle rect = this.makeRect(RedButton);
-
+        checkColitions(rect);
     }
     @FXML
-    private void btnBActivado(){ 
-        System.out.println("TECLA AZUL");
+    private void btnBActivado(){
+        Rectangle rect = this.makeRect(BlueButton);
+        checkColitions(rect);
     }
     @FXML
     private void btnYActivado(){
-        System.out.println("TECLA AMARILLA");
+        Rectangle rect = this.makeRect(YellowButton);
+        checkColitions(rect);
     }
     @FXML
     private void btnGActivado(){
-        System.out.println("TECLA VERDE");
+        Rectangle rect = this.makeRect(GreenButton);
+        checkColitions(rect);
     }
     @FXML
     private void btnOActivado(){
-        System.out.println("TECLA NARANJA ");
+        Rectangle rect = this.makeRect(OrangeButton);
+        checkColitions(rect);
     }
 
     private void releaseButton(Button button){
@@ -256,7 +267,7 @@ public class juegoController implements Initializable {
     }
 
 
-//    private void checkColitions
+
     private void setPositions(){
         this.HorizontalRect.toBack();
         this.l1.toBack();
@@ -264,6 +275,21 @@ public class juegoController implements Initializable {
         this.l3.toBack();
         this.l4.toBack();
         this.l5.toBack();
+    }
+
+    private void checkColitions(Rectangle rect){
+
+        for (Circle circle : teclasEnPantalla) {
+            if (rect.contains(circle.getCenterX(), circle.getCenterY()) ||
+                    rect.contains(circle.getCenterX(), circle.getCenterY() + circle.getRadius()) ||
+                        rect.contains(circle.getCenterX(), circle.getCenterY() - circle.getRadius())){
+
+                //TODO sprite de explosion de circulo, aumentar el marcador
+                circle.setVisible(false);   //Esto es mil veces mejor que destruirlo aqui
+                return;
+            }
+        }
+        //TODO Quitar puntos porque se presiono una tecla cuando no habia nada
     }
 }
 
