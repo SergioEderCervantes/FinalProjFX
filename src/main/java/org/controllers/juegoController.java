@@ -8,16 +8,13 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
-import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -249,7 +246,7 @@ public class juegoController implements Initializable {
         checkColitions(rect);
         Sprite sprite = new Sprite((ImageView) BlueButton.getGraphic(),4,4,32,32);
         sprite.setCycleCount(1);
-        sprite.setOnFinished(actionEvent -> {sprite.resetAnimation();});
+        sprite.setOnFinished(actionEvent -> sprite.resetAnimation());
         sprite.play();
     }
     @FXML
@@ -258,7 +255,7 @@ public class juegoController implements Initializable {
         checkColitions(rect);
         Sprite sprite = new Sprite((ImageView) YellowButton.getGraphic(),4,4,32,32);
         sprite.setCycleCount(1);
-        sprite.setOnFinished(actionEvent -> {sprite.resetAnimation();});
+        sprite.setOnFinished(actionEvent -> sprite.resetAnimation());
         sprite.play();
     }
     @FXML
@@ -267,7 +264,7 @@ public class juegoController implements Initializable {
         checkColitions(rect);
         Sprite sprite = new Sprite((ImageView) GreenButton.getGraphic(),4,4,32,32);
         sprite.setCycleCount(1);
-        sprite.setOnFinished(actionEvent -> {sprite.resetAnimation();});
+        sprite.setOnFinished(actionEvent -> sprite.resetAnimation());
         sprite.play();
     }
     @FXML
@@ -276,7 +273,7 @@ public class juegoController implements Initializable {
         checkColitions(rect);
         Sprite sprite = new Sprite((ImageView) OrangeButton.getGraphic(),4,4,32,32);
         sprite.setCycleCount(1);
-        sprite.setOnFinished(actionEvent -> {sprite.resetAnimation();});
+        sprite.setOnFinished(actionEvent -> sprite.resetAnimation());
         sprite.play();
     }
 
