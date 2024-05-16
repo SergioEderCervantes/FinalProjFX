@@ -16,6 +16,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
@@ -35,6 +36,9 @@ public class juegoController implements Initializable {
             {Color.RED, Color.BLUE, Color.YELLOW, Color.GREEN, Color.ORANGE};
 
     private Stage stage;
+    private int puntaje=0;
+    private int multiplicador=1;
+    private int cont=0;
     private Scene scene;
     private Song prueba;
     public Timeline timeline;
@@ -69,7 +73,10 @@ public class juegoController implements Initializable {
     Line l4;
     @FXML
     Line l5;
-
+    @FXML
+    Label score;
+    @FXML
+    Label multiplo;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -92,7 +99,15 @@ public class juegoController implements Initializable {
         long t_final = System.currentTimeMillis();
         long dt = t_final - t_inicio;     //Esto sera en milisegundos
 
+        score.setText(String.valueOf(puntaje));
+        if(multiplicador != 1){
+            multiplo.setVisible(true);
+        }
+        else{
+            multiplo.setVisible(false);
+        }
 
+        multiplo.setText("x"+String.valueOf(multiplicador));
         //Primero desplaza todas las que ya existen hacia abajo y elimina del ArrayList y el Panel las teclas que ya no se ven
         try{
             for (Circle circulo : teclasEnPantalla) {
@@ -220,7 +235,7 @@ public class juegoController implements Initializable {
         OrangeButton.setDisable(false);
         timeline.play();
     }
-    @FXML
+    @FXML //TODO Retorno al menu
     public void back(ActionEvent event) throws IOException {
         Pane root = loadFXML("Menu");
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -283,10 +298,24 @@ public class juegoController implements Initializable {
             if (rect.contains(circle.getCenterX(), circle.getCenterY()) ||
                     rect.contains(circle.getCenterX(), circle.getCenterY() + circle.getRadius()) ||
                         rect.contains(circle.getCenterX(), circle.getCenterY() - circle.getRadius())){
-
+                puntaje = puntaje+(multiplicador * 25);
+                cont++;
+                if(cont>=4 && cont<8){
+                    multiplicador=2;
+                }
+                else if (cont >=8 && cont <12){
+                    multiplicador=4;
+                } else if(cont >= 12){
+                    multiplicador = 8;
+                }
                 //TODO sprite de explosion de circulo, aumentar el marcador
                 circle.setVisible(false);   //Esto es mil veces mejor que destruirlo aqui
+                System.out.println("Score: "+puntaje);
                 return;
+            }
+            else {
+                multiplicador=1;
+                cont=0;
             }
         }
         //TODO Quitar puntos porque se presiono una tecla cuando no habia nada
