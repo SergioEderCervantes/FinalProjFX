@@ -45,6 +45,7 @@ public class juegoController implements Initializable {
     private Tecla aux;
     private final ArrayList<Circle> teclasEnPantalla = new ArrayList<>();
     private long t_inicio;
+    private int band=0;
 
     //Variables de componentes del FXML
     @FXML
@@ -117,7 +118,10 @@ public class juegoController implements Initializable {
             for (Circle circulo : teclasEnPantalla) {
                 circulo.setCenterY(circulo.getCenterY() + 5);
                 if (circulo.getCenterY() > 620) {
-
+                    if(circulo.isVisible()){
+                        multiplicador=1;
+                        cont = 0;
+                    }
                     teclasEnPantalla.remove(circulo);
                     principal.getChildren().remove(circulo);
                 }
@@ -305,11 +309,16 @@ public class juegoController implements Initializable {
     private void checkColitions(Rectangle rect){
 
         for (Circle circle : teclasEnPantalla) {
+
+
+            System.out.println(band);
             if (rect.contains(circle.getCenterX(), circle.getCenterY()) ||
                     rect.contains(circle.getCenterX(), circle.getCenterY() + circle.getRadius()) ||
                         rect.contains(circle.getCenterX(), circle.getCenterY() - circle.getRadius())){
+
                 puntaje = puntaje+(multiplicador * 25);
                 cont++;
+
                 if(cont>=4 && cont<8){
                     multiplicador=2;
                 }
@@ -323,16 +332,21 @@ public class juegoController implements Initializable {
                         }
                     }
                 }
-
+//                System.out.println(cont);
                 //TODO sprite de explosion de circulo, aumentar el marcador
-                circle.setVisible(false);   //Esto es mil veces mejor que destruirlo aqui
+                circle.setVisible(false);
+
+                    //Esto es mil veces mejor que destruirlo aqui
                 System.out.println("Score: "+puntaje);
                 return;
             }
             else {
-                multiplicador=1;
-                cont=0;
+
+                multiplicador = 1;
+                cont = 0;
+
             }
+            band=0;
         }
         //TODO Quitar puntos porque se presiono una tecla cuando no habia nada
     }
