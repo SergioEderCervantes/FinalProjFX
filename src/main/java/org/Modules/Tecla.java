@@ -61,6 +61,7 @@ public class Tecla {
             this.numColor = t.numColor;
             this.color = t.color;
             this.aristasAdyacentes = t.aristasAdyacentes;
+            this.tipo = t.tipo;
         }
         else {
             throw new Exception("Exception: llamada al constructor copia de un objeto nulo o intento de reasignacion");
@@ -96,10 +97,5 @@ public class Tecla {
         aristasAdyacentes.add(arista);
     }
 
-    public void dibujaTecla(Graphics g, int x, int y){
-        g.setColor(this.color);
-        g.fillOval(x,y,20,20);
-        g.setColor(Color.BLACK);
-        g.drawString(this.getTecla_ID().toString(),x + 7,y + 10);
-    }
+
 }

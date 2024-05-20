@@ -2,7 +2,7 @@ package org.controllers;
 
 
 
-import java.io.File;
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -21,8 +21,6 @@ import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
@@ -81,8 +79,7 @@ public class juegoController implements Initializable {
     Label score;
     @FXML
     Label multiplo;
-    @FXML
-    Button PruebaSonido;
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -113,10 +110,6 @@ public class juegoController implements Initializable {
 //        // Botón para reproducir audio
 //
 //        PruebaSonido.setOnAction(e -> mediaPlayer.play());
-
-
-
-
         this.timeline.play();
     }
 
@@ -128,14 +121,9 @@ public class juegoController implements Initializable {
         long dt = t_final - t_inicio;     //Esto sera en milisegundos
 
         score.setText(String.valueOf(puntaje));
-        if(multiplicador != 1){
-            multiplo.setVisible(true);
-        }
-        else{
-            multiplo.setVisible(false);
-        }
+        multiplo.setVisible(multiplicador != 1);
 
-        multiplo.setText("x"+String.valueOf(multiplicador));
+        multiplo.setText("x" + multiplicador);
         //Primero desplaza todas las que ya existen hacia abajo y elimina del ArrayList y el Panel las teclas que ya no se ven
         try{
             for (Circle circulo : teclasEnPantalla) {

@@ -4,7 +4,6 @@
  */
 package org.controllers;
 
-import java.io.File;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
@@ -17,9 +16,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.IOException;
-import javafx.scene.control.Button;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
+
 
 import static org.controllers.App.loadFXML;
 
@@ -97,13 +94,6 @@ public class menuController {
 
     }
 
-    public void switchToMenu(ActionEvent event) throws IOException {
-        Pane root = loadFXML("Menu");
-        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
-    }
 
     public void switchToJugador(ActionEvent event) throws IOException {
         Pane root = loadFXML("Jugador");

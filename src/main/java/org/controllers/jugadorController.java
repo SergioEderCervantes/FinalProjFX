@@ -12,10 +12,6 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import static org.controllers.App.loadFXML;
 
-/**
- *
- * @author zzzup
- */
 public class jugadorController {
     private Stage stage;
     private Scene scene;
