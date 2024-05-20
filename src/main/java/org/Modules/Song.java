@@ -110,7 +110,7 @@ public class Song {
 
     private void printGraphRecursive(Tecla root){
         Tecla Last_Tecla = root;
-        int x = 20, y = 20;
+        int x = 20, y = 100;
         System.out.println("HOLA");
         try {
             Thread.sleep((long) root.getDtSiguiente() * 1000);
