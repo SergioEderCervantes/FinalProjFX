@@ -4,6 +4,8 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 
 
 
@@ -24,6 +26,7 @@ public class App extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         Pane root = loadFXML("Menu");
+        
         scene = new Scene(root, WINDOW_WIDTH, WINDOW_HEIGHT);
         stage.setScene(scene);
         stage.show();

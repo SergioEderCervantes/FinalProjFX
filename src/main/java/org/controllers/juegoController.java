@@ -2,6 +2,7 @@ package org.controllers;
 
 
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -20,6 +21,8 @@ import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
@@ -78,6 +81,8 @@ public class juegoController implements Initializable {
     Label score;
     @FXML
     Label multiplo;
+    @FXML
+    Button PruebaSonido;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -92,6 +97,24 @@ public class juegoController implements Initializable {
 
         this.initKeyboard();
         this.initButtons();
+
+//        //Prueba sonido
+//        String audioFilePath = "src/main/java/org/controllers/prueba.mp3";
+//
+//        // Convertir la ruta del archivo a una URL
+//        String mediaUrl = new File(audioFilePath).toURI().toString();
+//
+//        // Crear un objeto Media
+//        Media media = new Media(mediaUrl);
+//
+//        // Crear un objeto MediaPlayer
+//        MediaPlayer mediaPlayer = new MediaPlayer(media);
+//
+//        // Botón para reproducir audio
+//
+//        PruebaSonido.setOnAction(e -> mediaPlayer.play());
+
+
 
 
         this.timeline.play();
