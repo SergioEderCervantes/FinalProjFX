@@ -45,6 +45,7 @@ public class juegoController implements Initializable {
     private Tecla aux;
     private final ArrayList<Circle> teclasEnPantalla = new ArrayList<>();
     private long t_inicio;
+    private double posInicial;
 
     //Variables de componentes del FXML
     @FXML
@@ -111,7 +112,19 @@ public class juegoController implements Initializable {
         //Primero desplaza todas las que ya existen hacia abajo y elimina del ArrayList y el Panel las teclas que ya no se ven
         try{
             for (Circle circulo : teclasEnPantalla) {
-                circulo.setCenterY(circulo.getCenterY() + 5);
+                circulo.setCenterY(circulo.getCenterY() + 3);
+                if(circulo.getCenterX() < 461 ){
+                    circulo.setCenterX(circulo.getCenterX() - 0.5);
+                }
+                else if(circulo.getCenterX() > 739){
+                    circulo.setCenterX(circulo.getCenterX() + 0.5);
+                }
+                else if(circulo.getCenterX() < 600){
+                    circulo.setCenterX(circulo.getCenterX() - 0.25);
+                }else if(circulo.getCenterX() >600){
+                    circulo.setCenterX(circulo.getCenterX() + 0.25);
+                }
+
                 if (circulo.getCenterY() > 620) {
 
                     teclasEnPantalla.remove(circulo);
@@ -127,22 +140,22 @@ public class juegoController implements Initializable {
                 for (Arista i : aux.getAristasAdyacentes()) {
                     switch (i.destino().numColor) { //Dependiendo del color se inician en coordenadas en X diferentes
                         case 0:
-                            xDef = 400;
+                            xDef = 460;
                             break;
                         case 1:
-                            xDef = 500;
+                            xDef = 525;
                             break;
                         case 2:
                             xDef = 600;
                             break;
                         case 3:
-                            xDef = 700;
+                            xDef = 675;
                             break;
                         case 4:
-                            xDef = 800;
+                            xDef = 740;
                             break;
                     }
-                    Circle circle = new Circle(xDef, 30, 20, ColoresPosibles[i.destino().numColor]);
+                    Circle circle = new Circle(xDef, 155, 20, ColoresPosibles[i.destino().numColor]);
                     principal.getChildren().add(circle);
                     teclasEnPantalla.add(circle);
                     circle.toBack();
