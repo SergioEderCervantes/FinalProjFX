@@ -12,17 +12,22 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.IOException;
+import java.nio.file.Paths;
 
 import static org.controllers.App.loadFXML;
 
 public class menuController {
     private Stage stage;
     private Scene scene;
+    public MediaPlayer mediaPlayer;
+
 
     @FXML
     private Label title;
@@ -35,12 +40,7 @@ public class menuController {
     private Rectangle bar3;
     @FXML
     private Rectangle bar4;
-    @FXML
-    private Rectangle bar5;
-    @FXML
-    private Rectangle bar6;
-    @FXML
-    private Rectangle bar7;
+
     @FXML
     private Rectangle bar8;
     @FXML
@@ -51,6 +51,7 @@ public class menuController {
     private Rectangle bar11;
 
     public void initialize() {
+        music();
         // Aplicar estilo CSS al título
         title.getStyleClass().add("title");
 
@@ -69,6 +70,14 @@ public class menuController {
         titleTimeline.play();
     }
 
+    public void music(){
+        String s = "src/main/resources/music/menu.mp3";
+        Media h = new Media(Paths.get(s).toUri().toString());
+        mediaPlayer = new MediaPlayer(h);
+        mediaPlayer.play();
+
+    }
+
     private void updateBars() {
         // Simular la animación de barras
         bar1.setY((Math.random() * 150) + 170);
@@ -83,15 +92,7 @@ public class menuController {
         bar4.setY((Math.random() * 150) + 170);
         bar4.setY(bar4.getY() + 80);
         bar4.setY(bar4.getY() - 90);
-        bar5.setY((Math.random() * 150) + 170);
-        bar5.setY(bar5.getY() + 75);
-        bar5.setY(bar5.getY() - 100);
-        bar6.setY((Math.random() * 150) + 170);
-        bar6.setY(bar6.getY() + 80);
-        bar6.setY(bar6.getY() - 90);
-        bar7.setY((Math.random() * 150) + 170);
-        bar7.setY(bar7.getY() + 75);
-        bar7.setY(bar7.getY() - 100);
+
         bar8.setY((Math.random() * 150) + 170);
         bar8.setY(bar8.getY() + 80);
         bar8.setY(bar8.getY() - 90);

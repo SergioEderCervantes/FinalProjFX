@@ -97,24 +97,6 @@
             </LinearGradient>
          </fill>
       </Rectangle>
-      <Rectangle fx:id="bar5" height="430.0" layoutX="476.0" layoutY="171.0" rotate="180.0" width="66.0">
-         <fill>
-            <LinearGradient endX="1.0" endY="1.0" startY="0.5118483412322274">
-               <stops>
-                  <Stop>
-                     <color>
-                        <Color red="0.6476190686225891" blue="1.0" />
-                     </color>
-                  </Stop>
-                  <Stop offset="1.0">
-                     <color>
-                        <Color red="1.0" green="1.0" blue="1.0" opacity="0.0" />
-                     </color>
-                  </Stop>
-               </stops>
-            </LinearGradient>
-         </fill>
-      </Rectangle>
       <Rectangle fx:id="bar8" height="430.0" layoutX="787.0" layoutY="171.0" rotate="180.0" width="66.0">
          <fill>
             <LinearGradient endX="1.0" endY="1.0" startY="0.4976303317535545">
@@ -140,42 +122,6 @@
                   <Stop>
                      <color>
                         <Color red="0.23038499057292938" green="0.8157894611358643" blue="0.7279788255691528" />
-                     </color>
-                  </Stop>
-                  <Stop offset="1.0">
-                     <color>
-                        <Color red="1.0" green="1.0" blue="1.0" opacity="0.0" />
-                     </color>
-                  </Stop>
-               </stops>
-            </LinearGradient>
-         </fill>
-      </Rectangle>
-      <Rectangle fx:id="bar6" height="430.0" layoutX="583.0" layoutY="171.0" rotate="180.0" width="66.0">
-         <fill>
-            <LinearGradient endX="1.0" endY="1.0" startY="0.5734597156398105">
-               <stops>
-                  <Stop>
-                     <color>
-                        <Color red="0.23038499057292938" green="0.8157894611358643" blue="0.7279788255691528" />
-                     </color>
-                  </Stop>
-                  <Stop offset="1.0">
-                     <color>
-                        <Color red="1.0" green="1.0" blue="1.0" opacity="0.0" />
-                     </color>
-                  </Stop>
-               </stops>
-            </LinearGradient>
-         </fill>
-      </Rectangle>
-      <Rectangle fx:id="bar7" height="430.0" layoutX="682.0" layoutY="170.0" rotate="180.0" width="66.0">
-         <fill>
-            <LinearGradient endX="1.0" endY="1.0" startY="0.46445497630331756">
-               <stops>
-                  <Stop>
-                     <color>
-                        <Color red="0.03809523954987526" green="1.0" />
                      </color>
                   </Stop>
                   <Stop offset="1.0">
