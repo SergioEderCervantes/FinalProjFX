@@ -10,6 +10,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
@@ -17,12 +18,14 @@ import javafx.util.Duration;
 
 import java.io.IOException;
 
-
 import static org.controllers.App.loadFXML;
 
 public class menuController {
     private Stage stage;
     private Scene scene;
+
+    @FXML
+    private Label title;
 
     @FXML
     private Rectangle bar1;
@@ -48,52 +51,60 @@ public class menuController {
     private Rectangle bar11;
 
     public void initialize() {
+        // Aplicar estilo CSS al título
+        title.getStyleClass().add("title");
+
         // Iniciar la animación de las barras
-        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(100), e -> updateBars()));
-        timeline.setCycleCount(Timeline.INDEFINITE);
-        timeline.play();
+        Timeline barTimeline = new Timeline(new KeyFrame(Duration.millis(100), e -> updateBars()));
+        barTimeline.setCycleCount(Timeline.INDEFINITE);
+        barTimeline.play();
+
+        // Iniciar la animación rítmica del título
+        Timeline titleTimeline = new Timeline(
+                new KeyFrame(Duration.seconds(0), e -> title.setLayoutY(50)),
+                new KeyFrame(Duration.seconds(0.5), e -> title.setLayoutY(55)),
+                new KeyFrame(Duration.seconds(1), e -> title.setLayoutY(50))
+        );
+        titleTimeline.setCycleCount(Timeline.INDEFINITE);
+        titleTimeline.play();
     }
 
     private void updateBars() {
         // Simular la animación de barras
-
-        bar1.setY((Math.random() * 150)+170);
-        bar1.setY(bar1.getY()+75);
-        bar1.setY(bar1.getY()-100);
-        bar2.setY((Math.random() * 150)+170);
-        bar2.setY(bar2.getY()+80);
-        bar2.setY(bar2.getY()-90);
-        bar3.setY((Math.random() * 150)+170);
-        bar3.setY(bar3.getY()+75);
-        bar3.setY(bar3.getY()-100);
-        bar4.setY((Math.random() * 150)+170);
-        bar4.setY(bar4.getY()+80);
-        bar4.setY(bar4.getY()-90);
-        bar5.setY((Math.random() * 150)+170);
-        bar5.setY(bar5.getY()+75);
-        bar5.setY(bar5.getY()-100);
-        bar6.setY((Math.random() * 150)+170);
-        bar6.setY(bar6.getY()+80);
-        bar6.setY(bar6.getY()-90);
-        bar7.setY((Math.random() * 150)+170);
-        bar7.setY(bar7.getY()+75);
-        bar7.setY(bar7.getY()-100);
-        bar8.setY((Math.random() * 150)+170);
-        bar8.setY(bar8.getY()+80);
-        bar8.setY(bar8.getY()-90);
-        bar9.setY((Math.random() * 150)+170);
-        bar9.setY(bar9.getY()+75);
-        bar9.setY(bar9.getY()-100);
-        bar10.setY((Math.random() * 150)+170);
-        bar10.setY(bar10.getY()+80);
-        bar10.setY(bar10.getY()-90);
-        bar11.setY((Math.random() * 150)+170);
-        bar11.setY(bar11.getY()+75);
-        bar11.setY(bar11.getY()-100);
-
-
+        bar1.setY((Math.random() * 150) + 170);
+        bar1.setY(bar1.getY() + 75);
+        bar1.setY(bar1.getY() - 100);
+        bar2.setY((Math.random() * 150) + 170);
+        bar2.setY(bar2.getY() + 80);
+        bar2.setY(bar2.getY() - 90);
+        bar3.setY((Math.random() * 150) + 170);
+        bar3.setY(bar3.getY() + 75);
+        bar3.setY(bar3.getY() - 100);
+        bar4.setY((Math.random() * 150) + 170);
+        bar4.setY(bar4.getY() + 80);
+        bar4.setY(bar4.getY() - 90);
+        bar5.setY((Math.random() * 150) + 170);
+        bar5.setY(bar5.getY() + 75);
+        bar5.setY(bar5.getY() - 100);
+        bar6.setY((Math.random() * 150) + 170);
+        bar6.setY(bar6.getY() + 80);
+        bar6.setY(bar6.getY() - 90);
+        bar7.setY((Math.random() * 150) + 170);
+        bar7.setY(bar7.getY() + 75);
+        bar7.setY(bar7.getY() - 100);
+        bar8.setY((Math.random() * 150) + 170);
+        bar8.setY(bar8.getY() + 80);
+        bar8.setY(bar8.getY() - 90);
+        bar9.setY((Math.random() * 150) + 170);
+        bar9.setY(bar9.getY() + 75);
+        bar9.setY(bar9.getY() - 100);
+        bar10.setY((Math.random() * 150) + 170);
+        bar10.setY(bar10.getY() + 80);
+        bar10.setY(bar10.getY() - 90);
+        bar11.setY((Math.random() * 150) + 170);
+        bar11.setY(bar11.getY() + 75);
+        bar11.setY(bar11.getY() - 100);
     }
-
 
     public void switchToJugador(ActionEvent event) throws IOException {
         Pane root = loadFXML("Jugador");

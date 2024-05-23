@@ -1,0 +1,27 @@
+@import url('https://fonts.googleapis.com/css2?family=Neon&display=swap');
+
+/* Estilo para el botón */
+.button-glow {
+    -fx-background-color: rgba(255, 255, 255, 0.3); /* Botón semitransparente */
+    -fx-border-color: transparent;
+    -fx-border-width: 2;
+    -fx-effect: dropshadow(gaussian, rgba(128, 0, 128, 0.8), 15, 0.5, 0, 0); /* Brillo morado */
+    -fx-text-fill: white; /* Color del texto del botón */
+}
+
+/* Estilo para el label */
+.label-title {
+    font-family: 'Neon', sans-serif;
+    -fx-text-fill: rgba(186, 85, 211, 1.0); /* Color de texto morado brillante */
+    -fx-font-size: 49px; /* Tamaño de fuente */
+    -fx-font-weight: bold; /* Negrita */
+    -fx-background-color: transparent; /* Fondo transparente */
+    -fx-padding: 10px; /* Espaciado alrededor del texto */
+    -fx-border-color: rgba(186, 85, 211, 0.8); /* Color del borde */
+    -fx-border-width: 5px; /* Ancho del borde */
+    -fx-border-radius: 5px; /* Borde redondeado */
+    -fx-effect: dropshadow(gaussian, rgba(186, 85, 211, 0.6), 10, 0.7, 0, 0),
+    dropshadow(gaussian, rgba(186, 85, 211, 0.4), 20, 0.5, 0, 0),
+    dropshadow(gaussian, rgba(186, 85, 211, 1.0), 30, 0.3, 0, 0),
+    glow(100); /* Efecto de brillo ajustado */
+}
