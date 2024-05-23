@@ -71,37 +71,37 @@ public class menuController {
 
     private void updateBars() {
         // Simular la animación de barras
-        bar1.setY((Math.random() * 150) + 170);
+        bar1.setY((Math.random() * 150) + 200);
         bar1.setY(bar1.getY() + 75);
         bar1.setY(bar1.getY() - 100);
-        bar2.setY((Math.random() * 150) + 170);
+        bar2.setY((Math.random() * 150) + 200);
         bar2.setY(bar2.getY() + 80);
         bar2.setY(bar2.getY() - 90);
-        bar3.setY((Math.random() * 150) + 170);
+        bar3.setY((Math.random() * 150) + 200);
         bar3.setY(bar3.getY() + 75);
         bar3.setY(bar3.getY() - 100);
-        bar4.setY((Math.random() * 150) + 170);
+        bar4.setY((Math.random() * 150) + 200);
         bar4.setY(bar4.getY() + 80);
-        bar4.setY(bar4.getY() - 90);
-        bar5.setY((Math.random() * 150) + 170);
+        bar4.setY(bar4.getY() - 50);
+        bar5.setY((Math.random() * 150) + 200);
         bar5.setY(bar5.getY() + 75);
-        bar5.setY(bar5.getY() - 100);
-        bar6.setY((Math.random() * 150) + 170);
+        bar5.setY(bar5.getY() - 50);
+        bar6.setY((Math.random() * 150) + 200);
         bar6.setY(bar6.getY() + 80);
-        bar6.setY(bar6.getY() - 90);
-        bar7.setY((Math.random() * 150) + 170);
+        bar6.setY(bar6.getY() - 50);
+        bar7.setY((Math.random() * 150) + 200);
         bar7.setY(bar7.getY() + 75);
-        bar7.setY(bar7.getY() - 100);
-        bar8.setY((Math.random() * 150) + 170);
+        bar7.setY(bar7.getY() - 50);
+        bar8.setY((Math.random() * 150) + 200);
         bar8.setY(bar8.getY() + 80);
-        bar8.setY(bar8.getY() - 90);
-        bar9.setY((Math.random() * 150) + 170);
+        bar8.setY(bar8.getY() - 50);
+        bar9.setY((Math.random() * 150) + 200);
         bar9.setY(bar9.getY() + 75);
         bar9.setY(bar9.getY() - 100);
-        bar10.setY((Math.random() * 150) + 170);
+        bar10.setY((Math.random() * 150) + 200);
         bar10.setY(bar10.getY() + 80);
         bar10.setY(bar10.getY() - 90);
-        bar11.setY((Math.random() * 150) + 170);
+        bar11.setY((Math.random() * 150) + 200);
         bar11.setY(bar11.getY() + 75);
         bar11.setY(bar11.getY() - 100);
     }
