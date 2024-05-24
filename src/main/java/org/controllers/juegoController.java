@@ -51,7 +51,6 @@ public class juegoController implements Initializable {
     private long t_Nuevo;       //Tiempo medido para iteraciones
     private long t_inicio;      //Tiempo global
     private boolean reproduciendo;
-    private final long DELAY = 1647;
     //Delay necesario para que las teclas aparezcan on time, se modifica en funcion de la velocidad de bajada de las teclas
     private MediaPlayer reproductor;
 
@@ -87,23 +86,94 @@ public class juegoController implements Initializable {
     @FXML
     Label multiplo;
 
-
+    /**
+     *Metodo de inicializacion para la Ventana juego, en la cual se settean varios parametros importantes para el juego
+     * como lo son la timeLine de la animacion, la inicializacion de los eventos de teclado y botones, la
+     * inicializacion de la cancion y finalmente se da una pausa de 2 segundos para que el jugador se prepare y despues
+     * se llama al metodo play de timeline para iniciar la animacion del juego,
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        //Dicta la frecuencia de refresco de la animacion, mientas menor sea el numero mayor seran los fps del juego
-        //Aproximadamente, 50 dan 20fps, 33 son 30 fps, 16 son 60fps
-        int REPETITION_MILIS = 16;
-        this.timeline = new Timeline(new KeyFrame(Duration.millis(REPETITION_MILIS), event -> print()));    //Animacion
-        this.aux = cancionSeleccionada.getTeclas_pulsadas().getVertice(0);
-        this.timeline.setCycleCount(Timeline.INDEFINITE);   //Ciclos que durara la animacion
-        this.t_inicio = this.t_Nuevo = System.currentTimeMillis();
-
+        this.initTimeline();
         this.initKeyboard();
         this.initButtons();
+        this.initReproduction(0);
+        this.t_inicio = this.t_Nuevo = System.currentTimeMillis();
+        this.timeline.play();
+    }
 
+
+    private void initTimeline(){
+        //REPETITION_MILIS dicta la frecuencia de refresco de la animacion,
+        // mientas menor sea el numero mayor seran los fps del juego
+        //Aproximadamente, 50 dan 20fps, 33 son 30 fps, 16 son 60fps
+        int REPETITION_MILIS = 16;
+
+        this.timeline = new Timeline(new KeyFrame(Duration.millis(REPETITION_MILIS), event -> print()));    //Animacion
+        this.timeline.setCycleCount(Timeline.INDEFINITE);   //Ciclos que durara la animacion
+    }
+
+    /**
+     * KeyListener para los eventos del teclado, cuando se presiona una tecla realiza un switch para ver si se
+     * Presiono una tecla de interes, en caso de que si, acciona los eventos de la GUI Necesarios, los cuales son
+     * darle focus al boton, accionarlo y realizar la animacion de que se pulsó (pulsado y liberado)
+     * si se pulsa la tecla ESC
+     */
+    private void initKeyboard(){
+
+        this.principal.addEventHandler(KeyEvent.KEY_PRESSED, keyEvent -> {
+            KeyCode code = keyEvent.getCode();
+
+            if(this.timeline.getStatus() == Animation.Status.RUNNING) {
+                switch (code) {
+                    case Q:
+                        this.RedButton.setFocusTraversable(true);
+                        this.RedButton.fire();
+                        break;
+                    case W:
+                        this.BlueButton.setFocusTraversable(true);
+                        this.BlueButton.fire();
+                        break;
+                    case E:
+                        this.YellowButton.setFocusTraversable(true);
+                        this.YellowButton.fire();
+                        break;
+                    case O:
+                        this.GreenButton.setFocusTraversable(true);
+                        this.GreenButton.fire();
+                        break;
+                    case P:
+                        this.OrangeButton.setFocusTraversable(true);
+                        this.OrangeButton.fire();
+                        break;
+                    case ESCAPE:
+                        pause();
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
+    }
+
+    private void initButtons(){
+        this.RedButton.toFront();
+        this.BlueButton.toFront();
+        this.YellowButton.toFront();
+        this.GreenButton.toFront();
+        this.OrangeButton.toFront();
+        Sprite.setStylesButton(RedButton,"..\\..\\images\\RedButton.png");
+        Sprite.setStylesButton(BlueButton, "..\\..\\images\\BlueButton.png");
+        Sprite.setStylesButton(YellowButton, "..\\..\\images\\YellowButton.png");
+        Sprite.setStylesButton(GreenButton, "..\\..\\images\\GreenButton.png");
+        Sprite.setStylesButton(OrangeButton, "..\\..\\images\\OrangeButton.png");
+    }
+
+    private void initReproduction(int SongID){
         //TODO tomar el ID de la cancion seleccionada y cargar toda la cancion para guardarla en un objeto Song, puede ser:
         //this.cancionSeleccionada = loadSongFromSQL(song_ID);
         this.cancionSeleccionada = TestGraph.RealizarTest();
+        this.aux = cancionSeleccionada.getTeclas_pulsadas().getVertice(0);
 
         //Settea reproductor con la cancion seleccionada
         String audioFilePath = cancionSeleccionada.getRuta();
@@ -111,12 +181,7 @@ public class juegoController implements Initializable {
         Media media = new Media(mediaUrl);
         this.reproductor = new MediaPlayer(media);
         this.reproduciendo = false;
-
-
-
-        this.timeline.play();
     }
-
 
     private void print() {
 
@@ -124,6 +189,7 @@ public class juegoController implements Initializable {
         Tecla lastTecla = null;
         long t_final = System.currentTimeMillis();
         long dt = t_final - t_Nuevo;     //Esto sera en milisegundos
+        final long DELAY = 1647;
         if (t_final - t_inicio > DELAY && !reproduciendo) {
             reproduciendo = true;
             reproductor.play();
@@ -198,64 +264,10 @@ public class juegoController implements Initializable {
         }
     }
 
-    /**
-     * KeyListener para los eventos del teclado, cuando se presiona una tecla realiza un switch para ver si se
-     * Presiono una tecla de interes, en caso de que si, acciona los eventos de la GUI Necesarios, los cuales son
-     * darle focus al boton, accionarlo y realizar la animacion de que se pulsó (pulsado y liberado)
-     * si se pulsa la tecla ESC
-     */
-    private void initKeyboard(){
-
-        this.principal.addEventHandler(KeyEvent.KEY_PRESSED, keyEvent -> {
-            KeyCode code = keyEvent.getCode();
-
-            if(this.timeline.getStatus() == Animation.Status.RUNNING) {
-                switch (code) {
-                    case Q:
-                        this.RedButton.setFocusTraversable(true);
-                        this.RedButton.fire();
-                        break;
-                    case W:
-                        this.BlueButton.setFocusTraversable(true);
-                        this.BlueButton.fire();
-                        break;
-                    case E:
-                        this.YellowButton.setFocusTraversable(true);
-                        this.YellowButton.fire();
-                        break;
-                    case O:
-                        this.GreenButton.setFocusTraversable(true);
-                        this.GreenButton.fire();
-                        break;
-                    case P:
-                        this.OrangeButton.setFocusTraversable(true);
-                        this.OrangeButton.fire();
-                        break;
-                    case ESCAPE:
-                        pause();
-                        break;
-                    default:
-                        break;
-                }
-            }
-        });
-    }
-
-    private void initButtons(){
-        this.RedButton.toFront();
-        this.BlueButton.toFront();
-        this.YellowButton.toFront();
-        this.GreenButton.toFront();
-        this.OrangeButton.toFront();
-        Sprite.setStylesButton(RedButton,"..\\..\\images\\RedButton.png");
-        Sprite.setStylesButton(BlueButton, "..\\..\\images\\BlueButton.png");
-        Sprite.setStylesButton(YellowButton, "..\\..\\images\\YellowButton.png");
-        Sprite.setStylesButton(GreenButton, "..\\..\\images\\GreenButton.png");
-        Sprite.setStylesButton(OrangeButton, "..\\..\\images\\OrangeButton.png");
-    }
 
     private void pause(){
         timeline.pause();
+        reproductor.pause();
         RedButton.setDisable(true);
         BlueButton.setDisable(true);
         YellowButton.setDisable(true);
@@ -264,6 +276,8 @@ public class juegoController implements Initializable {
         PausePane.setVisible(true);
         PausePane.toFront();
     }
+
+
     @FXML
     public void continuar() {
         PausePane.setVisible(false);
@@ -273,7 +287,10 @@ public class juegoController implements Initializable {
         GreenButton.setDisable(false);
         OrangeButton.setDisable(false);
         timeline.play();
+        reproductor.play();
     }
+
+
     @FXML //TODO Retorno al menu
     public void back(ActionEvent event) throws IOException {
         Pane root = loadFXML("Menu");
@@ -281,14 +298,18 @@ public class juegoController implements Initializable {
         scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
-
-
+        reproductor.stop();
+        timeline.stop();
     }
+
+
     @FXML
     private void btnRActivado(){
         Rectangle rect = this.makeRect(RedButton);
         checkColitions(rect);
     }
+
+
     @FXML
     private void btnBActivado(){
         Rectangle rect = this.makeRect(BlueButton);
@@ -298,6 +319,8 @@ public class juegoController implements Initializable {
         sprite.setOnFinished(actionEvent -> sprite.resetAnimation());
         sprite.play();
     }
+
+
     @FXML
     private void btnYActivado(){
         Rectangle rect = this.makeRect(YellowButton);
@@ -307,6 +330,8 @@ public class juegoController implements Initializable {
         sprite.setOnFinished(actionEvent -> sprite.resetAnimation());
         sprite.play();
     }
+
+
     @FXML
     private void btnGActivado(){
         Rectangle rect = this.makeRect(GreenButton);
@@ -316,6 +341,8 @@ public class juegoController implements Initializable {
         sprite.setOnFinished(actionEvent -> sprite.resetAnimation());
         sprite.play();
     }
+
+
     @FXML
     private void btnOActivado(){
         Rectangle rect = this.makeRect(OrangeButton);
