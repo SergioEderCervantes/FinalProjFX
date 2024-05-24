@@ -5,18 +5,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Tecla {
-    Color color;
     String tipo;
     double tiempoInicio;
     double tiempoFin;
     private final Integer tecla_ID;
     private final List<Arista> aristasAdyacentes;
-    public static final Color[] ColoresPosibles = {Color.RED,Color.BLUE,Color.YELLOW,Color.GREEN, Color.ORANGE};
     public int numColor;
     public Tecla() {
         aristasAdyacentes = new ArrayList<>();
         numColor = (int)(Math.random() * 5);
-        color = ColoresPosibles[numColor];
         tiempoInicio = 0;
         tiempoFin = 0;
         tecla_ID = 0;
@@ -26,7 +23,6 @@ public class Tecla {
     public Tecla(int id) {
         this.tecla_ID = id;
         numColor = (int)(Math.random() * 4);
-        color = ColoresPosibles[numColor];
         tiempoInicio = 0;
         tiempoFin = 0;
         tipo = "null";
@@ -37,9 +33,8 @@ public class Tecla {
         this.tecla_ID = tecla_ID;
         this.tiempoFin = tiempoFin;
         this.tiempoInicio = tiempoInicio;
-        this.tipo = "null";
+        this.tipo = "larga";
         this.numColor = (int)(Math.random() * 5);
-        this.color = ColoresPosibles[numColor];
         this.aristasAdyacentes = new ArrayList<>();
     }
     public Tecla(Integer tecla_ID, double tiempoInicio) {
@@ -48,7 +43,6 @@ public class Tecla {
         this.tiempoFin = tiempoInicio +1;
         this.tipo = "c";
         this.numColor = (int)(Math.random() * 5);
-        this.color = ColoresPosibles[numColor];
         this.aristasAdyacentes = new ArrayList<>();
 
     }
@@ -59,13 +53,19 @@ public class Tecla {
             this.tiempoFin = t.tiempoFin;
             this.tiempoInicio = t.tiempoInicio;
             this.numColor = t.numColor;
-            this.color = t.color;
             this.aristasAdyacentes = t.aristasAdyacentes;
             this.tipo = t.tipo;
         }
         else {
             throw new Exception("Exception: llamada al constructor copia de un objeto nulo o intento de reasignacion");
         }
+    }
+
+    public Tecla (Integer tecla_ID, double tiempoInicio, int numColor) {
+        this.tecla_ID = tecla_ID;
+        this.tiempoInicio = tiempoInicio;
+        this.numColor = numColor;
+        this.aristasAdyacentes = new ArrayList<>();
     }
 
     public Integer getTecla_ID() {
@@ -86,10 +86,6 @@ public class Tecla {
 
     public int getNumAristasAdyacentes(){
         return aristasAdyacentes.size();
-    }
-
-    public Color getColor() {
-        return color;
     }
 
     public void agregarArista(Tecla destino, double peso) {
