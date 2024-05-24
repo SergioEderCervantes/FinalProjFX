@@ -74,6 +74,7 @@ public class menuController {
         String s = "src/main/resources/music/menu.mp3";
         Media h = new Media(Paths.get(s).toUri().toString());
         mediaPlayer = new MediaPlayer(h);
+        mediaPlayer.setVolume(0.1);
         mediaPlayer.play();
 
     }
