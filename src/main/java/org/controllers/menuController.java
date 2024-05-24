@@ -108,6 +108,7 @@ public class menuController {
     }
 
     public void switchToJugador(ActionEvent event) throws IOException {
+        mediaPlayer.stop();
         Pane root = loadFXML("Jugador");
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root);
@@ -116,6 +117,7 @@ public class menuController {
     }
 
     public void switchToEditor(ActionEvent event) throws IOException {
+        mediaPlayer.stop();
         Pane root = loadFXML("Editor");
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root);
@@ -124,6 +126,7 @@ public class menuController {
     }
 
     public void switchToSalida(ActionEvent event) throws IOException {
+        mediaPlayer.stop();
         System.exit(0);
     }
 }
