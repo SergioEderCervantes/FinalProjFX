@@ -264,7 +264,9 @@ public class juegoController implements Initializable {
         }
     }
 
-
+    /**
+     * En la pausa, pausa la animacion de las teclas, la cancion y los botones, asi como habilita el panel de pausa
+     */
     private void pause(){
         timeline.pause();
         reproductor.pause();

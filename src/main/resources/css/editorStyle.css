@@ -1,0 +1,14 @@
+.anchorPane {
+    -fx-background-color: #1a1b26 ;
+}
+
+.sideBar{
+    -fx-background-color: #c314b6;
+}
+.marcos {
+    -fx-fill: #c314b6;
+}
+
+.filePane {
+    -fx-background-color: #FFFFFF;
+}
