@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Tecla {
-    String tipo;
+
     double tiempoInicio;
     double tiempoFin;
     private final Integer tecla_ID;
@@ -17,7 +17,7 @@ public class Tecla {
         tiempoInicio = 0;
         tiempoFin = 0;
         tecla_ID = 0;
-        tipo = "null";
+
     }
 
     public Tecla(int id) {
@@ -25,7 +25,7 @@ public class Tecla {
         numColor = (int)(Math.random() * 4);
         tiempoInicio = 0;
         tiempoFin = 0;
-        tipo = "null";
+
         this.aristasAdyacentes = new ArrayList<>();
     }
 
@@ -33,7 +33,7 @@ public class Tecla {
         this.tecla_ID = tecla_ID;
         this.tiempoFin = tiempoFin;
         this.tiempoInicio = tiempoInicio;
-        this.tipo = "larga";
+
         this.numColor = (int)(Math.random() * 5);
         this.aristasAdyacentes = new ArrayList<>();
     }
@@ -41,7 +41,7 @@ public class Tecla {
         this.tecla_ID = tecla_ID;
         this.tiempoInicio = tiempoInicio;
         this.tiempoFin = tiempoInicio +1;
-        this.tipo = "c";
+
         this.numColor = (int)(Math.random() * 5);
         this.aristasAdyacentes = new ArrayList<>();
 
@@ -54,7 +54,7 @@ public class Tecla {
             this.tiempoInicio = t.tiempoInicio;
             this.numColor = t.numColor;
             this.aristasAdyacentes = t.aristasAdyacentes;
-            this.tipo = t.tipo;
+
         }
         else {
             throw new Exception("Exception: llamada al constructor copia de un objeto nulo o intento de reasignacion");
