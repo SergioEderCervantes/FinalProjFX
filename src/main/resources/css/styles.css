@@ -1,7 +1,17 @@
+
 .button-glow {
     -fx-background-color: rgba(255, 255, 255, 0.3); /* Botón semitransparente */
     -fx-border-color: transparent;
     -fx-border-width: 2;
     -fx-effect: dropshadow(gaussian, rgba(128, 0, 128, 0.8), 15, 0.5, 0, 0); /* Brillo morado */
     -fx-text-fill: white; /* Color del texto del botón */
+}
+.button:hover {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%,#EE82EE,  #B57EDC);
+    -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.75), 15, 0.5, 0, 0);
+}
+
+.button:pressed {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #9065CA	, #FF000000);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.9), 10, 0.5, 0, 0);
 }

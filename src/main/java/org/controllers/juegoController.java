@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
+import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -66,6 +67,8 @@ public class juegoController implements Initializable {
     @FXML
     Rectangle HorizontalRect;
     @FXML
+    ImageView img;
+    @FXML
     Line l1;
     @FXML
     Line l2;
@@ -78,8 +81,11 @@ public class juegoController implements Initializable {
     @FXML
     Label score;
     @FXML
+    Label scoref;
+    @FXML
     Label multiplo;
-
+    @FXML
+    Pane finalPanel;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -121,6 +127,7 @@ public class juegoController implements Initializable {
         long dt = t_final - t_inicio;     //Esto sera en milisegundos
 
         score.setText(String.valueOf(puntaje));
+
         multiplo.setVisible(multiplicador != 1);
 
         multiplo.setText("x" + multiplicador);
@@ -150,7 +157,10 @@ public class juegoController implements Initializable {
                 }
             }
         }catch (Exception e){}
-
+        if(teclasEnPantalla.isEmpty() && aux.getNumAristasAdyacentes() == 0){
+            scoref.setText(String.valueOf(puntaje));
+            pantallaFinal();
+        }
         //Agregamos las nuevas teclas si deben de aparecer
         if (aux.getNumAristasAdyacentes() != 0) {
             if (dt >= aux.getDtSiguiente()) {
@@ -195,7 +205,6 @@ public class juegoController implements Initializable {
      * si se pulsa la tecla ESC
      */
     private void initKeyboard(){
-
         this.principal.addEventHandler(KeyEvent.KEY_PRESSED, keyEvent -> {
             KeyCode code = keyEvent.getCode();
 
@@ -204,6 +213,7 @@ public class juegoController implements Initializable {
                     case Q:
                         this.RedButton.setFocusTraversable(true);
                         this.RedButton.fire();
+
                     break;
                 case W:
                     this.BlueButton.setFocusTraversable(true);
@@ -212,10 +222,12 @@ public class juegoController implements Initializable {
                 case E:
                     this.YellowButton.setFocusTraversable(true);
                     this.YellowButton.fire();
+
                     break;
                 case O:
                     this.GreenButton.setFocusTraversable(true);
                     this.GreenButton.fire();
+
                     break;
                 case P:
                     this.OrangeButton.setFocusTraversable(true);
@@ -237,11 +249,16 @@ public class juegoController implements Initializable {
         this.YellowButton.toFront();
         this.GreenButton.toFront();
         this.OrangeButton.toFront();
-        Sprite.setStylesButton(RedButton,"..\\..\\images\\RedButton.png");
-        Sprite.setStylesButton(BlueButton, "..\\..\\images\\BlueButton.png");
-        Sprite.setStylesButton(YellowButton, "..\\..\\images\\YellowButton.png");
-        Sprite.setStylesButton(GreenButton, "..\\..\\images\\GreenButton.png");
-        Sprite.setStylesButton(OrangeButton, "..\\..\\images\\OrangeButton.png");
+
+    }
+    private void pantallaFinal(){
+        timeline.pause();
+        RedButton.setDisable(true);
+        BlueButton.setDisable(true);
+        YellowButton.setDisable(true);
+        GreenButton.setDisable(true);
+        OrangeButton.setDisable(true);
+        finalPanel.setVisible(true);
     }
 
     private void pause(){
@@ -266,6 +283,11 @@ public class juegoController implements Initializable {
     }
     @FXML //TODO Retorno al menu
     public void back(ActionEvent event) throws IOException {
+        RedButton.setDisable(false);
+        BlueButton.setDisable(false);
+        YellowButton.setDisable(false);
+        GreenButton.setDisable(false);
+        OrangeButton.setDisable(false);
         Pane root = loadFXML("Menu");
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root);
@@ -278,42 +300,31 @@ public class juegoController implements Initializable {
     private void btnRActivado(){
         Rectangle rect = this.makeRect(RedButton);
         checkColitions(rect);
+
     }
     @FXML
     private void btnBActivado(){
         Rectangle rect = this.makeRect(BlueButton);
         checkColitions(rect);
-        Sprite sprite = new Sprite((ImageView) BlueButton.getGraphic(),4,4,32,32);
-        sprite.setCycleCount(1);
-        sprite.setOnFinished(actionEvent -> sprite.resetAnimation());
-        sprite.play();
+
     }
     @FXML
     private void btnYActivado(){
         Rectangle rect = this.makeRect(YellowButton);
         checkColitions(rect);
-        Sprite sprite = new Sprite((ImageView) YellowButton.getGraphic(),4,4,32,32);
-        sprite.setCycleCount(1);
-        sprite.setOnFinished(actionEvent -> sprite.resetAnimation());
-        sprite.play();
+
     }
     @FXML
     private void btnGActivado(){
         Rectangle rect = this.makeRect(GreenButton);
         checkColitions(rect);
-        Sprite sprite = new Sprite((ImageView) GreenButton.getGraphic(),4,4,32,32);
-        sprite.setCycleCount(1);
-        sprite.setOnFinished(actionEvent -> sprite.resetAnimation());
-        sprite.play();
+
     }
     @FXML
     private void btnOActivado(){
         Rectangle rect = this.makeRect(OrangeButton);
         checkColitions(rect);
-        Sprite sprite = new Sprite((ImageView) OrangeButton.getGraphic(),4,4,32,32);
-        sprite.setCycleCount(1);
-        sprite.setOnFinished(actionEvent -> sprite.resetAnimation());
-        sprite.play();
+
     }
 
     private Rectangle makeRect(Button btn){
@@ -327,6 +338,7 @@ public class juegoController implements Initializable {
         this.l3.toBack();
         this.l4.toBack();
         this.l5.toBack();
+        this.img.toBack();
     }
 
     private void checkColitions(Rectangle rect){
@@ -342,15 +354,15 @@ public class juegoController implements Initializable {
                 puntaje = puntaje+(multiplicador * 25);
                 cont++;
 
-                if(cont>=4 && cont<8){
+                if(cont>=8 && cont<12){
                     multiplicador=2;
                 }
                 else {
-                    if (cont >= 8 && cont < 12) {
+                    if (cont >= 12 && cont < 24) {
                         multiplicador = 4;
                     }
                     else {
-                        if (cont >= 12) {
+                        if (cont >= 24) {
                             multiplicador = 8;
                         }
                     }
@@ -360,13 +372,11 @@ public class juegoController implements Initializable {
                 circle.setVisible(false);
 
                     //Esto es mil veces mejor que destruirlo aqui
-                System.out.println("Score: "+puntaje);
                 return;
             }
             else {
 
-                multiplicador = 1;
-                cont = 0;
+
 
             }
             band=0;

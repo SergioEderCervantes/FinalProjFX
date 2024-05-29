@@ -1,0 +1,128 @@
+.track-pane {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #3b1d64, #1a0842);
+    -fx-padding: 10;
+    -fx-border-color: #FFFFFF;
+    -fx-border-width: 2;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 10, 0.5, 0, 0);
+}
+
+.track-line {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #ff0000, #ff6600);
+    -fx-border-color: white;
+    -fx-border-width: 1;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-effect: dropshadow(gaussian, rgba(255,255,255,1.0), 15, 0.8, 0, 0);
+}
+
+.track-line.red {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #ff0000, #ff6600);
+}
+
+.track-line.green {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #00ff00, #66ff66);
+}
+
+.track-line.blue {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #0000ff, #6666ff);
+}
+
+.track-line.yellow {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #ffff00, #ffff66);
+}
+
+.track-button {
+    -fx-background-color: linear-gradient(to bottom, #444444, #222222);
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 15;
+    -fx-padding: 10 15;
+    -fx-border-color: transparent;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.6), 10, 0, 0, 0);
+    -fx-transition: background-color 0.2s, transform 0.1s;
+}
+
+.track-button.red {
+    -fx-background-color: #ff0000;
+    -fx-effect: dropshadow(three-pass-box, rgba(255, 0, 0, 0.6), 10, 0, 0, 0);
+}
+
+.track-button.green {
+    -fx-background-color: #00ff00;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 255, 0, 0.6), 10, 0, 0, 0);
+}
+
+.track-button.blue {
+    -fx-background-color: #0000ff;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 255, 0.6), 10, 0, 0, 0);
+
+}
+
+.track-button.yellow {
+    -fx-background-color: #ffff00;
+    -fx-effect: dropshadow(three-pass-box, rgba(255, 255, 0, 0.6), 10, 0, 0, 0);
+}
+
+.track-button.orange {
+    -fx-background-color: #ff6600;
+    -fx-effect: dropshadow(three-pass-box, rgba(255, 165, 0, 0.6), 10, 0, 0, 0);
+}
+
+.track-button:pressed {
+    -fx-background-color: #111111;
+    -fx-transform: scale(0.95);
+}
+
+.track-button.red:pressed {
+    -fx-background-color: #cc0000;
+
+
+}
+
+.track-button.green:pressed {
+    -fx-background-color: #00cc00;
+}
+
+.track-button.blue:pressed {
+    -fx-background-color: #0000cc;
+
+}
+
+.track-button.yellow:pressed {
+    -fx-background-color: #cccc00;
+
+}
+
+.track-button.orange:pressed. {
+    -fx-background-color: #cc5200;
+
+}
+
+.rectangle {
+    -fx-fill: linear-gradient(from 0% 0% to 100% 100%, #3b1d64, #1a0842);
+    -fx-stroke: #ffffff;
+    -fx-stroke-width: 2;
+    -fx-effect: dropshadow(gaussian, rgba(72,61,139,0.75), 15, 0.5, 0, 0);
+}
+
+.transparent-black-rectangle {
+    -fx-fill: rgba(0, 0, 0, 0.5); /* Fondo negro semitransparente */
+    -fx-stroke: white; /* Borde blanco */
+    -fx-stroke-width: 2; /* Ancho del borde */
+    -fx-effect: dropshadow(gaussian, rgba(255, 255, 255, 0.8), 10, 0.5, 0, 0); /* Sombra blanca brillante */
+}
+.transparent-button {
+    -fx-background-color: transparent; /* Fondo transparente */
+    -fx-border-color: white; /* Borde blanco */
+    -fx-border-width: 2; /* Ancho del borde */
+    -fx-text-fill: white; /* Letra blanca */
+    -fx-font-weight: normal; /* Letra en negrita */
+    -fx-padding: 10 20; /* Relleno del botón */
+    -fx-effect: dropshadow(gaussian, rgba(255, 255, 255, 0.8), 10, 0.5, 0, 0), /* Sombra blanca brillante */
+    glow(75);
+}
+
