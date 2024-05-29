@@ -19,6 +19,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
 import org.Modules.MySqlConn;
+import org.Modules.Pair;
 import org.Modules.Song;
 import org.Modules.Tecla;
 
@@ -26,17 +27,17 @@ import org.Modules.Tecla;
 import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Objects;
+
 
 
 public class editorController {
 
-   Song nuevaCancion;
-   MediaPlayer mediaPlayer;
-   boolean enReproduccion = false;
-   Timeline animacionReproduccion;
-   ArrayList<Tecla> teclasApulsar = new ArrayList<>();
-
+   private Song nuevaCancion;
+   private MediaPlayer mediaPlayer;
+   private boolean enReproduccion = false;
+   private Timeline animacionReproduccion;
+   private ArrayList<Tecla> teclasApulsar = new ArrayList<>();
+   private Pair[] map;
    //Variables FXML
     @FXML
     private TextField songName;
@@ -98,6 +99,7 @@ public class editorController {
         conn.consult(query);
         int n = 0;
 
+
         this.comboBox.setVisible(true);
         this.comboBox.setDisable(false);
 
@@ -111,17 +113,16 @@ public class editorController {
                 e.printStackTrace();
             }
             String []resultados = new String[n];
+            this.map = new Pair[n];
             for (int i = 0; i < n; i++) {
                 try {
-
-                    resultados[i] = (conn.rs.getString(2)) + (".");
-
+                    resultados[i] = (conn.rs.getString(2));
+                    map[i] = new Pair<Integer,String>(conn.rs.getInt(1),conn.rs.getString(2));
                     conn.rs.next();
                 }catch (SQLException e){
                     e.printStackTrace();
                 }
             }
-            System.out.println(resultados[0]);
             comboBox.getItems().setAll(resultados);
         }
         conn.closeRsStmt();
@@ -144,37 +145,42 @@ public class editorController {
     @FXML
     private void editarCancion(ActionEvent event){
         //TODO configurar el media player para poner la cancion, asi como descargar las teclas de la BD, hechale ganitas
-        MySqlConn conn = new MySqlConn();
-        final String query = "SELECT * FROM song";
-        conn.consult(query);
-        int n = 0;
-        String nombreSeleccionado = comboBox.getValue();
-        if (conn.rs != null){
-            try {
-                conn.rs.last();
-                n = conn.rs.getRow();
-                conn.rs.first();
-            }catch (SQLException e){}
-            StringBuilder resultado = new StringBuilder();
-            for (int i = 0; i < n; i++) {
-                try {
-                    if (Objects.equals(conn.rs.getString(2), nombreSeleccionado)){
-                        this.nuevaCancion = new Song(conn.rs.getString(2),conn.rs.getString(3),
-                                0);
-                        break;
-                    }
-                    conn.rs.next();
-                }catch (SQLException e){}
+        int songId = 100;
+        System.out.println(comboBox.getValue());
+        for (int i = 0; i < map.length; i++) {
+            System.out.println(map[i].getSecond());
+            if (map[i].getSecond().equals(comboBox.getValue())){
+                songId = i;
             }
         }
+        //Hacer que si songId == 100 salte error
+        songId++;
+        final String query = "SELECT * FROM song WHERE idSong = " + songId;
+        MySqlConn conn = new MySqlConn();
+        conn.consult(query);
+        String name = "";
+        String path = "";
+        if (conn.rs != null){
+            try {
+                conn.rs.first();
+                name = conn.rs.getString(2);
+                path = conn.rs.getString(3);
+            }catch (SQLException e){}
+        }
+        this.songName.setText(name);
+        this.songPath.setText(path);
 
 
+        try{
+            String mediaURL = new File(path).toURI().toString();
+            Media media = new Media(mediaURL);
+            this.mediaPlayer = new MediaPlayer(media);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        AcceptPista.setDisable(false);
 
-//        try{
-//            String mediaURL = new File(path).toURI().toString();
-//            Media media = new Media(mediaURL);
-//            this.mediaPlayer = new MediaPlayer(media);
-//        }
+//        this.cargarTeclas(conn,idSong);
     }
 
 
@@ -369,4 +375,18 @@ public class editorController {
         this.timeDisplay.setText(timepo);
     }
 
+    private void cargarTeclas(MySqlConn conn, int idSong){
+        final String query = "SELECT * FROM tecla WHERE idSong = " + idSong;
+        conn.consult(query);
+
+        int n = 0;
+        if (conn.rs != null){
+            try {
+                conn.rs.last();
+                n = conn.rs.getRow();
+                conn.rs.first();
+            }catch (SQLException e){}
+
+        }
+    }
 }
