@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class TestGraph {
     public static Song RealizarTest(){
         ArrayList<Tecla> teclas = new ArrayList<>();
-        Song test = new Song("Vamonos a marte", "D:/files/UNI/Cuarto Semetre/Progra III/ProyectoFinal/FinalProjFX/src/main/resources/songs/vamonos_a_marte.mp3",200);
+        Song test = new Song("Vamonos a marte", "src/main/resources/songs/vamonos_a_marte.mp3",200);
         teclas.add(new Tecla(1,666,0));
         teclas.add(new Tecla(2,1000,1));
         teclas.add(new Tecla(3,1333,2));
