@@ -273,6 +273,7 @@ public class juegoController implements Initializable {
         this.GreenButton.toFront();
         this.OrangeButton.toFront();
 
+
     }
     private void pantallaFinal(){
         timeline.pause();
@@ -372,6 +373,7 @@ public class juegoController implements Initializable {
         this.l3.toBack();
         this.l4.toBack();
         this.l5.toBack();
+        this.img.toBack();
     }
 
     private void checkColitions(Rectangle rect){
