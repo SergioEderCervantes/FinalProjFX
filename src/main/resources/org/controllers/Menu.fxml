@@ -5,6 +5,8 @@
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.effect.Glow?>
+<?import javafx.scene.effect.Light.Distant?>
 <?import javafx.scene.effect.Lighting?>
 <?import javafx.scene.effect.Shadow?>
 <?import javafx.scene.image.Image?>
@@ -22,21 +24,12 @@
          <image>
             <Image url="@../../images/background.jpg" />
          </image>
-         <effect>
-            <Lighting diffuseConstant="1.32">
-               <bumpInput>
-                  <Shadow />
-               </bumpInput>
-               <light>
-                  
-               </light>
-            </Lighting>
-         </effect>
+
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
       </ImageView>
-      <Label fx:id="title" alignment="CENTER" contentDisplay="CENTER" layoutX="414.0" layoutY="30.0" prefHeight="125.0" prefWidth="391.0" styleClass="label-title" text="Neon Rhythmn" textAlignment="CENTER" textFill="#fffffff7">
+      <Label fx:id="title" alignment="CENTER" contentDisplay="CENTER" layoutX="414.0" layoutY="30.0" prefHeight="125.0" prefWidth="391.0" styleClass="label-title" text="The Game" textAlignment="CENTER" textFill="#fffffff7">
          <font>
             <Font name="Minecraft" size="46.0" />
          </font>
@@ -44,7 +37,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Label>
-      <Rectangle fx:id="bar1" height="430.0" layoutX="36.0" layoutY="170.0" rotate="180.0" width="66.0">
+      <Rectangle fx:id="bar1" height="430.0" layoutX="36.0" layoutY="170.0" opacity="0.79" rotate="180.0" width="66.0">
          <fill>
             <LinearGradient endX="1.0" endY="1.0" startY="0.5781990521327014">
                <stops>
@@ -61,7 +54,7 @@
                </stops>
             </LinearGradient>
          </fill></Rectangle>
-      <Rectangle fx:id="bar4" height="430.0" layoutX="372.0" layoutY="171.0" rotate="180.0" width="66.0">
+      <Rectangle fx:id="bar4" height="430.0" layoutX="372.0" layoutY="171.0" opacity="0.68" rotate="180.0" width="66.0">
          <fill>
             <LinearGradient endX="1.0" endY="1.0" startY="0.5545023696682464">
                <stops>
@@ -79,7 +72,7 @@
             </LinearGradient>
          </fill>
       </Rectangle>
-      <Rectangle fx:id="bar3" height="430.0" layoutX="260.0" layoutY="170.0" rotate="180.0" width="66.0">
+      <Rectangle fx:id="bar3" height="430.0" layoutX="260.0" layoutY="170.0" opacity="0.79" rotate="180.0" width="66.0">
          <fill>
             <LinearGradient endX="1.0" endY="1.0" startY="0.5118483412322274">
                <stops>
@@ -97,7 +90,7 @@
             </LinearGradient>
          </fill>
       </Rectangle>
-      <Rectangle fx:id="bar8" height="430.0" layoutX="787.0" layoutY="171.0" rotate="180.0" width="66.0">
+      <Rectangle fx:id="bar8" height="430.0" layoutX="787.0" layoutY="171.0" opacity="0.72" rotate="180.0" width="66.0">
          <fill>
             <LinearGradient endX="1.0" endY="1.0" startY="0.4976303317535545">
                <stops>
@@ -115,7 +108,7 @@
             </LinearGradient>
          </fill>
       </Rectangle>
-      <Rectangle fx:id="bar10" height="430.0" layoutX="995.0" layoutY="170.0" rotate="180.0" width="66.0">
+      <Rectangle fx:id="bar10" height="430.0" layoutX="995.0" layoutY="170.0" opacity="0.82" rotate="180.0" width="66.0">
          <fill>
             <LinearGradient endX="1.0" endY="1.0" startY="0.46919431279620855">
                <stops>
@@ -133,7 +126,7 @@
             </LinearGradient>
          </fill>
       </Rectangle>
-      <Rectangle fx:id="bar9" height="430.0" layoutX="892.0" layoutY="170.0" rotate="180.0" width="66.0">
+      <Rectangle fx:id="bar9" height="430.0" layoutX="892.0" layoutY="170.0" opacity="0.81" rotate="180.0" width="66.0">
          <fill>
             <LinearGradient endX="1.0" endY="1.0" startY="0.5071090047393365">
                <stops>
@@ -151,7 +144,7 @@
             </LinearGradient>
          </fill>
       </Rectangle>
-      <Rectangle fx:id="bar2" height="430.0" layoutX="143.0" layoutY="170.0" rotate="180.0" width="66.0">
+      <Rectangle fx:id="bar2" height="430.0" layoutX="143.0" layoutY="170.0" opacity="0.82" rotate="180.0" width="66.0">
          <fill>
             <LinearGradient endX="1.0" endY="1.0" startY="0.47867298578199047">
                <stops>
@@ -169,7 +162,7 @@
             </LinearGradient>
          </fill>
       </Rectangle>
-      <Button layoutX="541.0" layoutY="432.0" mnemonicParsing="false" onAction="#switchToSalida" prefHeight="64.0" prefWidth="147.0" styleClass="button-glow" text="Salir" textAlignment="CENTER" textOverrun="CLIP">
+      <Button layoutX="536.0" layoutY="432.0" mnemonicParsing="false" onAction="#switchToSalida" opacity="0.69" prefHeight="64.0" prefWidth="147.0" styleClass="button-glow" text="Salir" textAlignment="CENTER" textOverrun="CLIP">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
@@ -179,6 +172,9 @@
          <font>
             <Font name="Microsoft YaHei" size="15.0" />
          </font>
+         <effect>
+            <Glow level="0.64" />
+         </effect>
       </Button>
       <Button layoutX="536.0" layoutY="334.0" mnemonicParsing="false" onAction="#switchToEditor" prefHeight="64.0" prefWidth="147.0" styleClass="button-glow" text="Editor" textAlignment="CENTER" textOverrun="CLIP">
          <cursor>
@@ -191,7 +187,7 @@
             <Font name="Microsoft YaHei" size="15.0" />
          </font>
       </Button>
-      <Button layoutX="536.0" layoutY="236.0" mnemonicParsing="false" onAction="#switchToJugador" prefHeight="64.0" prefWidth="147.0" styleClass="button-glow" text="Jugar" textAlignment="CENTER" textOverrun="CLIP">
+      <Button fx:id="pulseButton" layoutX="536.0" layoutY="236.0" mnemonicParsing="false" onAction="#switchToJugador" prefHeight="64.0" prefWidth="147.0" styleClass="button-glow" text="Jugar" textAlignment="CENTER" textOverrun="CLIP">
          <font>
             <Font name="Microsoft YaHei" size="15.0" />
          </font>
@@ -202,7 +198,7 @@
             <Insets bottom="20.0" left="41.0" right="41.0" top="20.0" />
          </padding>
       </Button>
-      <Rectangle fx:id="bar11" height="430.0" layoutX="1096.0" layoutY="170.0" rotate="180.0" width="66.0">
+      <Rectangle fx:id="bar11" height="430.0" layoutX="1096.0" layoutY="170.0" opacity="0.72" rotate="180.0" width="66.0">
          <fill>
             <LinearGradient endX="1.0" endY="1.0" startY="0.4218009478672986">
                <stops>

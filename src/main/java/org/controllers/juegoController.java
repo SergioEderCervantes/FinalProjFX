@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
+import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -72,6 +73,8 @@ public class juegoController implements Initializable {
     @FXML
     Rectangle HorizontalRect;
     @FXML
+    ImageView img;
+    @FXML
     Line l1;
     @FXML
     Line l2;
@@ -84,7 +87,12 @@ public class juegoController implements Initializable {
     @FXML
     Label score;
     @FXML
+    Label scoref;
+    @FXML
     Label multiplo;
+    @FXML
+    Pane finalPanel;
+
 
     /**
      *Metodo de inicializacion para la Ventana juego, en la cual se settean varios parametros importantes para el juego
@@ -103,7 +111,7 @@ public class juegoController implements Initializable {
     }
 
 
-    private void initTimeline(){
+    private void initTimeline() {
         //REPETITION_MILIS dicta la frecuencia de refresco de la animacion,
         // mientas menor sea el numero mayor seran los fps del juego
         //Aproximadamente, 50 dan 20fps, 33 son 30 fps, 16 son 60fps
@@ -111,64 +119,11 @@ public class juegoController implements Initializable {
 
         this.timeline = new Timeline(new KeyFrame(Duration.millis(REPETITION_MILIS), event -> print()));    //Animacion
         this.timeline.setCycleCount(Timeline.INDEFINITE);   //Ciclos que durara la animacion
+        this.t_inicio = System.currentTimeMillis();
+
+        this.initKeyboard();
+        this.initButtons();
     }
-
-    /**
-     * KeyListener para los eventos del teclado, cuando se presiona una tecla realiza un switch para ver si se
-     * Presiono una tecla de interes, en caso de que si, acciona los eventos de la GUI Necesarios, los cuales son
-     * darle focus al boton, accionarlo y realizar la animacion de que se pulsó (pulsado y liberado)
-     * si se pulsa la tecla ESC
-     */
-    private void initKeyboard(){
-
-        this.principal.addEventHandler(KeyEvent.KEY_PRESSED, keyEvent -> {
-            KeyCode code = keyEvent.getCode();
-
-            if(this.timeline.getStatus() == Animation.Status.RUNNING) {
-                switch (code) {
-                    case Q:
-                        this.RedButton.setFocusTraversable(true);
-                        this.RedButton.fire();
-                        break;
-                    case W:
-                        this.BlueButton.setFocusTraversable(true);
-                        this.BlueButton.fire();
-                        break;
-                    case E:
-                        this.YellowButton.setFocusTraversable(true);
-                        this.YellowButton.fire();
-                        break;
-                    case O:
-                        this.GreenButton.setFocusTraversable(true);
-                        this.GreenButton.fire();
-                        break;
-                    case P:
-                        this.OrangeButton.setFocusTraversable(true);
-                        this.OrangeButton.fire();
-                        break;
-                    case ESCAPE:
-                        pause();
-                        break;
-                    default:
-                        break;
-                }
-            }
-        });
-    }
-
-    private void initButtons(){
-        this.RedButton.toFront();
-        this.BlueButton.toFront();
-        this.YellowButton.toFront();
-        this.GreenButton.toFront();
-        this.OrangeButton.toFront();
-        Sprite.setStylesButton(RedButton,"..\\..\\images\\RedButton.png");
-        Sprite.setStylesButton(BlueButton, "..\\..\\images\\BlueButton.png");
-        Sprite.setStylesButton(YellowButton, "..\\..\\images\\YellowButton.png");
-        Sprite.setStylesButton(GreenButton, "..\\..\\images\\GreenButton.png");
-        Sprite.setStylesButton(OrangeButton, "..\\..\\images\\OrangeButton.png");
-    }
-
     private void initReproduction(int SongID){
         //TODO tomar el ID de la cancion seleccionada y cargar toda la cancion para guardarla en un objeto Song, puede ser:
         //this.cancionSeleccionada = loadSongFromSQL(song_ID);
@@ -196,38 +151,40 @@ public class juegoController implements Initializable {
         }
 
         score.setText(String.valueOf(puntaje));
+
         multiplo.setVisible(multiplicador != 1);
         multiplo.setText("x" + multiplicador);
 
         //Primero desplaza todas las que ya existen hacia abajo y elimina del ArrayList y el Panel las teclas que ya no se ven
         try{
-            if (!teclasEnPantalla.isEmpty()) {
-                for (Circle circulo : teclasEnPantalla) {
-                    circulo.setCenterY(circulo.getCenterY() + 4);
-                    if(circulo.getCenterX() < 461 ){
-                        circulo.setCenterX(circulo.getCenterX() - 0.66666);
+            for (Circle circulo : teclasEnPantalla) {
+                circulo.setCenterY(circulo.getCenterY() + 3);
+                if(circulo.getCenterX() < 461 ){
+                    circulo.setCenterX(circulo.getCenterX() - 0.5);
+                }
+                else if(circulo.getCenterX() > 739){
+                    circulo.setCenterX(circulo.getCenterX() + 0.5);
+                }
+                else if(circulo.getCenterX() < 600){
+                    circulo.setCenterX(circulo.getCenterX() - 0.25);
+                }else if(circulo.getCenterX() >600){
+                    circulo.setCenterX(circulo.getCenterX() + 0.25);
+                }
+
+                if (circulo.getCenterY() > 620) {
+                    if(circulo.isVisible()){
+                        multiplicador=1;
+                        cont = 0;
                     }
-                    else if(circulo.getCenterX() > 739){
-                        circulo.setCenterX(circulo.getCenterX() + 0.66666);
-                    }
-                    else if(circulo.getCenterX() < 600){
-                        circulo.setCenterX(circulo.getCenterX() - 0.33333);
-                    }else if(circulo.getCenterX() >600){
-                        circulo.setCenterX(circulo.getCenterX() + 0.33333);
-                    }
-                    //Si el circulo se sale del rango de la pantalla, se borra
-                    if (circulo.getCenterY() > 620) {
-                        if(circulo.isVisible()){
-                            multiplicador=1;
-                            cont = 0;
-                        }
-                        teclasEnPantalla.remove(circulo);
-                        principal.getChildren().remove(circulo);
-                    }
+                    teclasEnPantalla.remove(circulo);
+                    principal.getChildren().remove(circulo);
                 }
             }
         }catch (Exception e){}
-
+        if(teclasEnPantalla.isEmpty() && aux.getNumAristasAdyacentes() == 0){
+            scoref.setText(String.valueOf(puntaje));
+            pantallaFinal();
+        }
         //Agregamos las nuevas teclas si deben de aparecer
         if (aux.getNumAristasAdyacentes() != 0) {
             if (dt >= aux.getDtSiguiente()) {
@@ -264,6 +221,68 @@ public class juegoController implements Initializable {
         }
     }
 
+    /**
+     * KeyListener para los eventos del teclado, cuando se presiona una tecla realiza un switch para ver si se
+     * Presiono una tecla de interes, en caso de que si, acciona los eventos de la GUI Necesarios, los cuales son
+     * darle focus al boton, accionarlo y realizar la animacion de que se pulsó (pulsado y liberado)
+     * si se pulsa la tecla ESC
+     */
+    private void initKeyboard(){
+        this.principal.addEventHandler(KeyEvent.KEY_PRESSED, keyEvent -> {
+            KeyCode code = keyEvent.getCode();
+
+            if(this.timeline.getStatus() == Animation.Status.RUNNING) {
+                switch (code) {
+                    case Q:
+                        this.RedButton.setFocusTraversable(true);
+                        this.RedButton.fire();
+
+                    break;
+                case W:
+                    this.BlueButton.setFocusTraversable(true);
+                    this.BlueButton.fire();
+                    break;
+                case E:
+                    this.YellowButton.setFocusTraversable(true);
+                    this.YellowButton.fire();
+
+                    break;
+                case O:
+                    this.GreenButton.setFocusTraversable(true);
+                    this.GreenButton.fire();
+
+                    break;
+                case P:
+                    this.OrangeButton.setFocusTraversable(true);
+                    this.OrangeButton.fire();
+                    break;
+                case ESCAPE:
+                    pause();
+                    break;
+                default:
+                    break;
+                }
+            }
+        });
+    }
+
+    private void initButtons(){
+        this.RedButton.toFront();
+        this.BlueButton.toFront();
+        this.YellowButton.toFront();
+        this.GreenButton.toFront();
+        this.OrangeButton.toFront();
+
+    }
+    private void pantallaFinal(){
+        timeline.pause();
+        RedButton.setDisable(true);
+        BlueButton.setDisable(true);
+        YellowButton.setDisable(true);
+        GreenButton.setDisable(true);
+        OrangeButton.setDisable(true);
+        finalPanel.setVisible(true);
+    }
 
     private void pause(){
         timeline.pause();
@@ -300,9 +319,10 @@ public class juegoController implements Initializable {
         stage.show();
         reproductor.stop();
         timeline.stop();
+
+
+
     }
-
-
     @FXML
     private void btnRActivado(){
         Rectangle rect = this.makeRect(RedButton);
@@ -314,10 +334,7 @@ public class juegoController implements Initializable {
     private void btnBActivado(){
         Rectangle rect = this.makeRect(BlueButton);
         checkColitions(rect);
-        Sprite sprite = new Sprite((ImageView) BlueButton.getGraphic(),4,4,32,32);
-        sprite.setCycleCount(1);
-        sprite.setOnFinished(actionEvent -> sprite.resetAnimation());
-        sprite.play();
+
     }
 
 
@@ -325,10 +342,7 @@ public class juegoController implements Initializable {
     private void btnYActivado(){
         Rectangle rect = this.makeRect(YellowButton);
         checkColitions(rect);
-        Sprite sprite = new Sprite((ImageView) YellowButton.getGraphic(),4,4,32,32);
-        sprite.setCycleCount(1);
-        sprite.setOnFinished(actionEvent -> sprite.resetAnimation());
-        sprite.play();
+
     }
 
 
@@ -336,10 +350,7 @@ public class juegoController implements Initializable {
     private void btnGActivado(){
         Rectangle rect = this.makeRect(GreenButton);
         checkColitions(rect);
-        Sprite sprite = new Sprite((ImageView) GreenButton.getGraphic(),4,4,32,32);
-        sprite.setCycleCount(1);
-        sprite.setOnFinished(actionEvent -> sprite.resetAnimation());
-        sprite.play();
+
     }
 
 
@@ -347,10 +358,7 @@ public class juegoController implements Initializable {
     private void btnOActivado(){
         Rectangle rect = this.makeRect(OrangeButton);
         checkColitions(rect);
-        Sprite sprite = new Sprite((ImageView) OrangeButton.getGraphic(),4,4,32,32);
-        sprite.setCycleCount(1);
-        sprite.setOnFinished(actionEvent -> sprite.resetAnimation());
-        sprite.play();
+
     }
 
     private Rectangle makeRect(Button btn){
@@ -379,27 +387,28 @@ public class juegoController implements Initializable {
                 puntaje = puntaje+(multiplicador * 25);
                 cont++;
 
-                if(cont>=4 && cont<8){
+                if(cont>=8 && cont<12){
                     multiplicador=2;
                 }
                 else {
-                    if (cont >= 8 && cont < 12) {
+                    if (cont >= 12 && cont < 24) {
                         multiplicador = 4;
                     }
                     else {
-                        if (cont >= 12) {
+                        if (cont >= 24) {
                             multiplicador = 8;
                         }
                     }
                 }
                 //TODO sprite de explosion de circulo, aumentar el marcador
-                circle.setVisible(false);   //Esto es mil veces mejor que destruirlo aqui
+                circle.setVisible(false);
+
+                    //Esto es mil veces mejor que destruirlo aqui
                 return;
             }
             else {
 
-                multiplicador = 1;
-                cont = 0;
+
 
             }
         }
