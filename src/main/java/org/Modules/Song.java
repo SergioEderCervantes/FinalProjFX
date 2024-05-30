@@ -102,42 +102,4 @@ public class Song {
         }
         return teclas_siguientes;
     }
-
-    //Metodos para imprimir el grafo en terminal usando la logica del recorrido de la cancion
-    public void printGraph(){
-        printGraphRecursive(teclas_pulsadas.getVertice(0));
-    }
-
-    private void printGraphRecursive(Tecla root){
-        Tecla Last_Tecla = root;
-        int x = 20, y = 100;
-        System.out.println("HOLA");
-        try {
-            Thread.sleep((long) root.getDtSiguiente() * 1000);
-        }catch (InterruptedException e){
-            e.printStackTrace();
-        }
-
-        for (Arista arista : root.getAristasAdyacentes()){
-            System.out.println(arista.destino().getTecla_ID() + " " + arista.destino().getColor());
-
-            Last_Tecla = arista.destino();
-        }
-        if (!(Last_Tecla.getNumAristasAdyacentes() == 0)){
-            printGraphRecursive(Last_Tecla);
-        }
-
-    }
-
-
-    //Metodo de impresion de grafo tradicional
-    public void printGraphNative(){
-        for (Tecla i: teclas_pulsadas.getVertices()){
-            System.out.print("\nPara el vertice #" + i.getTecla_ID() + " De tiempo inicio: " + i.tiempoInicio + "--> ");
-            for (Arista arista : i.getAristasAdyacentes()){
-                System.out.print("Destino: " + arista.destino().getTecla_ID() + " DT: " + arista.peso() + "Color: " +
-                        arista.destino().color +" || ");
-            }
-        }
-    }
 }
