@@ -76,5 +76,9 @@ public class Tecla {
         aristasAdyacentes.add(arista);
     }
 
+    public int getNumColor() {
+        return numColor;
+    }
+
 
 }

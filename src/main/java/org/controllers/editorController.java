@@ -6,6 +6,8 @@ package org.controllers;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -31,13 +33,13 @@ import java.util.ArrayList;
 
 
 public class editorController {
-
+    //TODO quitar warnings y en general hacer muchas validaciones
    private Song nuevaCancion;
    private MediaPlayer mediaPlayer;
    private boolean enReproduccion = false;
    private Timeline animacionReproduccion;
-   private ArrayList<Tecla> teclasApulsar = new ArrayList<>();
    private Pair[] map;
+   private int idSong = 100;
    //Variables FXML
     @FXML
     private TextField songName;
@@ -61,7 +63,8 @@ public class editorController {
     private TextField timeDisplay;
     @FXML
     private ComboBox <String> comboBox;
-
+    @FXML
+    private ListView <Tecla> teclasExistentes;
 
     /**
      * Event-Handlers para la pre-edicion
@@ -117,7 +120,7 @@ public class editorController {
             for (int i = 0; i < n; i++) {
                 try {
                     resultados[i] = (conn.rs.getString(2));
-                    map[i] = new Pair<Integer,String>(conn.rs.getInt(1),conn.rs.getString(2));
+                    map[i] = new Pair<>(conn.rs.getInt(1),conn.rs.getString(2));
                     conn.rs.next();
                 }catch (SQLException e){
                     e.printStackTrace();
@@ -135,6 +138,8 @@ public class editorController {
         this.splitPane.setDisable(false);
         //Configurar el slider de reproducccion
         configSlider();
+        this.comboBox.setVisible(false);
+        this.comboBox.setDisable(true);
         this.animacionReproduccion = new Timeline(new KeyFrame(Duration.millis(1000),event1 -> actualizarSlider(0)));
         animacionReproduccion.setCycleCount(Timeline.INDEFINITE);
     }
@@ -145,17 +150,14 @@ public class editorController {
     @FXML
     private void editarCancion(ActionEvent event){
         //TODO configurar el media player para poner la cancion, asi como descargar las teclas de la BD, hechale ganitas
-        int songId = 100;
-        System.out.println(comboBox.getValue());
         for (int i = 0; i < map.length; i++) {
-            System.out.println(map[i].getSecond());
             if (map[i].getSecond().equals(comboBox.getValue())){
-                songId = i;
+                this.idSong = i;
             }
         }
         //Hacer que si songId == 100 salte error
-        songId++;
-        final String query = "SELECT * FROM song WHERE idSong = " + songId;
+        this.idSong++;
+        final String query = "SELECT * FROM song WHERE idSong = " + this.idSong;
         MySqlConn conn = new MySqlConn();
         conn.consult(query);
         String name = "";
@@ -169,6 +171,7 @@ public class editorController {
         }
         this.songName.setText(name);
         this.songPath.setText(path);
+        conn.closeRsStmt();
 
 
         try{
@@ -180,7 +183,7 @@ public class editorController {
         }
         AcceptPista.setDisable(false);
 
-//        this.cargarTeclas(conn,idSong);
+        this.cargarTeclas(conn);
     }
 
 
@@ -272,7 +275,6 @@ public class editorController {
                 break;
 
         }
-        teclasApulsar.add(new Tecla());
     }
 
     @FXML
@@ -292,7 +294,7 @@ public class editorController {
         this.sliderRep.setShowTickLabels(true);
         this.sliderRep.setMajorTickUnit(60000);
         this.sliderRep.setMinorTickCount(0);
-        this.sliderRep.setLabelFormatter(new StringConverter<Double>() {
+        this.sliderRep.setLabelFormatter(new StringConverter<>() {
             @Override
             public String toString(Double timeMillis) {
                 long totalSec = Math.round(timeMillis) / 1000;
@@ -347,10 +349,10 @@ public class editorController {
         loadSong.setDisable(true);
         sideBar.getChildren().add(songName);
         sideBar.getChildren().add(songPath);
-        songName.setLayoutX(50);
-        songName.setLayoutY(100);
-        songPath.setLayoutX(50);
-        songPath.setLayoutY(120);
+        songName.setLayoutX(55);
+        songName.setLayoutY(48);
+        songPath.setLayoutX(55);
+        songPath.setLayoutY(83);
     }
 
     /**
@@ -375,8 +377,8 @@ public class editorController {
         this.timeDisplay.setText(timepo);
     }
 
-    private void cargarTeclas(MySqlConn conn, int idSong){
-        final String query = "SELECT * FROM tecla WHERE idSong = " + idSong;
+    private void cargarTeclas(MySqlConn conn){
+        final String query = "SELECT numColor,tiempoInicio FROM teclas WHERE idSong = " + idSong;
         conn.consult(query);
 
         int n = 0;
@@ -386,7 +388,51 @@ public class editorController {
                 n = conn.rs.getRow();
                 conn.rs.first();
             }catch (SQLException e){}
+            ArrayList<Tecla> aux = new ArrayList<>();
+            for (int i = 0; i < n; i++){
+                try {
+                    aux.add(new Tecla(i + 1,conn.rs.getDouble(2),conn.rs.getInt(1)));
+                    conn.rs.next();
+                } catch (SQLException e){}
+            }
+            this.configListView(aux);
 
         }
+    }
+    private void configListView(ArrayList<Tecla> aux){
+        ObservableList <Tecla> observableList= FXCollections.observableArrayList(aux);
+
+        this.teclasExistentes.setItems(observableList);
+
+        this.teclasExistentes.setCellFactory(param -> new javafx.scene.control.ListCell<>() {
+            @Override
+            protected void updateItem(Tecla tecla, boolean empty) {
+                super.updateItem(tecla, empty);
+                if (tecla == null || empty) {
+                    setText(null);
+                }else {
+                    String text = tecla.getTecla_ID().toString() + " - " ;
+                    switch (tecla.getNumColor()){
+                        case 0:
+                            text += "Rojo";
+                            break;
+                        case 1:
+                            text += "Azul";
+                            break;
+                        case 2:
+                            text += "Amarillo";
+                            break;
+                        case 3:
+                            text += "Verde";
+                            break;
+                        case 4:
+                            text += "Naranja";
+                            break;
+                    }
+                    text += " - " + tecla.getTiempoInicio();
+                    setText(text);
+                }
+            }
+        });
     }
 }
