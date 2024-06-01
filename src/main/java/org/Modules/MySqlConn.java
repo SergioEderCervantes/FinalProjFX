@@ -9,8 +9,8 @@ public class MySqlConn {
     public MySqlConn() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            String connectionURL = "jdbc:mysql://127.0.0.1/NeonCity?"
-                    + "characterEncoding=latin1&" + "user=root&password=ThoryMia898";
+            String connectionURL = "jdbc:mysql://10.10.11.121/NeonCity?"
+                    + "characterEncoding=latin1&" + "user=finalUserNC&password=mement0_M0ry_898";
             conn = DriverManager.getConnection(connectionURL);
         }catch (SQLException e) {
             System.out.println("SQL Exception: " + e.getMessage());
@@ -32,6 +32,9 @@ public class MySqlConn {
             System.out.println("SQL Exception: " + e.getMessage());
             System.out.println("SQL State: " + e.getSQLState());
             System.out.println("Error Code: " + e.getErrorCode());
+        }catch (Exception e) {
+            System.out.println("Exception: " + e.getMessage());
+            System.exit(1);
         }
 
     }

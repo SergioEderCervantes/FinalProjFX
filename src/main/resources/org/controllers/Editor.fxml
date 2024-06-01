@@ -21,21 +21,28 @@
       <Rectangle arcHeight="5.0" fill="DODGERBLUE" height="20.0" layoutY="585.0" smooth="false" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" styleClass="marcos" width="1200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="580.0" />
       <Rectangle arcHeight="5.0" fill="DODGERBLUE" height="600.0" smooth="false" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" styleClass="marcos" width="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="1185.0" AnchorPane.topAnchor="0.0" />
       <Rectangle arcHeight="5.0" fill="DODGERBLUE" height="600.0" layoutX="1185.0" smooth="false" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" styleClass="marcos" width="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="1180.0" AnchorPane.rightAnchor="0.20000000000004547" AnchorPane.topAnchor="0.0" />
-      <SplitPane fx:id="splitPane" disable="true" dividerPositions="0.16246546961325964" layoutX="20.0" layoutY="20.0" prefHeight="560.0" prefWidth="1160.0">
+      <SplitPane fx:id="splitPane" disable="true" dividerPositions="0.22203038674033146" layoutX="20.0" layoutY="20.0" prefHeight="560.0" prefWidth="1160.0">
         <items>
-          <AnchorPane fx:id="sideBar" minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" styleClass="sideBar">
+          <AnchorPane fx:id="sideBar" minHeight="0.0" minWidth="0.0" onMouseClicked="#regresarFocus" prefHeight="558.0" prefWidth="0.0" styleClass="sideBar">
                <children>
                   <Label alignment="CENTER" layoutY="14.0" prefHeight="28.0" prefWidth="170.0" text="Modo Edicion" textAlignment="CENTER" textFill="WHITE">
                      <font>
                         <Font size="16.0" />
                      </font>
                   </Label>
-                  <ListView fx:id="teclasExistentes" layoutX="17.0" layoutY="159.0" prefHeight="318.0" prefWidth="150.0" />
+                  <ListView fx:id="teclasExistentes" layoutX="34.0" layoutY="129.0" prefHeight="318.0" prefWidth="185.0" />
                   <Label layoutX="17.0" layoutY="50.0" text="Name:" />
                   <Label layoutX="17.0" layoutY="85.0" text="Path:" />
+                  <Button fx:id="probarSong" layoutX="127.0" layoutY="489.0" mnemonicParsing="false" onAction="#probarSong" prefHeight="54.0" prefWidth="123.0" text="Guardar y probar" textAlignment="CENTER" textOverrun="CLIP" wrapText="true">
+                     <font>
+                        <Font size="11.0" />
+                     </font>
+                  </Button>
+                  <Button layoutX="14.0" layoutY="489.0" mnemonicParsing="false" prefHeight="54.0" prefWidth="98.0" text="Eliminar Tecla" wrapText="true" />
+                  <Button layoutX="170.0" layoutY="15.0" mnemonicParsing="false" onAction="#saveSong" text="Save" />
                </children>
             </AnchorPane>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" styleClass="anchorPane">
+          <AnchorPane fx:id="principal" minHeight="0.0" minWidth="0.0" prefHeight="558.0" prefWidth="898.0" styleClass="anchorPane">
                <children>
                   <Button ellipsisString="" layoutX="34.0" layoutY="417.0" mnemonicParsing="false" onAction="#handleButtonEvent" prefHeight="30.0" prefWidth="641.0" text="⏮" textFill="WHITE" textOverrun="CLIP">
                      <styleClass>
@@ -99,11 +106,11 @@
                         <String fx:value="buttonDark" />
                      </styleClass>
                   </Button>
-                  <Button layoutX="240.0" layoutY="279.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="80.0" style="-fx-background-color: red;" styleClass="buttonRound" />
-                  <Button layoutX="340.0" layoutY="279.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="80.0" style="-fx-background-color: blue;" styleClass="buttonRound" />
-                  <Button layoutX="440.0" layoutY="279.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="80.0" style="-fx-background-color: Yellow;" styleClass="buttonRound" />
-                  <Button layoutX="540.0" layoutY="279.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="80.0" style="-fx-background-color: Green;" styleClass="buttonRound" />
-                  <Button layoutX="640.0" layoutY="279.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="80.0" style="-fx-background-color: Orange;" styleClass="buttonRound" />
+                  <Button fx:id="qBtn" layoutX="240.0" layoutY="279.0" mnemonicParsing="false" onAction="#agregarTecla" prefHeight="30.0" prefWidth="80.0" style="-fx-background-color: red;" styleClass="buttonRound" />
+                  <Button fx:id="wBtn" layoutX="340.0" layoutY="279.0" mnemonicParsing="false" onAction="#agregarTecla" prefHeight="30.0" prefWidth="80.0" style="-fx-background-color: blue;" styleClass="buttonRound" />
+                  <Button fx:id="eBtn" layoutX="440.0" layoutY="279.0" mnemonicParsing="false" onAction="#agregarTecla" prefHeight="30.0" prefWidth="80.0" style="-fx-background-color: Yellow;" styleClass="buttonRound" />
+                  <Button fx:id="oBtn" layoutX="540.0" layoutY="279.0" mnemonicParsing="false" onAction="#agregarTecla" prefHeight="30.0" prefWidth="80.0" style="-fx-background-color: Green;" styleClass="buttonRound" />
+                  <Button fx:id="pBtn" layoutX="640.0" layoutY="279.0" mnemonicParsing="false" onAction="#agregarTecla" prefHeight="30.0" prefWidth="80.0" style="-fx-background-color: Orange;" styleClass="buttonRound" />
                   <Slider fx:id="sliderRep" layoutX="36.0" layoutY="106.0" onDragDetected="#sliderDragged" onDragDone="#sliderDragged" onDragDropped="#sliderDragged" prefHeight="39.0" prefWidth="844.0" />
                   <Label layoutX="34.0" layoutY="161.0" text="Tiempo Actual:" textFill="WHITE" />
                   <TextField fx:id="timeDisplay" editable="false" layoutX="126.0" layoutY="156.0" prefHeight="26.0" prefWidth="79.0" />
