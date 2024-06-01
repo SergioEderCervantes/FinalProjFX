@@ -1,0 +1,52 @@
+
+.anchorPane {
+    -fx-background-color: #1a1b26 ;
+}
+
+.sideBar{
+    -fx-background-color: #c314b6;
+}
+.marcos {
+    -fx-fill: #c314b6;
+}
+
+.filePane {
+    -fx-background-color: #FFFFFF;
+}
+
+.button {
+    -fx-font-size: 16px;
+    -fx-padding: 0 20px;
+    -fx-border-width: 1px;
+    -fx-border-color: #1F1F1F;
+    -fx-border-radius: 3px;
+    -fx-background-radius: 3px;
+    -fx-background-color: #FFFFFF;
+    -fx-effect: dropshadow(three-pass-box, rgba(15, 15, 15, 0.5), 3, 0, 0, 1),
+    innershadow(two-pass-box, rgba(255, 255, 255, 0.2), 1, 0, 0, 1);
+}
+
+.buttonRound {
+    -fx-pref-height: 4em;
+    -fx-pref-width: 4em;
+    -fx-background-radius: 100%;
+}
+
+.buttonDark {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #737373 0%, #333333 100%);
+    -fx-background-size: auto 150%;
+    -fx-background-position: 0 100%;
+}
+
+.buttonDark:hover {
+    -fx-background-position: 0 50%;
+}
+
+.buttonDark:pressed {
+    -fx-text-fill: #000000;
+    -fx-background-position: 0 50%;
+    -fx-background-color: #333333;
+    -fx-effect: innershadow(two-pass-box, rgba(0, 0, 0, 0.5), 3, 0, 0, 2),
+    dropshadow(three-pass-box, rgba(255, 255, 255, 0.1), 1, 0, 0, 1);
+}
+

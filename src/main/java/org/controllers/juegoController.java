@@ -120,10 +120,8 @@ public class juegoController implements Initializable {
         this.timeline = new Timeline(new KeyFrame(Duration.millis(REPETITION_MILIS), event -> print()));    //Animacion
         this.timeline.setCycleCount(Timeline.INDEFINITE);   //Ciclos que durara la animacion
         this.t_inicio = System.currentTimeMillis();
-
-        this.initKeyboard();
-        this.initButtons();
     }
+
     private void initReproduction(int SongID){
         //TODO tomar el ID de la cancion seleccionada y cargar toda la cancion para guardarla en un objeto Song, puede ser:
         //this.cancionSeleccionada = loadSongFromSQL(song_ID);
