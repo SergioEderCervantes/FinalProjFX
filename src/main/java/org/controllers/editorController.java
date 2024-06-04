@@ -6,11 +6,15 @@ package org.controllers;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
@@ -27,20 +31,25 @@ import org.Modules.Tecla;
 
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
 
 
+
 public class editorController {
     //TODO quitar warnings y en general hacer muchas validaciones
-   private Song nuevaCancion;
-   private MediaPlayer mediaPlayer;
-   private boolean enReproduccion = false;
-   private Timeline animacionReproduccion;
-   private Pair[] map;
-   private int idSong = 100;
-   //Variables FXML
+    private MediaPlayer mediaPlayer;
+    private boolean enReproduccion = false;
+    private Timeline animacionReproduccion;
+    private Pair[] map;
+    private int idSong = 100;
+    private boolean editado = false;
+    //Variables FXML
     @FXML
     private TextField songName;
     @FXML
@@ -64,7 +73,19 @@ public class editorController {
     @FXML
     private ComboBox <String> comboBox;
     @FXML
-    private ListView <Tecla> teclasExistentes;
+    private ListView <String> teclasExistentes;
+    @FXML
+    private AnchorPane principal;
+    @FXML
+    private Button qBtn;
+    @FXML
+    private Button wBtn;
+    @FXML
+    private Button eBtn;
+    @FXML
+    private Button oBtn;
+    @FXML
+    private Button pBtn;
 
     /**
      * Event-Handlers para la pre-edicion
@@ -75,7 +96,7 @@ public class editorController {
         fileChooser.setTitle("Select a file");
         fileChooser.getExtensionFilters().add(
                 new FileChooser.ExtensionFilter("Music Files", "*.mp3"));
-        Stage stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
 
         File selectedFile = fileChooser.showOpenDialog(stage);
@@ -142,6 +163,7 @@ public class editorController {
         this.comboBox.setDisable(true);
         this.animacionReproduccion = new Timeline(new KeyFrame(Duration.millis(1000),event1 -> actualizarSlider(0)));
         animacionReproduccion.setCycleCount(Timeline.INDEFINITE);
+        this.initKeyboard();
     }
 
     /**
@@ -149,13 +171,11 @@ public class editorController {
      */
     @FXML
     private void editarCancion(ActionEvent event){
-        //TODO configurar el media player para poner la cancion, asi como descargar las teclas de la BD, hechale ganitas
         for (int i = 0; i < map.length; i++) {
             if (map[i].getSecond().equals(comboBox.getValue())){
                 this.idSong = i;
             }
         }
-        //Hacer que si songId == 100 salte error
         this.idSong++;
         final String query = "SELECT * FROM song WHERE idSong = " + this.idSong;
         MySqlConn conn = new MySqlConn();
@@ -184,6 +204,7 @@ public class editorController {
         AcceptPista.setDisable(false);
 
         this.cargarTeclas(conn);
+        this.editado = true;
     }
 
 
@@ -191,10 +212,14 @@ public class editorController {
      * Events Handlers para la edicion
      */
     @FXML
-    private void handleButtonEvent(ActionEvent event){
-        String btnPressed = ((Button)event.getSource()).getText();
+    private void handleButtonEvent(ActionEvent event) {
+        String btnPressed = ((Button) event.getSource()).getText();
         Duration actual;
-        Duration nuevo;
+        Duration nuevo = new Duration(0);
+
+
+        actual = new Duration(redondearAlValorMasCercano(mediaPlayer.getCurrentTime().toMillis()));
+
         switch (btnPressed){
             case "⏯":
                 if (enReproduccion){
@@ -216,46 +241,51 @@ public class editorController {
                 actualizarSlider(0.1);
                 break;
             case "⏵":
-                actual = mediaPlayer.getCurrentTime();
-                nuevo = actual.add(Duration.millis(333));
+                if (actual.toMillis() % 5 == 0){
+                    nuevo = actual.add(Duration.millis(250));
+                }
+                else {
+                    nuevo = actual.add(Duration.millis(333));
+                }
                 mediaPlayer.seek(nuevo);
                 actualizarSlider(nuevo.toMillis());
                 break;
             case "⏩":
-                actual = mediaPlayer.getCurrentTime();
                 nuevo = actual.add(Duration.millis(1000));
                 mediaPlayer.seek(nuevo);
                 actualizarSlider(nuevo.toMillis());
                 break;
             case "⏭":
-                actual = mediaPlayer.getCurrentTime();
-                nuevo = actual.add(Duration.seconds(5));
+                nuevo = actual.add(Duration.millis(5000));
                 mediaPlayer.seek(nuevo);
                 actualizarSlider(nuevo.toMillis());
                 break;
             case "⏴":
-                actual = mediaPlayer.getCurrentTime();
-                nuevo = actual.subtract(Duration.millis(333));
+                if (actual.toMillis() % 5 == 0){
+                    nuevo = actual.subtract(Duration.millis(250));
+                }
+                else {
+                    nuevo = actual.subtract(Duration.millis(333));
+                }
                 mediaPlayer.seek(nuevo);
                 actualizarSlider(nuevo.toMillis());
                 break;
             case "⏪":
-                actual = mediaPlayer.getCurrentTime();
                 nuevo = actual.subtract(Duration.millis(1000));
                 mediaPlayer.seek(nuevo);
                 actualizarSlider(nuevo.toMillis());
                 break;
             case "⏮" :
-                actual = mediaPlayer.getCurrentTime();
-                nuevo = actual.subtract(Duration.seconds(5));
+                nuevo = actual.subtract(Duration.millis(5000));
                 mediaPlayer.seek(nuevo);
                 actualizarSlider(nuevo.toMillis());
                 break;
         }
+
     }
     @FXML
     private void agregarTecla(ActionEvent event){
-        int numColor;
+        int numColor = 0;
         int xSelected = (int)((Button) event.getSource()).getLayoutX();
         switch (xSelected){
             case 240:
@@ -274,7 +304,17 @@ public class editorController {
                 numColor = 4;
                 break;
 
+
         }
+        double time = mediaPlayer.getCurrentTime().toMillis();
+        time = redondearAlValorMasCercano(time);
+
+        String aux = switchColores(numColor) + "--" + time;
+
+        //TODO Hacer que la tecla que se agregue en el orden que debe, para que quede ordenada
+        this.teclasExistentes.getItems().add(aux);
+
+
     }
 
     @FXML
@@ -282,6 +322,43 @@ public class editorController {
         final Duration valor = Duration.millis(sliderRep.getValue());
         mediaPlayer.seek(valor);
 
+    }
+
+    @FXML
+    private void regresarFocus(){
+        principal.requestFocus();
+    }
+
+    @FXML
+    private void probarSong(){
+
+
+    }
+
+    /**
+     * Metodo que guarda la nueva cancion en la base de datos
+     */
+    @FXML
+    private void saveSong(){
+        MySqlConn conn = new MySqlConn();
+        System.out.println(this.teclasExistentes.getItems().size());
+        long time = System.currentTimeMillis();
+        if (!editado){
+            //Cargar la cancion
+            this.idSong = loadSong2DB(conn,this.songName.getText(),changePath(this.songName.getText(),
+                            this.songPath.getText()),this.mediaPlayer.getTotalDuration().toMillis());
+            if (idSong == 0){
+                System.out.println("No se puede agregar el song");
+            }
+            else if  (loadTeclas2DB(this.teclasExistentes.getItems(),conn,this.idSong)){
+                    System.out.println("SUCCESS");
+                    System.out.println("Dt= " + (System.currentTimeMillis() - time));
+                }
+
+        }else {
+            //borrar todas las teclas de la cancion que existia en la base de datos y despues volver a cargarla
+        }
+        conn.closeRsStmt();
     }
 
     /**
@@ -367,7 +444,7 @@ public class editorController {
             newTime = sliderRep.getValue() + 1000;
         }
         final double finalNewTime = newTime;
-        javafx.application.Platform.runLater(() -> sliderRep.setValue(finalNewTime));
+        Platform.runLater(() -> sliderRep.setValue(finalNewTime));
 
         long totalSec = Math.round(newTime) / 1000;
         long millis = Math.round(newTime) % 1000;
@@ -388,51 +465,194 @@ public class editorController {
                 n = conn.rs.getRow();
                 conn.rs.first();
             }catch (SQLException e){}
-            ArrayList<Tecla> aux = new ArrayList<>();
+            ArrayList<String> aux = new ArrayList<>();
             for (int i = 0; i < n; i++){
                 try {
-                    aux.add(new Tecla(i + 1,conn.rs.getDouble(2),conn.rs.getInt(1)));
+                    StringBuilder builder = new StringBuilder();
+                    builder.append(switchColores(conn.rs.getInt(1)));
+                    builder.append("--");
+                    builder.append(conn.rs.getString(2));
+                    aux.add(builder.toString());
                     conn.rs.next();
                 } catch (SQLException e){}
             }
-            this.configListView(aux);
+
+            ObservableList <String> observableList= FXCollections.observableArrayList(aux);
+
+            this.teclasExistentes.setItems(observableList);
 
         }
     }
-    private void configListView(ArrayList<Tecla> aux){
-        ObservableList <Tecla> observableList= FXCollections.observableArrayList(aux);
-
-        this.teclasExistentes.setItems(observableList);
-
-        this.teclasExistentes.setCellFactory(param -> new javafx.scene.control.ListCell<>() {
-            @Override
-            protected void updateItem(Tecla tecla, boolean empty) {
-                super.updateItem(tecla, empty);
-                if (tecla == null || empty) {
-                    setText(null);
-                }else {
-                    String text = tecla.getTecla_ID().toString() + " - " ;
-                    switch (tecla.getNumColor()){
-                        case 0:
-                            text += "Rojo";
-                            break;
-                        case 1:
-                            text += "Azul";
-                            break;
-                        case 2:
-                            text += "Amarillo";
-                            break;
-                        case 3:
-                            text += "Verde";
-                            break;
-                        case 4:
-                            text += "Naranja";
-                            break;
-                    }
-                    text += " - " + tecla.getTiempoInicio();
-                    setText(text);
-                }
+    private void initKeyboard(){
+        this.principal.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
+            KeyCode code = event.getCode();
+            switch (code){
+                case Q:
+                    this.qBtn.setFocusTraversable(true);
+                    this.qBtn.fire();
+                    break;
+                case W:
+                    this.wBtn.setFocusTraversable(true);
+                    this.wBtn.fire();
+                    break;
+                case E:
+                    this.eBtn.setFocusTraversable(true);
+                    this.eBtn.fire();
+                    break;
+                case O:
+                    this.oBtn.setFocusTraversable(true);
+                    this.oBtn.fire();
+                    break;
+                case P:
+                    this.pBtn.setFocusTraversable(true);
+                    this.pBtn.fire();
+                    break;
             }
         });
     }
+
+    /** Metodo que sera llamado cuando se quiera probar la cancion que se esta editando en estos momentos,
+     *  construye el objeto Song nuevaCancion con sus teclas pulsadas para usarlas en el juego
+     * @return el objeto Song que fue creado
+     */
+    private Song construirSong(){
+        Song nuevaCancion;
+        if (!editado){
+
+            nuevaCancion = new Song(this.songName.getText(),changePath(this.songName.getText(),
+                    this.songPath.getText()), this.mediaPlayer.getTotalDuration().toMillis());
+        }
+        else {
+            nuevaCancion = new Song(this.songName.getText(),this.songPath.getText(),
+                    this.mediaPlayer.getTotalDuration().toMillis());
+        }
+
+        nuevaCancion.ConstruirGrafo(getTeclasPulsadas(this.teclasExistentes.getItems()));
+
+        return nuevaCancion;
+    }
+
+
+    //Funciones estaticas
+
+    private static String switchColores(int numColor){
+        switch (numColor){
+            case 0: return "Rojo";
+            case 1: return "Azul";
+            case 2: return "Amarillo";
+            case 3: return "Verde";
+            case 4: return "Naranja";
+        }
+        return "NONE";
+    }
+
+    private static double redondearAlValorMasCercano(double valor) {
+        double a = Math.floor(valor / 1000);
+        double b = valor % 1000;
+        double[] valoresObjetivos = {0, 250, 333, 500, 666,750, 1000};
+        double valorMasCercano = valoresObjetivos[0];
+        double menorDiferencia = Math.abs(b - valoresObjetivos[0]);
+
+        for (int i = 1; i < valoresObjetivos.length; i++) {
+            double diferencia = Math.abs(b - valoresObjetivos[i]);
+            if (diferencia < menorDiferencia) {
+                menorDiferencia = diferencia;
+                valorMasCercano = valoresObjetivos[i];
+            }
+        }
+
+        return (a * 1000 + valorMasCercano);
+    }
+
+    private static ArrayList<Tecla> getTeclasPulsadas(ObservableList<String> items){
+        ArrayList<Tecla> teclas = new ArrayList<>();
+
+        for (int i = 0; i < items.size(); i++) {
+            String[] partes =  items.get(i).split("--");
+            int numColor = 0;
+            switch (partes[0]){
+                case "Rojo": numColor = 0; break;
+                case "Azul": numColor = 1; break;
+                case "Amarillo": numColor = 2; break;
+                case "Verde": numColor = 3; break;
+                case "Naranja": numColor = 4; break;
+            }
+            try {
+                teclas.add(new Tecla(i + 1,Double.parseDouble(partes[1]),numColor));
+            }catch (NumberFormatException e){
+                System.out.println("Fallo al cargar las teclas de la cancion");
+            }
+
+        }
+        return teclas;
+    }
+
+    /**
+     * Metodo que dada la referencia de un archivo, crea una copia del mismo en los archivos locales del proyecto
+     * @param name  nombre del archivo sin ruta
+     * @param path ruta absoluta donde se encuentra actualmente el archivo
+     * @return  String de la ruta relativa al proyecto despues de hacer la copia
+     */
+    private static String changePath(String name,String path){
+        final String target = "src/main/resources/songs" + File.separator + name;
+        Path rutaAntigua = Paths.get(path);
+        Path rutaNueva = Paths.get(target);
+        try {
+            Files.copy(rutaAntigua,rutaNueva);
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+        return target;
+    }
+
+    private static int loadSong2DB(MySqlConn conn,String name, String path, double duracion){
+        final String query = "INSERT INTO song (name, sourcePath, duracion) VALUES(\"" + name + "\",\"" + path +
+                "\"," + duracion + ");";
+        if (conn.uptade(query) > 0) {
+            final String query2 = "SELECT idSong FROM song WHERE name='" + name + "' AND sourcePath='" + path + "';";
+            conn.consult(query2);
+            if (conn.rs != null){
+                try {
+                    conn.rs.last();
+                    if (conn.rs.getRow() != 1) throw new Exception("Excepcion de logica de base de datos:  mas hayde un registro" +
+                            "con el mismo nombre o no se encontro el registro");
+                    conn.rs.first();
+                    return conn.rs.getInt(1);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }
+        return 0;
+    }
+
+
+
+    private static boolean loadTeclas2DB(ObservableList<String> list,MySqlConn conn, int idSong) {
+        StringBuilder query = new StringBuilder("INSERT INTO teclas (idSong, numColor,tiempoInicio) VALUES ");
+        for (int i = 0; i < list.size(); i++) {
+            String[] partes = list.get(i).split("--");
+            int numColor = 0;
+            switch (partes[0]){
+                case "Rojo": break;
+                case "Azul": numColor = 1; break;
+                case "Amarillo": numColor = 2; break;
+                case "Verde": numColor = 3; break;
+                case "Naranja": numColor = 4; break;
+            }
+            double tiempoInicio = Double.parseDouble(partes[1]);
+            query.append("(").append(idSong).append(",").append(numColor).append(",").append(tiempoInicio).append(")");
+            if (i != list.size() - 1) {
+                query.append(",");
+            }
+        }
+        query.append(";");
+        return conn.uptade(query.toString()) > 0;
+    }
+
+    private static boolean del2DB(MySqlConn conn, int idSong) {
+        final String query = "DELETE FROM teclas WHERE idSong = " + idSong;
+        return conn.uptade(query) > 0;
+    }
+
 }

@@ -155,17 +155,17 @@ public class juegoController implements Initializable {
         //Primero desplaza todas las que ya existen hacia abajo y elimina del ArrayList y el Panel las teclas que ya no se ven
         try{
             for (Circle circulo : teclasEnPantalla) {
-                circulo.setCenterY(circulo.getCenterY() + 3);
+                circulo.setCenterY(circulo.getCenterY() + 4);
                 if(circulo.getCenterX() < 461 ){
-                    circulo.setCenterX(circulo.getCenterX() - 0.5);
+                    circulo.setCenterX(circulo.getCenterX() - 0.6666);
                 }
                 else if(circulo.getCenterX() > 739){
-                    circulo.setCenterX(circulo.getCenterX() + 0.5);
+                    circulo.setCenterX(circulo.getCenterX() + 0.6666);
                 }
                 else if(circulo.getCenterX() < 600){
-                    circulo.setCenterX(circulo.getCenterX() - 0.25);
+                    circulo.setCenterX(circulo.getCenterX() - 0.3333);
                 }else if(circulo.getCenterX() >600){
-                    circulo.setCenterX(circulo.getCenterX() + 0.25);
+                    circulo.setCenterX(circulo.getCenterX() + 0.3333);
                 }
 
                 if (circulo.getCenterY() > 620) {

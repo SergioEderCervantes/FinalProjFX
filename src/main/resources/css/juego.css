@@ -97,7 +97,7 @@
 
 }
 
-.track-button.orange:pressed. {
+.track-button.orange:pressed{
     -fx-background-color: #cc5200;
 
 }
