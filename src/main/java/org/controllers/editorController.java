@@ -11,12 +11,15 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -38,7 +41,7 @@ import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-
+import static org.controllers.App.loadFXML;
 
 
 public class editorController {
@@ -330,9 +333,21 @@ public class editorController {
     }
 
     @FXML
-    private void probarSong(){
+    private void probarSong(ActionEvent event) throws IOException{
+        this.saveSong();
+        Song nuevaCancion = construirSong();
+        //Switch de escena con el nuevo argumento
+        FXMLLoader loader = new FXMLLoader(App.class.getResource("juego.fxml"));
+        Pane root = loader.load();
+        juegoController controller = loader.getController();
+        controller.setCancionSeleccionada(nuevaCancion);
+        controller.postInitialize();
 
 
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
     }
 
     /**
@@ -342,7 +357,6 @@ public class editorController {
     private void saveSong(){
         MySqlConn conn = new MySqlConn();
         System.out.println(this.teclasExistentes.getItems().size());
-        long time = System.currentTimeMillis();
         if (!editado){
             //Cargar la cancion
             this.idSong = loadSong2DB(conn,this.songName.getText(),changePath(this.songName.getText(),
@@ -352,18 +366,21 @@ public class editorController {
             }
             else if  (loadTeclas2DB(this.teclasExistentes.getItems(),conn,this.idSong)){
                     System.out.println("SUCCESS");
-                    System.out.println("Dt= " + (System.currentTimeMillis() - time));
                 }
 
         }else {
             //borrar todas las teclas de la cancion que existia en la base de datos y despues volver a cargarla
+            if(!del2DB(conn,this.idSong)){
+                System.out.println("No se puede borrar las teclas");
+            } else if (!loadTeclas2DB(this.teclasExistentes.getItems(),conn,this.idSong)) {
+                System.out.println("No se puede agregar las nuevas teclas");
+            }
         }
         conn.closeRsStmt();
     }
 
-    /**
-     * Misc
-     */
+    //Misc
+
     private void configSlider(){
         this.sliderRep.setMin(0);
         Duration dur = mediaPlayer.getTotalDuration();
@@ -468,11 +485,10 @@ public class editorController {
             ArrayList<String> aux = new ArrayList<>();
             for (int i = 0; i < n; i++){
                 try {
-                    StringBuilder builder = new StringBuilder();
-                    builder.append(switchColores(conn.rs.getInt(1)));
-                    builder.append("--");
-                    builder.append(conn.rs.getString(2));
-                    aux.add(builder.toString());
+                    String builder = switchColores(conn.rs.getInt(1)) +
+                            "--" +
+                            conn.rs.getString(2);
+                    aux.add(builder);
                     conn.rs.next();
                 } catch (SQLException e){}
             }
@@ -571,7 +587,7 @@ public class editorController {
             String[] partes =  items.get(i).split("--");
             int numColor = 0;
             switch (partes[0]){
-                case "Rojo": numColor = 0; break;
+                case "Rojo": break;
                 case "Azul": numColor = 1; break;
                 case "Amarillo": numColor = 2; break;
                 case "Verde": numColor = 3; break;
@@ -594,7 +610,7 @@ public class editorController {
      * @return  String de la ruta relativa al proyecto despues de hacer la copia
      */
     private static String changePath(String name,String path){
-        final String target = "src/main/resources/songs" + File.separator + name;
+        final String target = "src/main/resources/songs/" + File.separator + name;
         Path rutaAntigua = Paths.get(path);
         Path rutaNueva = Paths.get(target);
         try {
@@ -654,5 +670,4 @@ public class editorController {
         final String query = "DELETE FROM teclas WHERE idSong = " + idSong;
         return conn.uptade(query) > 0;
     }
-
 }

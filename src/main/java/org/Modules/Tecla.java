@@ -80,5 +80,9 @@ public class Tecla {
         return numColor;
     }
 
+    public Tecla getTeclaSig(){
+        return this.aristasAdyacentes.get(0).destino();
+    }
+
 
 }
