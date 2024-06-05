@@ -2,11 +2,15 @@ package org.controllers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -19,6 +23,10 @@ import org.Modules.Pair;
 
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -32,7 +40,9 @@ public class MenuEditorController {
     private boolean editado;
     MediaPlayer pistaSeleccion;
     ArrayList<String> teclasSeleccion;
+    String cancionSeleccion;
     int idSongAEliminar;
+    final Image closeImg = new Image(Paths.get("src/main/resources/images/cross.png").toUri().toString());
 
     @FXML
     private VBox loadPanel;
@@ -50,6 +60,8 @@ public class MenuEditorController {
     private ComboBox<String> comboBoxEdit;
     @FXML
     private ComboBox<String> comboBoxDel;
+    @FXML
+    private Label confirmationLabel;
 
     /**
      * Switch Back a Menu
@@ -78,6 +90,11 @@ public class MenuEditorController {
         this.editado = false;
         this.loadPanel.setVisible(true);
         this.loadPanel.setDisable(false);
+        final ImageView closeImgVw = new ImageView(closeImg);
+
+        HBox hBox = (HBox) this.loadPanel.getChildren().get(0);
+        Button aux = (Button) hBox.getChildren().get(0);
+        aux.setGraphic(closeImgVw);
     }
 
     /**
@@ -89,6 +106,11 @@ public class MenuEditorController {
         this.editPanel.setVisible(true);
         this.editPanel.setDisable(false);
         this.initEditionPanel();
+        final ImageView closeImgVw = new ImageView(closeImg);
+
+        HBox hBox = (HBox) this.editPanel.getChildren().get(0);
+        Button aux = (Button) hBox.getChildren().get(0);
+        aux.setGraphic(closeImgVw);
     }
 
     /**
@@ -100,6 +122,11 @@ public class MenuEditorController {
         this.deletePanel.setVisible(true);
         this.deletePanel.setDisable(false);
         this.initDeletionPanel();
+        final ImageView closeImgVw = new ImageView(closeImg);
+
+        HBox hBox = (HBox) this.deletePanel.getChildren().get(0);
+        Button aux = (Button) hBox.getChildren().get(0);
+        aux.setGraphic(closeImgVw);
     }
 
     /**
@@ -112,38 +139,41 @@ public class MenuEditorController {
         fileChooser.getExtensionFilters().add(
                 new FileChooser.ExtensionFilter("Music Files", "*.mp3"));
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-
+        fileChooser.setInitialDirectory(new File(System.getProperty("user.home"),"Music"));
 
         File selectedFile = fileChooser.showOpenDialog(stage);
         if(validateFile(selectedFile)){
+            Pane pane =(Pane) this.loadPanel.getChildren().get(1);
             TextField songName = new TextField();
             songName.setLayoutX(51);
-            songName.setLayoutY(134);
+            songName.setLayoutY(109);
+            songName.setPrefWidth(106);
+            songName.setPrefHeight(25);
             songName.setFocusTraversable(false);
             songName.setText(selectedFile.getName());
-            this.loadPanel.getChildren().add(songName);
+            songName.setEditable(false);
+            pane.getChildren().add(songName);
 
             TextField songPath = new TextField();
-            songPath.setLayoutX(226);
-            songPath.setLayoutY(134);
+            songPath.setLayoutX(227);
+            songPath.setLayoutY(109);
+            songPath.setPrefWidth(106);
+            songPath.setPrefHeight(25);
             songPath.setFocusTraversable(false);
             songPath.setText(selectedFile.getPath());
-            this.loadPanel.getChildren().add(songPath);
+            songPath.setEditable(false);
+            pane.getChildren().add(songPath);
+
+            this.cancionSeleccion = selectedFile.getName();
             AcceptPista.setDisable(false);
+            String pathChida = changePath(selectedFile.getName(),selectedFile.getPath());
+            Media media = new Media(new File(pathChida).toURI().toString());
+            this.pistaSeleccion = new MediaPlayer(media);
+            this.teclasSeleccion = new ArrayList<>();
         }
         else {
             //todo se crea una ventana de error bonito
         }
-    }
-
-    //todo crear el manejo del boton AcceptPista bien
-    @FXML
-    private void accetpFile(ActionEvent event) {
-        System.out.println("Aceptao");
-    }
-    @FXML
-    private void deleteSong(){
-        System.out.println("DELETEAO");
     }
 
     @FXML
@@ -151,6 +181,7 @@ public class MenuEditorController {
         int idSong = this.getIdSong();
         if (editado){
             try {
+                this.cancionSeleccion = comboBoxEdit.getValue();
                 this.pistaSeleccion = loadMP(idSong);
                 this.teclasSeleccion = loadTl(idSong);
                 if (pistaSeleccion == null || teclasSeleccion == null){
@@ -166,6 +197,7 @@ public class MenuEditorController {
         }
         else {
             this.idSongAEliminar = idSong;
+            this.confirmationLabel.setVisible(true);
             this.delButton.setDisable(false);
         }
     }
@@ -179,6 +211,38 @@ public class MenuEditorController {
         VParent.setDisable(true);
     }
 
+    //todo crear el manejo del boton AcceptPista bien
+    @FXML
+    private void accetpFile(ActionEvent event) {
+        FXMLLoader loader = new FXMLLoader(App.class.getResource("Editor.fxml"));
+        try {
+            Pane root = loader.load();
+            editorController controller = loader.getController();
+            controller.setSongName(this.cancionSeleccion);
+            controller.setMediaPlayer(this.pistaSeleccion);
+            controller.setTeclas(this.teclasSeleccion);
+            controller.Postinitialize();
+
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        }catch (IOException e){
+            System.out.println("IOException: " + e.getMessage());
+
+        }
+    }
+    @FXML
+    private void deleteSong(){
+        MySqlConn conn = new MySqlConn();
+        final String query = "DELETE FROM song WHERE idSong =" + this.idSongAEliminar;
+        int affectedRows = conn.uptade(query);
+        System.out.println(affectedRows);
+    }
+
+    /**
+     * @return el idSong de la cancion que fue seleccionada ya sea en el comboBoxEdit o el comboBoxDel
+     */
     private int getIdSong() {
         int idSong = -1;
 
@@ -186,7 +250,7 @@ public class MenuEditorController {
             for (Pair<Integer, String> integerStringPair : map) {
                 if (integerStringPair.getSecond().equals(comboBoxEdit.getValue())) {
                     idSong = integerStringPair.getFirst();
-                    idSong++;
+
                 }
             }
         }
@@ -194,7 +258,7 @@ public class MenuEditorController {
             for (Pair<Integer, String> integerStringPair : map) {
                 if (integerStringPair.getSecond().equals(comboBoxDel.getValue())) {
                     idSong = integerStringPair.getFirst();
-                    idSong++;
+
                 }
             }
         }
@@ -205,15 +269,23 @@ public class MenuEditorController {
     }
 
 
+    /**
+     * Configura el comboBoxEdit
+     */
     private void initEditionPanel(){
         this.map = cargarSongs();
+        this.comboBoxEdit.getItems().clear();
         for (Pair<Integer, String> integerStringPair : map) {
             this.comboBoxEdit.getItems().add(integerStringPair.getSecond());
         }
     }
 
+    /**
+     * Configura el comboBoxDel
+     */
     private void initDeletionPanel(){
         this.map = cargarSongs();
+        this.comboBoxDel.getItems().clear();
         for (Pair<Integer, String> integerStringPair : map) {
             this.comboBoxDel.getItems().add(integerStringPair.getSecond());
         }
@@ -324,6 +396,24 @@ public class MenuEditorController {
             }
             return aux;
         }else return null;
+    }
+
+    /**
+     * Metodo que dada la referencia de un archivo, crea una copia del mismo en los archivos locales del proyecto
+     * @param name  nombre del archivo sin ruta
+     * @param path ruta absoluta donde se encuentra actualmente el archivo
+     * @return  String de la ruta relativa al proyecto despues de hacer la copia
+     */
+    private static String changePath(String name,String path){
+        final String target = "src/main/resources/songs/" + File.separator + name;
+        Path rutaAntigua = Paths.get(path);
+        Path rutaNueva = Paths.get(target);
+        try {
+            Files.copy(rutaAntigua,rutaNueva);
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+        return target;
     }
 
 }

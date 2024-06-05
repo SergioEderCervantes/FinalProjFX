@@ -20,10 +20,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
-import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
@@ -38,10 +35,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.sql.SQLException;
 import java.util.ArrayList;
-
-import static org.controllers.App.loadFXML;
 
 
 public class editorController {
@@ -52,29 +46,17 @@ public class editorController {
     private Pair[] map;
     private int idSong = 100;
     private boolean editado = false;
+
     //Variables FXML
     @FXML
     private TextField songName;
     @FXML
     private TextField songPath;
-    @FXML
-    private Label errorLabel1;
-    @FXML
-    private Label errorLabel2;
-    @FXML
-    private Button AcceptPista;
-    @FXML
-    private VBox loadSong;
-    @FXML
-    private AnchorPane sideBar;
-    @FXML
-    private SplitPane splitPane;
+
     @FXML
     private Slider sliderRep;
     @FXML
     private TextField timeDisplay;
-    @FXML
-    private ComboBox <String> comboBox;
     @FXML
     private ListView <String> teclasExistentes;
     @FXML
@@ -90,105 +72,29 @@ public class editorController {
     @FXML
     private Button pBtn;
 
-    /**
-     * Event-Handlers para la pre-edicion
-     */
-
-    /**
-     * Hacemos llamar a la base de datos con una consulta sobre las canciones que existen para poder seleccionar una
-     */
-    @FXML
-    private void openEditMenu(ActionEvent event){
-        final String query = "SELECT idSong, name FROM song";
-        MySqlConn conn = new MySqlConn();
-        conn.consult(query);
-        int n = 0;
-
-
-        this.comboBox.setVisible(true);
-        this.comboBox.setDisable(false);
-
-        if (conn.rs != null){
-
-            try {
-                conn.rs.last();
-                n = conn.rs.getRow();
-                conn.rs.first();
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-            String []resultados = new String[n];
-            this.map = new Pair[n];
-            for (int i = 0; i < n; i++) {
-                try {
-                    resultados[i] = (conn.rs.getString(2));
-                    map[i] = new Pair<>(conn.rs.getInt(1),conn.rs.getString(2));
-                    conn.rs.next();
-                }catch (SQLException e){
-                    e.printStackTrace();
-                }
-            }
-            comboBox.getItems().setAll(resultados);
-        }
-        conn.closeRsStmt();
-
+    public void setMediaPlayer(MediaPlayer mediaPlayer) {
+        this.mediaPlayer = mediaPlayer;
     }
 
-    @FXML
-    private void accetpFile(ActionEvent event){
-        this.relocateLabels();
-        this.splitPane.setDisable(false);
+    public void setTeclas(ArrayList<String> teclas) {
+        ObservableList <String> observableList= FXCollections.observableArrayList(teclas);
+        this.teclasExistentes.setItems(observableList);
+    }
+
+    public void setSongName (String songName) {
+        this.songName.setText(songName);
+    }
+
+
+    public void Postinitialize(){
+//        String path = Paths.get(mediaPlayer.getMedia().getSource()).toAbsolutePath().toString();
+//        this.songPath.setText(path);
         //Configurar el slider de reproducccion
         configSlider();
-        this.comboBox.setVisible(false);
-        this.comboBox.setDisable(true);
         this.animacionReproduccion = new Timeline(new KeyFrame(Duration.millis(1000),event1 -> actualizarSlider(0)));
         animacionReproduccion.setCycleCount(Timeline.INDEFINITE);
         this.initKeyboard();
     }
-
-    /**
-     * Cuando se selecciona una cancion ya existente, se carga desde la base de datos
-     */
-    @FXML
-    private void editarCancion(ActionEvent event){
-        for (int i = 0; i < map.length; i++) {
-            if (map[i].getSecond().equals(comboBox.getValue())){
-                this.idSong = i;
-            }
-        }
-        this.idSong++;
-        final String query = "SELECT * FROM song WHERE idSong = " + this.idSong;
-        MySqlConn conn = new MySqlConn();
-        conn.consult(query);
-        String name = "";
-        String path = "";
-        if (conn.rs != null){
-            try {
-                conn.rs.first();
-                name = conn.rs.getString(2);
-                path = conn.rs.getString(3);
-            }catch (SQLException e){}
-        }
-        this.songName.setText(name);
-        this.songPath.setText(path);
-        conn.closeRsStmt();
-
-
-        try{
-            String mediaURL = new File(path).toURI().toString();
-            Media media = new Media(mediaURL);
-            this.mediaPlayer = new MediaPlayer(media);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        AcceptPista.setDisable(false);
-
-        this.cargarTeclas(conn);
-        this.editado = true;
-    }
-
-
     /**
      * Events Handlers para la edicion
      */
@@ -270,7 +176,6 @@ public class editorController {
         int xSelected = (int)((Button) event.getSource()).getLayoutX();
         switch (xSelected){
             case 240:
-                numColor = 0;
                 break;
             case 340:
                 numColor = 1;
@@ -397,20 +302,6 @@ public class editorController {
     }
 
 
-
-    private void relocateLabels(){
-        loadSong.getChildren().remove(songName);
-        loadSong.getChildren().remove(songPath);
-        loadSong.setVisible(false);
-        loadSong.setDisable(true);
-        sideBar.getChildren().add(songName);
-        sideBar.getChildren().add(songPath);
-        songName.setLayoutX(55);
-        songName.setLayoutY(48);
-        songPath.setLayoutX(55);
-        songPath.setLayoutY(83);
-    }
-
     /**
      * Actualiza la posicion del slider de reproduccion, asi como formatea el tiempo para actualizar el label del
      * current time
@@ -433,34 +324,6 @@ public class editorController {
         this.timeDisplay.setText(timepo);
     }
 
-    private void cargarTeclas(MySqlConn conn){
-        final String query = "SELECT numColor,tiempoInicio FROM teclas WHERE idSong = " + idSong;
-        conn.consult(query);
-
-        int n = 0;
-        if (conn.rs != null){
-            try {
-                conn.rs.last();
-                n = conn.rs.getRow();
-                conn.rs.first();
-            }catch (SQLException e){}
-            ArrayList<String> aux = new ArrayList<>();
-            for (int i = 0; i < n; i++){
-                try {
-                    String builder = switchColores(conn.rs.getInt(1)) +
-                            "--" +
-                            conn.rs.getString(2);
-                    aux.add(builder);
-                    conn.rs.next();
-                } catch (SQLException e){}
-            }
-
-            ObservableList <String> observableList= FXCollections.observableArrayList(aux);
-
-            this.teclasExistentes.setItems(observableList);
-
-        }
-    }
     private void initKeyboard(){
         this.principal.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
             KeyCode code = event.getCode();
