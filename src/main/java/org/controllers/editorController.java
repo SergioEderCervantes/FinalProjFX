@@ -93,28 +93,6 @@ public class editorController {
     /**
      * Event-Handlers para la pre-edicion
      */
-    @FXML
-    private void openFileChooser(ActionEvent event){
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Select a file");
-        fileChooser.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter("Music Files", "*.mp3"));
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-
-
-        File selectedFile = fileChooser.showOpenDialog(stage);
-        if(validateFile(selectedFile)){
-            songName.setFocusTraversable(false);
-            songPath.setFocusTraversable(false);
-            songName.setText(selectedFile.getName());
-            songPath.setText(selectedFile.getPath());
-            AcceptPista.setDisable(false);
-        }
-        else {
-            errorLabel1.setVisible(true);
-            errorLabel2.setVisible(true);
-        }
-    }
 
     /**
      * Hacemos llamar a la base de datos con una consulta sobre las canciones que existen para poder seleccionar una
@@ -418,23 +396,7 @@ public class editorController {
         this.timeDisplay.setText("00:00:00");
     }
 
-    /**
-     * Funcion que valida el archivo y crea la instancia MediaPlayer de la pista
-     * @param file
-     * El archivo escogido en el fileChooser
-     */
-    private boolean validateFile(File file){
-        if (file == null || !file.getName().endsWith(".mp3") || !file.exists() || !file.canRead()) {
-            return false;
-        }
-        try {
-            Media media = new Media(file.toURI().toString());
-            mediaPlayer = new MediaPlayer(media);
-        } catch (Exception e) {
-            return false;
-        }
-        return true;
-    }
+
 
     private void relocateLabels(){
         loadSong.getChildren().remove(songName);
@@ -551,7 +513,7 @@ public class editorController {
 
     //Funciones estaticas
 
-    private static String switchColores(int numColor){
+    public static String switchColores(int numColor){
         switch (numColor){
             case 0: return "Rojo";
             case 1: return "Azul";
