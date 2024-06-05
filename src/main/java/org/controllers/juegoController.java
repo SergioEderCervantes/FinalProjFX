@@ -5,12 +5,14 @@ package org.controllers;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -92,6 +94,13 @@ public class juegoController implements Initializable {
     @FXML
     Pane finalPanel;
 
+    //Test
+    private long test_time_inicio;
+    private long test_time_fin;
+
+    public void setCancionSeleccionada(Song cancionSeleccionada) {
+        this.cancionSeleccionada = cancionSeleccionada;
+    }
 
     /**
      *Metodo de inicializacion para la Ventana juego, en la cual se settean varios parametros importantes para el juego
@@ -101,12 +110,17 @@ public class juegoController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        this.initTimeline();
         this.initKeyboard();
         this.initButtons();
-        this.initReproduction(0);
         this.t_inicio = this.t_Nuevo = System.currentTimeMillis();
+
+    }
+    //TODO comentar que es esto
+    public void postInitialize(){
+        this.initReproduction();
+        this.initTimeline();
         this.timeline.play();
+        this.test_time_inicio = System.currentTimeMillis();
     }
 
 
@@ -121,10 +135,10 @@ public class juegoController implements Initializable {
         this.t_inicio = System.currentTimeMillis();
     }
 
-    private void initReproduction(int SongID){
+    private void initReproduction(){
         //TODO tomar el ID de la cancion seleccionada y cargar toda la cancion para guardarla en un objeto Song, puede ser:
-        //this.cancionSeleccionada = loadSongFromSQL(song_ID);
-        this.cancionSeleccionada = TestGraph.RealizarTest();
+
+//        this.cancionSeleccionada = TestGraph.RealizarTest();
         this.aux = cancionSeleccionada.getTeclas_pulsadas().getVertice(0);
 
         //Settea reproductor con la cancion seleccionada
@@ -133,58 +147,45 @@ public class juegoController implements Initializable {
         Media media = new Media(mediaUrl);
         this.reproductor = new MediaPlayer(media);
         this.reproduciendo = false;
+        this.reproductor.setVolume(0.5);
     }
 
     private void print() {
-
+        test_time_fin = System.currentTimeMillis();
+        double frameDt = test_time_fin - test_time_inicio;
+        test_time_inicio = test_time_fin;
         int xDef = 0;
         Tecla lastTecla = null;
         long t_final = System.currentTimeMillis();
         long dt = t_final - t_Nuevo;     //Esto sera en milisegundos
-        final long DELAY = 1647;
-        if (t_final - t_inicio > DELAY && !reproduciendo) {
+        final long DELAY = 1580;
+        if (t_final - t_inicio > DELAY && !reproduciendo) {//no
             reproduciendo = true;
             reproductor.play();
         }
 
-        score.setText(String.valueOf(puntaje));
+        score.setText(String.valueOf(puntaje));//no
 
-        multiplo.setVisible(multiplicador != 1);
-        multiplo.setText("x" + multiplicador);
+        multiplo.setVisible(multiplicador != 1);//no
+        multiplo.setText("x" + multiplicador);//no
 
         //Primero desplaza todas las que ya existen hacia abajo y elimina del ArrayList y el Panel las teclas que ya no se ven
         try{
             for (Circle circulo : teclasEnPantalla) {
-                circulo.setCenterY(circulo.getCenterY() + 4);
-                if(circulo.getCenterX() < 461 ){
-                    circulo.setCenterX(circulo.getCenterX() - 0.6666);
-                }
-                else if(circulo.getCenterX() > 739){
-                    circulo.setCenterX(circulo.getCenterX() + 0.6666);
-                }
-                else if(circulo.getCenterX() < 600){
-                    circulo.setCenterX(circulo.getCenterX() - 0.3333);
-                }else if(circulo.getCenterX() >600){
-                    circulo.setCenterX(circulo.getCenterX() + 0.3333);
-                }
+                fisicaCirculo(circulo, frameDt);
 
                 if (circulo.getCenterY() > 620) {
                     if(circulo.isVisible()){
                         multiplicador=1;
                         cont = 0;
                     }
-                    teclasEnPantalla.remove(circulo);
-                    principal.getChildren().remove(circulo);
+                    this.removeCircle(circulo);
                 }
             }
         }catch (Exception e){}
-        if(teclasEnPantalla.isEmpty() && aux.getNumAristasAdyacentes() == 0){
-            scoref.setText(String.valueOf(puntaje));
-            pantallaFinal();
-        }
         //Agregamos las nuevas teclas si deben de aparecer
         if (aux.getNumAristasAdyacentes() != 0) {
-            if (dt >= aux.getDtSiguiente()) {
+            if (aux.getTeclaSig().getTiempoInicio() - DELAY <= this.reproductor.getCurrentTime().toMillis()) {   //
                 t_Nuevo = t_final;
                 for (Arista i : aux.getAristasAdyacentes()) {
                     switch (i.destino().numColor) { //Dependiendo del color se inician en coordenadas en X diferentes
@@ -214,10 +215,19 @@ public class juegoController implements Initializable {
             }
             this.setPositions();
         }else {
-            //TODO cuando acabe la cancion de ejecutarse, salir al menu principal
+            if (teclasEnPantalla.isEmpty()) {
+                scoref.setText(String.valueOf(puntaje));
+                pantallaFinal();
+            }
         }
     }
+    public void removeCircle(Circle circle) {
+        Platform.runLater(() -> {
+            principal.getChildren().remove(circle);
+            teclasEnPantalla.remove(circle);
+        });
 
+    }
     /**
      * KeyListener para los eventos del teclado, cuando se presiona una tecla realiza un switch para ver si se
      * Presiono una tecla de interes, en caso de que si, acciona los eventos de la GUI Necesarios, los cuales son
@@ -412,6 +422,75 @@ public class juegoController implements Initializable {
             }
         }
         //TODO Quitar puntos porque se presiono una tecla cuando no habia nada
+    }
+
+    public void loadSongFromDB(int idSong){
+        final String query1 = "SELECT * FROM song WHERE idSong = " + idSong;
+        final String query2 = "SELECT numColor, tiempoInicio FROM teclas WHERE idSong = " + idSong;
+        MySqlConn conn = new MySqlConn();
+
+        conn.consult(query1);
+        try {
+            if (conn.rs != null){
+                int n = 0;
+
+                conn.rs.last();
+                n = conn.rs.getRow();
+                conn.rs.first();
+
+                if (n == 1){
+                    this.cancionSeleccionada = new Song(conn.rs.getString(2),
+                            conn.rs.getString(3),conn.rs.getDouble(4));
+                }
+                else throw new Exception("mas de una cancion con el mismo ID");
+            }
+            else throw new Exception("Resulset == null");
+
+        }catch (SQLException sqle){
+            sqle.printStackTrace();
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+
+        //cargar las teclas
+        conn.consult(query2);
+        ArrayList<Tecla> teclas = new ArrayList<>();
+        try {
+            if (conn.rs != null){
+                int n = 0;
+                conn.rs.last();
+                n = conn.rs.getRow();
+                conn.rs.first();
+                for (int i = 0; i < n; i++) {
+                    teclas.add(new Tecla(i+1,conn.rs.getDouble(2),conn.rs.getInt(1)));
+                    conn.rs.next();
+                }
+            }else throw new Exception("rs == null");
+        } catch (SQLException sqle){
+            sqle.printStackTrace();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        this.cancionSeleccionada.ConstruirGrafo(teclas);
+
+    }
+
+    public static void fisicaCirculo(Circle circulo,double dt){
+        double factor = dt / 4 ;
+        double factor1 = factor / 6;
+        double factor2 = factor / 12;
+        circulo.setCenterY(circulo.getCenterY() + factor);
+        if(circulo.getCenterX() < 461 ){
+            circulo.setCenterX(circulo.getCenterX() - factor1);
+        }
+        else if(circulo.getCenterX() > 739){
+            circulo.setCenterX(circulo.getCenterX() + factor1);
+        }
+        else if(circulo.getCenterX() < 600){
+            circulo.setCenterX(circulo.getCenterX() - factor2);
+        }else if(circulo.getCenterX() >600){
+            circulo.setCenterX(circulo.getCenterX() + factor2);
+        }
     }
 }
 

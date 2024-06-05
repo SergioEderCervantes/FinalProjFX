@@ -6,6 +6,7 @@ package org.controllers;
 
 import java.io.IOException;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
@@ -25,7 +26,12 @@ public class jugadorController {
 
 
     } public void switchToJuego(ActionEvent event) throws IOException {
-        Pane root = loadFXML("juego");
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("juego.fxml"));
+        Pane root = loader.load();
+        juegoController controller = loader.getController();
+        controller.loadSongFromDB(1);
+        controller.postInitialize();
+
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);
