@@ -9,7 +9,7 @@ public class MySqlConn {
     public MySqlConn() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            String connectionURL = "jdbc:mysql://10.10.11.124/NeonCity?"
+            String connectionURL = "jdbc:mysql://10.10.11.121/NeonCity?"
                     + "characterEncoding=latin1&" + "user=finalUserNC&password=mement0_M0ry_898";
             conn = DriverManager.getConnection(connectionURL);
         }catch (SQLException e) {
