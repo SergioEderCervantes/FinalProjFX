@@ -25,13 +25,8 @@ public class jugadorController {
         stage.show();
 
 
-    } public void switchToJuego(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("juego.fxml"));
-        Pane root = loader.load();
-        juegoController controller = loader.getController();
-        controller.loadSongFromDB(1);
-        controller.postInitialize();
-
+    } public void switchToSelector(ActionEvent event) throws IOException {
+        Pane root = loadFXML("Selector");
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);

@@ -2,44 +2,132 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.effect.ColorAdjust?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.media.MediaView?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="600.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.controllers.selectorController">
+<AnchorPane prefHeight="600.0" prefWidth="1200.0" style="-fx-background-color: #000000;" stylesheets="@../../css/juego.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.controllers.selectorController">
    <children>
-      <AnchorPane prefHeight="402.0" prefWidth="600.0" AnchorPane.bottomAnchor="36.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <MediaView fx:id="backgSelect" fitHeight="600.0" fitWidth="1200.0" opacity="0.76" preserveRatio="false" />
+      <Pane prefHeight="551.0" prefWidth="1200.0" style="-fx-background-color: transparent;">
          <children>
-            <ImageView fitHeight="600.0" fitWidth="1200.0" layoutX="300.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="uno" fitHeight="270.0" fitWidth="261.0" layoutX="478.0" layoutY="49.0" pickOnBounds="true">
                <image>
-                  <Image url="@../../images/carr.png" />
-               </image>
-            </ImageView>
-            <Label layoutX="460.0" layoutY="350.0" prefHeight="25.0" prefWidth="68.0" text="Label">
+                  <Image url="@../../images/find del mundo.jpg" />
+               </image></ImageView>
+         </children>
+      </Pane>
+      <Pane prefHeight="551.0" prefWidth="1200.0" style="-fx-background-color: transparent;">
+         <children>
+            <ImageView fx:id="dos" fitHeight="270.0" fitWidth="261.0" layoutX="476.0" layoutY="49.0" pickOnBounds="true" />
+         </children>
+      </Pane>
+      <Pane prefHeight="551.0" prefWidth="1200.0" style="-fx-background-color: transparent;">
+         <children>
+            <ImageView fx:id="tres" fitHeight="270.0" fitWidth="261.0" layoutX="478.0" layoutY="49.0" pickOnBounds="true" />
+         </children>
+      </Pane>
+      <Pane prefHeight="551.0" prefWidth="1200.0" style="-fx-background-color: transparent;">
+         <children>
+            <ImageView fx:id="cuatro" fitHeight="270.0" fitWidth="261.0" layoutX="478.0" layoutY="49.0" pickOnBounds="true" />
+         </children>
+      </Pane>
+      <Pane prefHeight="551.0" prefWidth="1200.0" style="-fx-background-color: transparent;">
+         <children>
+            <ImageView fx:id="cinco" fitHeight="270.0" fitWidth="261.0" layoutX="478.0" layoutY="49.0" pickOnBounds="true" />
+         </children>
+      </Pane>
+      <Pane prefHeight="551.0" prefWidth="1200.0" style="-fx-background-color: transparent00;">
+         <children>
+            <ImageView fx:id="seis" fitHeight="270.0" fitWidth="261.0" layoutX="478.0" layoutY="49.0" pickOnBounds="true" />
+         </children>
+      </Pane>
+      <Pane prefHeight="551.0" prefWidth="1200.0" style="-fx-background-color: transparent;">
+         <children>
+            <ImageView fx:id="siete" fitHeight="270.0" fitWidth="261.0" layoutX="478.0" layoutY="49.0" pickOnBounds="true" />
+         </children>
+      </Pane>
+      <Pane prefHeight="551.0" prefWidth="1200.0" style="-fx-background-color: transparent;">
+         <children>
+            <ImageView fx:id="ocho" fitHeight="270.0" fitWidth="261.0" layoutX="478.0" layoutY="49.0" pickOnBounds="true">
+               <image>
+                  <Image url="@../../images/mii.png" />
+               </image></ImageView>
+         </children>
+      </Pane>
+      <Pane prefHeight="551.0" prefWidth="1200.0" style="-fx-background-color: transparent;">
+         <children>
+            <ImageView fx:id="nueve" fitHeight="270.0" fitWidth="265.0" layoutX="478.0" layoutY="51.0" pickOnBounds="true" />
+         </children>
+      </Pane>
+      <Pane prefHeight="551.0" prefWidth="1200.0" style="-fx-background-color: transparent;">
+         <children>
+            <ImageView fx:id="diez" fitHeight="270.0" fitWidth="261.0" layoutX="478.0" layoutY="49.0" pickOnBounds="true" />
+         </children>
+      </Pane>
+      <Pane prefHeight="551.0" prefWidth="1200.0" style="-fx-background-color: transparent;">
+         <children>
+            <ImageView fx:id="once" fitHeight="270.0" fitWidth="261.0" layoutX="476.0" layoutY="49.0" pickOnBounds="true" />
+         </children>
+      </Pane>
+      <Pane prefHeight="551.0" prefWidth="1200.0" style="-fx-background-color: transparent;">
+         <children>
+            <ImageView fx:id="doce" fitHeight="270.0" fitWidth="261.0" layoutX="478.0" layoutY="49.0" pickOnBounds="true" />
+         </children>
+      </Pane>
+      <Pane prefHeight="551.0" prefWidth="1200.0" style="-fx-background-color: transparent;">
+         <children>
+            <ImageView fx:id="trece" fitHeight="270.0" fitWidth="261.0" layoutX="478.0" layoutY="49.0" pickOnBounds="true" />
+         </children>
+      </Pane>
+      <Pane prefHeight="551.0" prefWidth="1200.0" style="-fx-background-color: transparent;">
+         <children>
+            <ImageView fx:id="catorce" fitHeight="270.0" fitWidth="261.0" layoutX="478.0" layoutY="49.0" pickOnBounds="true" />
+         </children>
+      </Pane>
+      <Pane prefHeight="551.0" prefWidth="1200.0" style="-fx-background-color: transparent;">
+         <children>
+            <ImageView fx:id="quince" fitHeight="270.0" fitWidth="261.0" layoutX="478.0" layoutY="49.0" pickOnBounds="true" />
+         </children>
+      </Pane>
+      <Pane layoutY="550.0" prefHeight="50.0" prefWidth="1200.0" style="-fx-background-color: #720000;">
+         <children>
+            <Button layoutX="14.0" layoutY="13.0" mnemonicParsing="false" onAction="#back" prefHeight="25.0" prefWidth="56.0" text="atrás" />
+            <Label fx:id="num" layoutX="595.0" layoutY="13.0" text="1/15" textFill="WHITE">
                <font>
-                  <Font name="System Bold" size="22.0" />
+                  <Font name="System Bold" size="14.0" />
                </font>
             </Label>
          </children>
-      </AnchorPane>
-      <AnchorPane prefHeight="402.0" prefWidth="600.0">
-         <children>
-            <ImageView fitHeight="600.0" fitWidth="1200.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-         </children>
-      </AnchorPane>
-      <AnchorPane prefHeight="402.0" prefWidth="600.0">
-         <children>
-            <ImageView fitHeight="600.0" fitWidth="1200.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-         </children>
-      </AnchorPane>
-      <Pane layoutY="550.0" prefHeight="50.0" prefWidth="1200.0" style="-fx-background-color: #720000;">
-         <children>
-            <Button layoutX="14.0" layoutY="13.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="56.0" text="atrás" />
-         </children>
       </Pane>
-      <Button disable="true" mnemonicParsing="false" prefHeight="144.0" prefWidth="44.0" text="&lt;" visible="false" />
-      <Button disable="true" mnemonicParsing="false" prefHeight="144.0" prefWidth="44.0" text="&gt;" visible="false" />
+      <Button layoutY="220.0" mnemonicParsing="false" onAction="#atras" prefHeight="144.0" prefWidth="72.0" style="-fx-background-color: transparent;" text="&lt;" textFill="WHITE">
+         <font>
+            <Font size="35.0" />
+         </font></Button>
+      <Button layoutX="1117.0" layoutY="220.0" mnemonicParsing="false" onAction="#adelante" prefHeight="144.0" prefWidth="83.0" style="-fx-background-color: transparent;" text="&gt;" textFill="WHITE">
+         <font>
+            <Font size="35.0" />
+         </font>
+      </Button>
+      <Label fx:id="name" layoutX="495.0" layoutY="337.0" text="Undefined" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <ImageView fx:id="note" fitHeight="551.0" fitWidth="517.0" layoutX="350.0" pickOnBounds="true">
+         <effect>
+            <ColorAdjust brightness="1.0" />
+         </effect>
+      </ImageView>
+      <Button layoutX="580.0" layoutY="399.0" mnemonicParsing="false" onAction="#switchTojuego" prefHeight="50.0" prefWidth="56.0" style="-fx-background-color: transparent;" styleClass="track-button" textFill="TRANSPARENT" />
+      <Label fx:id="err" layoutX="562.0" layoutY="503.0" text="Inexistente" textFill="RED" visible="false">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

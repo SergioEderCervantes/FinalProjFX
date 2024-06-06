@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
-import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -41,11 +40,9 @@ public class juegoController implements Initializable {
     public static final Color[] ColoresPosibles =
             {Color.RED, Color.BLUE, Color.YELLOW, Color.GREEN, Color.ORANGE};
 
-    private Stage stage;
     private int puntaje=0;
     private int multiplicador=1;
     private int cont=0;
-    private Scene scene;
     private Song cancionSeleccionada;
     public Timeline timeline;
     private Tecla aux;
@@ -96,7 +93,6 @@ public class juegoController implements Initializable {
 
     //Test
     private long test_time_inicio;
-    private long test_time_fin;
 
     public void setCancionSeleccionada(Song cancionSeleccionada) {
         this.cancionSeleccionada = cancionSeleccionada;
@@ -151,13 +147,13 @@ public class juegoController implements Initializable {
     }
 
     private void print() {
-        test_time_fin = System.currentTimeMillis();
+        long test_time_fin = System.currentTimeMillis();
         double frameDt = test_time_fin - test_time_inicio;
         test_time_inicio = test_time_fin;
         int xDef = 0;
         Tecla lastTecla = null;
         long t_final = System.currentTimeMillis();
-        long dt = t_final - t_Nuevo;     //Esto sera en milisegundos
+        //Esto sera en milisegundos
         final long DELAY = 1580;
         if (t_final - t_inicio > DELAY && !reproduciendo) {//no
             reproduciendo = true;
@@ -182,7 +178,7 @@ public class juegoController implements Initializable {
                     this.removeCircle(circulo);
                 }
             }
-        }catch (Exception e){}
+        }catch (Exception ignored){}
         //Agregamos las nuevas teclas si deben de aparecer
         if (aux.getNumAristasAdyacentes() != 0) {
             if (aux.getTeclaSig().getTiempoInicio() - DELAY <= this.reproductor.getCurrentTime().toMillis()) {   //
@@ -320,9 +316,9 @@ public class juegoController implements Initializable {
 
     @FXML //TODO Retorno al menu
     public void back(ActionEvent event) throws IOException {
-        Pane root = loadFXML("Menu");
-        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        scene = new Scene(root);
+        Pane root = loadFXML("Selector");
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
         reproductor.stop();
@@ -415,11 +411,7 @@ public class juegoController implements Initializable {
                     //Esto es mil veces mejor que destruirlo aqui
                 return;
             }
-            else {
 
-
-
-            }
         }
         //TODO Quitar puntos porque se presiono una tecla cuando no habia nada
     }
@@ -432,7 +424,7 @@ public class juegoController implements Initializable {
         conn.consult(query1);
         try {
             if (conn.rs != null){
-                int n = 0;
+                int n;
 
                 conn.rs.last();
                 n = conn.rs.getRow();
@@ -457,7 +449,7 @@ public class juegoController implements Initializable {
         ArrayList<Tecla> teclas = new ArrayList<>();
         try {
             if (conn.rs != null){
-                int n = 0;
+                int n;
                 conn.rs.last();
                 n = conn.rs.getRow();
                 conn.rs.first();

@@ -32,18 +32,25 @@
 .track-line.yellow {
     -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #ffff00, #ffff66);
 }
-
 .track-button {
-    -fx-background-color: linear-gradient(to bottom, #444444, #222222);
+    -fx-background-color: transparent;
     -fx-text-fill: white;
     -fx-font-size: 16px;
     -fx-font-weight: bold;
-    -fx-background-radius: 15;
+    -fx-background-radius: 15; /* Bordes redondeados */
     -fx-padding: 10 15;
-    -fx-border-color: transparent;
+    -fx-border-color: white;
+    -fx-border-width: 2px;
+    -fx-border-radius: 15;
     -fx-cursor: hand;
-    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.6), 10, 0, 0, 0);
-    -fx-transition: background-color 0.2s, transform 0.1s;
+    -fx-effect: dropshadow(gaussian, rgba(255, 255, 255, 0.75), 10, 0, 0, 0); /* Bordes brillantes */
+    -fx-transition: background-color 0.2s, transform 0.1s, -fx-effect 0.1s;
+}
+
+.track-button:pressed {
+    -fx-background-color: transparent; /* Mantener el fondo transparente */
+    -fx-effect: dropshadow(gaussian, rgba(0, 255, 255, 0.75), 10, 0, 0, 0); /* Bordes brillantes cian */
+    -fx-transform: scale(0.95); /* Efecto de pulsado */
 }
 
 .track-button.red {
