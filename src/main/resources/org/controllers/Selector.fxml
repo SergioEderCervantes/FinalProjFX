@@ -17,7 +17,7 @@
          <children>
             <ImageView fx:id="uno" fitHeight="270.0" fitWidth="261.0" layoutX="478.0" layoutY="49.0" pickOnBounds="true">
                <image>
-                  <Image url="@../../images/find del mundo.jpg" />
+                  <Image url="@../../images/fin.jpg" />
                </image></ImageView>
          </children>
       </Pane>
