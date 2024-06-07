@@ -24,9 +24,7 @@ import org.Modules.Pair;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -65,7 +63,6 @@ public class MenuEditorController {
 
     /**
      * Switch Back a Menu
-     * @param event
      */
     @FXML
     private void back(ActionEvent event) {
@@ -77,7 +74,7 @@ public class MenuEditorController {
             stage.setScene(scene);
             stage.show();
         } catch (Exception e){
-            e.printStackTrace();
+            System.out.println("Exception: " + e.getMessage());
             System.exit(1);
         }
     }
@@ -211,7 +208,9 @@ public class MenuEditorController {
         VParent.setDisable(true);
     }
 
-    //todo crear el manejo del boton AcceptPista bien
+    /**
+     * Metodo que cambia la escena al editor, pasandole todos los valores necesarios para ello
+     */
     @FXML
     private void accetpFile(ActionEvent event) {
         FXMLLoader loader = new FXMLLoader(App.class.getResource("Editor.fxml"));
@@ -232,6 +231,10 @@ public class MenuEditorController {
 
         }
     }
+
+    /**
+     * Hace una llamada a la base de datos para eliminar la cancion que se selecciono, devuelve e imprime la cantidad de registros afectados
+     */
     @FXML
     private void deleteSong(){
         MySqlConn conn = new MySqlConn();
@@ -330,7 +333,7 @@ public class MenuEditorController {
                 n = conn.rs.getRow();
                 conn.rs.first();
             }catch (Exception e){
-                e.printStackTrace();
+                System.out.println("Exception:" + e.getMessage());
             }
             map = new Pair[n];
 
@@ -339,7 +342,7 @@ public class MenuEditorController {
                     map[i] = new Pair<>(conn.rs.getInt(1),conn.rs.getString(2));
                     conn.rs.next();
                 }catch (SQLException e){
-                    e.printStackTrace();
+                    System.out.println("SQLException:" + e.getMessage());
                 }
             }
 
@@ -358,7 +361,7 @@ public class MenuEditorController {
         MySqlConn conn = new MySqlConn();
         conn.consult(query);
 
-        String path = "";
+        String path;
         MediaPlayer target = null;
         if (conn.rs != null){
             conn.rs.first();
@@ -380,7 +383,7 @@ public class MenuEditorController {
         MySqlConn conn = new MySqlConn();
         conn.consult(query);
 
-        int n = 0;
+        int n;
         if (conn.rs != null) {
             conn.rs.last();
             n = conn.rs.getRow();
@@ -409,9 +412,9 @@ public class MenuEditorController {
         Path rutaAntigua = Paths.get(path);
         Path rutaNueva = Paths.get(target);
         try {
-            Files.copy(rutaAntigua,rutaNueva);
+            Files.copy(rutaAntigua,rutaNueva, StandardCopyOption.REPLACE_EXISTING);
         }catch (IOException e){
-            e.printStackTrace();
+            System.out.println("IOException: " + e.getMessage());
         }
         return target;
     }

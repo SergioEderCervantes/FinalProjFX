@@ -52,3 +52,9 @@
     dropshadow(three-pass-box, rgba(255, 255, 255, 0.1), 1, 0, 0, 1);
 }
 
+.icon-button {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-text-fill: transparent;
+}
+
