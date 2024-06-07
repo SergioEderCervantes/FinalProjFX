@@ -24,6 +24,7 @@ import java.net.URL;
 import java.sql.SQLException;
 
 import static org.controllers.App.loadFXML;
+import static org.controllers.multijugadorController.band;
 
 public class selectorController {
     private Stage stage;
@@ -248,8 +249,9 @@ public class selectorController {
         translateAnimation(0.5,quince,1200);
     }
     public void switchTojuego(ActionEvent event) throws IOException {
-        if( canciones[show-1].getSecond() instanceof String){
-            fondo.stop();
+        fondo.stop();
+        if( band==0){
+
             FXMLLoader loader = new FXMLLoader(getClass().getResource("juego.fxml"));
 
 
@@ -265,6 +267,19 @@ public class selectorController {
 
 
 
+        }else if(band == 1){
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("Local.fxml"));
+
+            Pane root = loader.load();
+            juegoController controller = loader.getController();
+            controller.loadSongFromDB(canciones[show-1].getFirst());
+            controller.postInitialize();
+            stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        }else{
+            //multi en linea
         }
 
 
