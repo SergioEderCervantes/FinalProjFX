@@ -26,9 +26,12 @@
 }
 
 .buttonRound {
+    -fx-background-radius: 100%;
+}
+
+.buttonControls{
     -fx-pref-height: 4em;
     -fx-pref-width: 4em;
-    -fx-background-radius: 100%;
 }
 
 .buttonDark {
@@ -47,5 +50,11 @@
     -fx-background-color: #333333;
     -fx-effect: innershadow(two-pass-box, rgba(0, 0, 0, 0.5), 3, 0, 0, 2),
     dropshadow(three-pass-box, rgba(255, 255, 255, 0.1), 1, 0, 0, 1);
+}
+
+.icon-button {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-text-fill: transparent;
 }
 

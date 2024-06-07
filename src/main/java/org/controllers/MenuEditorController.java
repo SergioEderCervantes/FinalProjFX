@@ -1,0 +1,422 @@
+package org.controllers;
+
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+import org.Modules.MySqlConn;
+import org.Modules.Pair;
+
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.*;
+import java.sql.SQLException;
+import java.util.ArrayList;
+
+import static org.controllers.App.loadFXML;
+import static org.controllers.editorController.switchColores;
+
+
+public class MenuEditorController {
+
+    private Pair<Integer,String>[] map;
+    private boolean editado;
+    MediaPlayer pistaSeleccion;
+    ArrayList<String> teclasSeleccion;
+    String cancionSeleccion;
+    int idSongAEliminar;
+    final Image closeImg = new Image(Paths.get("src/main/resources/images/cross.png").toUri().toString());
+
+    @FXML
+    private VBox loadPanel;
+    @FXML
+    private VBox editPanel;
+    @FXML
+    private VBox deletePanel;
+    @FXML
+    private Button AcceptPista;
+    @FXML
+    private Button AcceptPista1;
+    @FXML
+    private Button delButton;
+    @FXML
+    private ComboBox<String> comboBoxEdit;
+    @FXML
+    private ComboBox<String> comboBoxDel;
+    @FXML
+    private Label confirmationLabel;
+
+    /**
+     * Switch Back a Menu
+     */
+    @FXML
+    private void back(ActionEvent event) {
+        try{
+
+            Pane root = loadFXML("Menu");
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        } catch (Exception e){
+            System.out.println("Exception: " + e.getMessage());
+            System.exit(1);
+        }
+    }
+
+    /**
+     * Metodo que despliega el panel de agregar nueva cancion
+     */
+    @FXML
+    private void AgregarCancion() {
+        this.editado = false;
+        this.loadPanel.setVisible(true);
+        this.loadPanel.setDisable(false);
+        final ImageView closeImgVw = new ImageView(closeImg);
+
+        HBox hBox = (HBox) this.loadPanel.getChildren().get(0);
+        Button aux = (Button) hBox.getChildren().get(0);
+        aux.setGraphic(closeImgVw);
+    }
+
+    /**
+     * Metodo que despliega el panel de editar una cancion
+     */
+    @FXML
+    private void editarCancion() {
+        this.editado = true;
+        this.editPanel.setVisible(true);
+        this.editPanel.setDisable(false);
+        this.initEditionPanel();
+        final ImageView closeImgVw = new ImageView(closeImg);
+
+        HBox hBox = (HBox) this.editPanel.getChildren().get(0);
+        Button aux = (Button) hBox.getChildren().get(0);
+        aux.setGraphic(closeImgVw);
+    }
+
+    /**
+     * Metodo que despliega el panel de eliminar una cancion
+     */
+    @FXML
+    private void EliminarCancion() {
+        this.editado = false;
+        this.deletePanel.setVisible(true);
+        this.deletePanel.setDisable(false);
+        this.initDeletionPanel();
+        final ImageView closeImgVw = new ImageView(closeImg);
+
+        HBox hBox = (HBox) this.deletePanel.getChildren().get(0);
+        Button aux = (Button) hBox.getChildren().get(0);
+        aux.setGraphic(closeImgVw);
+    }
+
+    /**
+     * Manejo del fileChooser de agregar nueva cancion
+     */
+    @FXML
+    private void openFileChooser(ActionEvent event){
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Select a file");
+        fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("Music Files", "*.mp3"));
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        fileChooser.setInitialDirectory(new File(System.getProperty("user.home"),"Music"));
+
+        File selectedFile = fileChooser.showOpenDialog(stage);
+        if(validateFile(selectedFile)){
+            Pane pane =(Pane) this.loadPanel.getChildren().get(1);
+            TextField songName = new TextField();
+            songName.setLayoutX(51);
+            songName.setLayoutY(109);
+            songName.setPrefWidth(106);
+            songName.setPrefHeight(25);
+            songName.setFocusTraversable(false);
+            songName.setText(selectedFile.getName());
+            songName.setEditable(false);
+            pane.getChildren().add(songName);
+
+            TextField songPath = new TextField();
+            songPath.setLayoutX(227);
+            songPath.setLayoutY(109);
+            songPath.setPrefWidth(106);
+            songPath.setPrefHeight(25);
+            songPath.setFocusTraversable(false);
+            songPath.setText(selectedFile.getPath());
+            songPath.setEditable(false);
+            pane.getChildren().add(songPath);
+
+            this.cancionSeleccion = selectedFile.getName();
+            AcceptPista.setDisable(false);
+            String pathChida = changePath(selectedFile.getName(),selectedFile.getPath());
+            Media media = new Media(new File(pathChida).toURI().toString());
+            this.pistaSeleccion = new MediaPlayer(media);
+            this.teclasSeleccion = new ArrayList<>();
+        }
+        else {
+            //todo se crea una ventana de error bonito
+        }
+    }
+
+    @FXML
+    private void getSong() {
+        int idSong = this.getIdSong();
+        if (editado){
+            try {
+                this.cancionSeleccion = comboBoxEdit.getValue();
+                this.pistaSeleccion = loadMP(idSong);
+                this.teclasSeleccion = loadTl(idSong);
+                if (pistaSeleccion == null || teclasSeleccion == null){
+                    throw new Exception("devolvio un null:");
+                }
+
+            } catch (SQLException sqlException){
+                System.err.println("Error SQL: " + sqlException.getMessage());
+            } catch (Exception e){
+                System.err.println("Error: " + e.getMessage());
+            }
+            this.AcceptPista1.setDisable(false);
+        }
+        else {
+            this.idSongAEliminar = idSong;
+            this.confirmationLabel.setVisible(true);
+            this.delButton.setDisable(false);
+        }
+    }
+
+    @FXML
+    private void closeWindow(ActionEvent event) {
+        Button source = (Button) event.getSource();
+        HBox HParent = (HBox) source.getParent();
+        VBox VParent = (VBox) HParent.getParent();
+        VParent.setVisible(false);
+        VParent.setDisable(true);
+    }
+
+    /**
+     * Metodo que cambia la escena al editor, pasandole todos los valores necesarios para ello
+     */
+    @FXML
+    private void accetpFile(ActionEvent event) {
+        FXMLLoader loader = new FXMLLoader(App.class.getResource("Editor.fxml"));
+        try {
+            Pane root = loader.load();
+            editorController controller = loader.getController();
+            controller.setSongName(this.cancionSeleccion);
+            controller.setMediaPlayer(this.pistaSeleccion);
+            controller.setTeclas(this.teclasSeleccion);
+            controller.Postinitialize();
+
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        }catch (IOException e){
+            System.out.println("IOException: " + e.getMessage());
+
+        }
+    }
+
+    /**
+     * Hace una llamada a la base de datos para eliminar la cancion que se selecciono, devuelve e imprime la cantidad de registros afectados
+     */
+    @FXML
+    private void deleteSong(){
+        MySqlConn conn = new MySqlConn();
+        final String query = "DELETE FROM song WHERE idSong =" + this.idSongAEliminar;
+        int affectedRows = conn.uptade(query);
+        System.out.println(affectedRows);
+    }
+
+    /**
+     * @return el idSong de la cancion que fue seleccionada ya sea en el comboBoxEdit o el comboBoxDel
+     */
+    private int getIdSong() {
+        int idSong = -1;
+
+        if (editado){
+            for (Pair<Integer, String> integerStringPair : map) {
+                if (integerStringPair.getSecond().equals(comboBoxEdit.getValue())) {
+                    idSong = integerStringPair.getFirst();
+
+                }
+            }
+        }
+        else {
+            for (Pair<Integer, String> integerStringPair : map) {
+                if (integerStringPair.getSecond().equals(comboBoxDel.getValue())) {
+                    idSong = integerStringPair.getFirst();
+
+                }
+            }
+        }
+        if (idSong == -1){
+            //todo error bonito
+        }
+        return idSong;
+    }
+
+
+    /**
+     * Configura el comboBoxEdit
+     */
+    private void initEditionPanel(){
+        this.map = cargarSongs();
+        this.comboBoxEdit.getItems().clear();
+        for (Pair<Integer, String> integerStringPair : map) {
+            this.comboBoxEdit.getItems().add(integerStringPair.getSecond());
+        }
+    }
+
+    /**
+     * Configura el comboBoxDel
+     */
+    private void initDeletionPanel(){
+        this.map = cargarSongs();
+        this.comboBoxDel.getItems().clear();
+        for (Pair<Integer, String> integerStringPair : map) {
+            this.comboBoxDel.getItems().add(integerStringPair.getSecond());
+        }
+    }
+
+
+
+    //Static methods
+    /**
+     * Funcion que valida el archivo y crea la instancia MediaPlayer de la pista
+     * @param file
+     * El archivo escogido en el fileChooser
+     */
+    private static boolean validateFile(File file){
+        if (file == null || !file.getName().endsWith(".mp3") || !file.exists() || !file.canRead()) {
+            return false;
+        }
+        try {
+            Media media = new Media(file.toURI().toString());
+            MediaPlayer mediaPlayer = new MediaPlayer(media);
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Metodo que hace una llamada a la base de datos para hacer una consulta de los nombres y id de las canciones existentes
+     * @return un arreglo de Pair que contiene todos los id's de las canciones asi como sus nombres
+     */
+    private static Pair <Integer,String>[] cargarSongs(){
+        final String query = "SELECT idSong, name FROM song";
+        MySqlConn conn = new MySqlConn();
+        conn.consult(query);
+        Pair <Integer,String>[] map = null;
+
+        int n = 0;
+        if (conn.rs != null){
+
+            try {
+                conn.rs.last();
+                n = conn.rs.getRow();
+                conn.rs.first();
+            }catch (Exception e){
+                System.out.println("Exception:" + e.getMessage());
+            }
+            map = new Pair[n];
+
+            for (int i = 0; i < n; i++) {
+                try {
+                    map[i] = new Pair<>(conn.rs.getInt(1),conn.rs.getString(2));
+                    conn.rs.next();
+                }catch (SQLException e){
+                    System.out.println("SQLException:" + e.getMessage());
+                }
+            }
+
+        }
+        conn.closeRsStmt();
+        return map;
+    }
+
+    /**
+     * Metodo que carga un MediaPlayer desde la base de datos con el id de la cancion
+     * @param idSong id de la cancion seleccionada
+     * @return MediaPlayer funcional para su uso
+     */
+    private static MediaPlayer loadMP(int idSong) throws SQLException{
+        final String query = "SELECT sourcePath FROM song WHERE idSong = " + idSong;
+        MySqlConn conn = new MySqlConn();
+        conn.consult(query);
+
+        String path;
+        MediaPlayer target = null;
+        if (conn.rs != null){
+            conn.rs.first();
+            path = conn.rs.getString(1);
+            Media media = new Media(new File(path).toURI().toString());
+            target = new MediaPlayer(media);
+
+        }
+        return target;
+    }
+
+    /**
+     * Metodo para cargar todas las teclas relacionadas con el idsong que se pasa
+     * @param idSong el id de la cancion seleccionada
+     * @return ArrayList listo para usarse
+     */
+    private static ArrayList<String> loadTl(int idSong) throws SQLException {
+        final String query = "SELECT numColor,tiempoInicio FROM teclas WHERE idSong = " + idSong;
+        MySqlConn conn = new MySqlConn();
+        conn.consult(query);
+
+        int n;
+        if (conn.rs != null) {
+            conn.rs.last();
+            n = conn.rs.getRow();
+            conn.rs.first();
+
+            ArrayList<String> aux = new ArrayList<>();
+            for (int i = 0; i < n; i++) {
+                String builder = switchColores(conn.rs.getInt(1)) +
+                        "--" +
+                        conn.rs.getString(2);
+                aux.add(builder);
+                conn.rs.next();
+            }
+            return aux;
+        }else return null;
+    }
+
+    /**
+     * Metodo que dada la referencia de un archivo, crea una copia del mismo en los archivos locales del proyecto
+     * @param name  nombre del archivo sin ruta
+     * @param path ruta absoluta donde se encuentra actualmente el archivo
+     * @return  String de la ruta relativa al proyecto despues de hacer la copia
+     */
+    private static String changePath(String name,String path){
+        final String target = "src/main/resources/songs/" + File.separator + name;
+        Path rutaAntigua = Paths.get(path);
+        Path rutaNueva = Paths.get(target);
+        try {
+            Files.copy(rutaAntigua,rutaNueva, StandardCopyOption.REPLACE_EXISTING);
+        }catch (IOException e){
+            System.out.println("IOException: " + e.getMessage());
+        }
+        return target;
+    }
+
+}

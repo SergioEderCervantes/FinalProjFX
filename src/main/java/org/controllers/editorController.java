@@ -5,7 +5,9 @@
 package org.controllers;
 
 import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.animation.Transition;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -15,30 +17,28 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-import javafx.stage.FileChooser;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
-import org.Modules.MySqlConn;
-import org.Modules.Pair;
-import org.Modules.Song;
-import org.Modules.Tecla;
+import org.Modules.*;
 
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
+import java.net.URI;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 import static org.controllers.App.loadFXML;
@@ -52,29 +52,17 @@ public class editorController {
     private Pair[] map;
     private int idSong = 100;
     private boolean editado = false;
+    String songPath;
+    Sprite sprite;
+    CustomRunnable<Button,Color> effect;
+
     //Variables FXML
     @FXML
     private TextField songName;
     @FXML
-    private TextField songPath;
-    @FXML
-    private Label errorLabel1;
-    @FXML
-    private Label errorLabel2;
-    @FXML
-    private Button AcceptPista;
-    @FXML
-    private VBox loadSong;
-    @FXML
-    private AnchorPane sideBar;
-    @FXML
-    private SplitPane splitPane;
-    @FXML
     private Slider sliderRep;
     @FXML
     private TextField timeDisplay;
-    @FXML
-    private ComboBox <String> comboBox;
     @FXML
     private ListView <String> teclasExistentes;
     @FXML
@@ -89,128 +77,64 @@ public class editorController {
     private Button oBtn;
     @FXML
     private Button pBtn;
-
-    /**
-     * Event-Handlers para la pre-edicion
-     */
     @FXML
-    private void openFileChooser(ActionEvent event){
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Select a file");
-        fileChooser.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter("Music Files", "*.mp3"));
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+    private Button exitBtn;
+    @FXML
+    private Button saveBtn;
+    @FXML
+    private ImageView Animacion;
 
 
-        File selectedFile = fileChooser.showOpenDialog(stage);
-        if(validateFile(selectedFile)){
-            songName.setFocusTraversable(false);
-            songPath.setFocusTraversable(false);
-            songName.setText(selectedFile.getName());
-            songPath.setText(selectedFile.getPath());
-            AcceptPista.setDisable(false);
-        }
-        else {
-            errorLabel1.setVisible(true);
-            errorLabel2.setVisible(true);
-        }
+    public void setMediaPlayer(MediaPlayer mediaPlayer) {
+        this.mediaPlayer = mediaPlayer;
+        this.songPath = getRelativePath(mediaPlayer.getMedia());
     }
 
-    /**
-     * Hacemos llamar a la base de datos con una consulta sobre las canciones que existen para poder seleccionar una
-     */
-    @FXML
-    private void openEditMenu(ActionEvent event){
-        final String query = "SELECT idSong, name FROM song";
-        MySqlConn conn = new MySqlConn();
-        conn.consult(query);
-        int n = 0;
-
-
-        this.comboBox.setVisible(true);
-        this.comboBox.setDisable(false);
-
-        if (conn.rs != null){
-
-            try {
-                conn.rs.last();
-                n = conn.rs.getRow();
-                conn.rs.first();
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-            String []resultados = new String[n];
-            this.map = new Pair[n];
-            for (int i = 0; i < n; i++) {
-                try {
-                    resultados[i] = (conn.rs.getString(2));
-                    map[i] = new Pair<>(conn.rs.getInt(1),conn.rs.getString(2));
-                    conn.rs.next();
-                }catch (SQLException e){
-                    e.printStackTrace();
-                }
-            }
-            comboBox.getItems().setAll(resultados);
-        }
-        conn.closeRsStmt();
-
+    public void setTeclas(ArrayList<String> teclas) {
+        ObservableList <String> observableList= FXCollections.observableArrayList(teclas);
+        this.teclasExistentes.setItems(observableList);
     }
 
-    @FXML
-    private void accetpFile(ActionEvent event){
-        this.relocateLabels();
-        this.splitPane.setDisable(false);
+    public void setSongName (String songName) {
+        this.songName.setText(songName);
+    }
+
+
+    public void Postinitialize(){
         //Configurar el slider de reproducccion
+        initButtons();
         configSlider();
-        this.comboBox.setVisible(false);
-        this.comboBox.setDisable(true);
+        Image img = new Image(Paths.get("src/main/resources/images/WavesSprite1.png").toUri().toString());
+        Animacion.setImage(img);
+        this.effect = (Button btn,Color color) -> {
+            Circle aux = new Circle();
+            aux.setRadius(0);
+            aux.setFill(color);
+            aux.setCenterX(btn.getLayoutX() + btn.getWidth()/ 2);
+            aux.setCenterY(btn.getLayoutY() + btn.getHeight() / 2);
+
+            this.principal.getChildren().add(aux);
+
+            //Animacion del circulo
+            Timeline timeline = new Timeline();
+            KeyValue kvRadius = new KeyValue(aux.radiusProperty(),btn.getHeight() * 1.5);
+            KeyValue kvOpacity = new KeyValue(aux.opacityProperty(),0);
+            KeyFrame kf = new KeyFrame(Duration.millis(250),kvRadius,kvOpacity);
+
+            timeline.getKeyFrames().add(kf);
+            timeline.setOnFinished(e -> principal.getChildren().remove(aux));
+
+            timeline.play();
+        };
+
+        this.sprite = new Sprite(Animacion,16,4,463,244,1500);
+        this.sprite.setCycleCount(Transition.INDEFINITE);
+        this.sprite.resetAnimation();
+        this.sprite.setAutoReverse(true);
         this.animacionReproduccion = new Timeline(new KeyFrame(Duration.millis(1000),event1 -> actualizarSlider(0)));
         animacionReproduccion.setCycleCount(Timeline.INDEFINITE);
         this.initKeyboard();
     }
-
-    /**
-     * Cuando se selecciona una cancion ya existente, se carga desde la base de datos
-     */
-    @FXML
-    private void editarCancion(ActionEvent event){
-        for (int i = 0; i < map.length; i++) {
-            if (map[i].getSecond().equals(comboBox.getValue())){
-                this.idSong = i;
-            }
-        }
-        this.idSong++;
-        final String query = "SELECT * FROM song WHERE idSong = " + this.idSong;
-        MySqlConn conn = new MySqlConn();
-        conn.consult(query);
-        String name = "";
-        String path = "";
-        if (conn.rs != null){
-            try {
-                conn.rs.first();
-                name = conn.rs.getString(2);
-                path = conn.rs.getString(3);
-            }catch (SQLException e){}
-        }
-        this.songName.setText(name);
-        this.songPath.setText(path);
-        conn.closeRsStmt();
-
-
-        try{
-            String mediaURL = new File(path).toURI().toString();
-            Media media = new Media(mediaURL);
-            this.mediaPlayer = new MediaPlayer(media);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        AcceptPista.setDisable(false);
-
-        this.cargarTeclas(conn);
-        this.editado = true;
-    }
-
-
     /**
      * Events Handlers para la edicion
      */
@@ -220,7 +144,6 @@ public class editorController {
         Duration actual;
         Duration nuevo = new Duration(0);
 
-
         actual = new Duration(redondearAlValorMasCercano(mediaPlayer.getCurrentTime().toMillis()));
 
         switch (btnPressed){
@@ -229,11 +152,13 @@ public class editorController {
                     mediaPlayer.pause();
                     enReproduccion = false;
                     animacionReproduccion.pause();
+                    sprite.pause();
                 }
                 else {
                     mediaPlayer.play();
                     enReproduccion = true;
                     animacionReproduccion.play();
+                    sprite.play();
                 }
                 break;
             case "↺":
@@ -283,28 +208,40 @@ public class editorController {
                 mediaPlayer.seek(nuevo);
                 actualizarSlider(nuevo.toMillis());
                 break;
+            case "b":
+                this.back(event);
+                break;
+            case "s":
+                this.saveSong();
+                break;
         }
 
     }
     @FXML
     private void agregarTecla(ActionEvent event){
         int numColor = 0;
+        Button btn = (Button) event.getSource();
+
         int xSelected = (int)((Button) event.getSource()).getLayoutX();
         switch (xSelected){
-            case 240:
-                numColor = 0;
+            case 200:
+                effect.run(btn,Color.RED);
                 break;
-            case 340:
+            case 320:
                 numColor = 1;
+                effect.run(btn,Color.BLUE);
                 break;
             case 440:
                 numColor = 2;
+                effect.run(btn,Color.YELLOW);
                 break;
-            case 540:
+            case 560:
                 numColor = 3;
+                effect.run(btn,Color.GREEN);
                 break;
-            case 640:
+            case 680:
                 numColor = 4;
+                effect.run(btn,Color.ORANGE);
                 break;
 
 
@@ -351,16 +288,32 @@ public class editorController {
     }
 
     /**
+     * Switch Back a Menu
+     */
+    private void back(ActionEvent event) {
+        try{
+
+            Pane root = loadFXML("Menu");
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        } catch (Exception e){
+            System.out.println("Exception: " + e.getMessage());
+            System.exit(1);
+        }
+    }
+
+    /**
      * Metodo que guarda la nueva cancion en la base de datos
      */
-    @FXML
     private void saveSong(){
         MySqlConn conn = new MySqlConn();
         System.out.println(this.teclasExistentes.getItems().size());
         if (!editado){
             //Cargar la cancion
-            this.idSong = loadSong2DB(conn,this.songName.getText(),changePath(this.songName.getText(),
-                            this.songPath.getText()),this.mediaPlayer.getTotalDuration().toMillis());
+            this.idSong = loadSong2DB(conn,this.songName.getText(),this.songPath,
+                    this.mediaPlayer.getTotalDuration().toMillis());
             if (idSong == 0){
                 System.out.println("No se puede agregar el song");
             }
@@ -418,36 +371,6 @@ public class editorController {
         this.timeDisplay.setText("00:00:00");
     }
 
-    /**
-     * Funcion que valida el archivo y crea la instancia MediaPlayer de la pista
-     * @param file
-     * El archivo escogido en el fileChooser
-     */
-    private boolean validateFile(File file){
-        if (file == null || !file.getName().endsWith(".mp3") || !file.exists() || !file.canRead()) {
-            return false;
-        }
-        try {
-            Media media = new Media(file.toURI().toString());
-            mediaPlayer = new MediaPlayer(media);
-        } catch (Exception e) {
-            return false;
-        }
-        return true;
-    }
-
-    private void relocateLabels(){
-        loadSong.getChildren().remove(songName);
-        loadSong.getChildren().remove(songPath);
-        loadSong.setVisible(false);
-        loadSong.setDisable(true);
-        sideBar.getChildren().add(songName);
-        sideBar.getChildren().add(songPath);
-        songName.setLayoutX(55);
-        songName.setLayoutY(48);
-        songPath.setLayoutX(55);
-        songPath.setLayoutY(83);
-    }
 
     /**
      * Actualiza la posicion del slider de reproduccion, asi como formatea el tiempo para actualizar el label del
@@ -471,33 +394,60 @@ public class editorController {
         this.timeDisplay.setText(timepo);
     }
 
-    private void cargarTeclas(MySqlConn conn){
-        final String query = "SELECT numColor,tiempoInicio FROM teclas WHERE idSong = " + idSong;
-        conn.consult(query);
+    private void initButtons(){
+        configButton(exitBtn,"src/main/resources/images/home.png",28,false,
+                "src/main/resources/images/homeHover.png");
+        configButton(saveBtn,"src/main/resources/images/disk.png",28,false,
+                "src/main/resources/images/diskHover.png");
 
-        int n = 0;
-        if (conn.rs != null){
-            try {
-                conn.rs.last();
-                n = conn.rs.getRow();
-                conn.rs.first();
-            }catch (SQLException e){}
-            ArrayList<String> aux = new ArrayList<>();
-            for (int i = 0; i < n; i++){
-                try {
-                    String builder = switchColores(conn.rs.getInt(1)) +
-                            "--" +
-                            conn.rs.getString(2);
-                    aux.add(builder);
-                    conn.rs.next();
-                } catch (SQLException e){}
-            }
-
-            ObservableList <String> observableList= FXCollections.observableArrayList(aux);
-
-            this.teclasExistentes.setItems(observableList);
-
-        }
+        Button bigBack = new Button("⏮");
+        bigBack.setLayoutX(34);
+        bigBack.setLayoutY(417);
+        configButton(bigBack,"src/main/resources/images/forward-fast.png",50,true,
+                "src/main/resources/images/forward-fastPressed.png");
+        principal.getChildren().add(bigBack);
+        Button back = new Button("⏪");
+        back.setLayoutX(134);
+        back.setLayoutY(417);
+        configButton(back,"src/main/resources/images/forward.png",50,true,
+                "src/main/resources/images/forwardPressed.png");
+        principal.getChildren().add(back);
+        Button miniBack = new Button("⏴");
+        miniBack.setLayoutX(234);
+        miniBack.setLayoutY(410);
+        configButton(miniBack,"src/main/resources/images/miniFw.png",64,true,
+                "src/main/resources/images/miniFwPressed.png");
+        principal.getChildren().add(miniBack);
+        Button reload = new Button("↺");
+        reload.setLayoutX(378);
+        reload.setLayoutY(417);
+        configButton(reload,"src/main/resources/images/reload.png",50,false,
+                "src/main/resources/images/reloadPressed.png");
+        principal.getChildren().add(reload);
+        Button play = new Button("⏯");
+        play.setLayoutX(478);
+        play.setLayoutY(417);
+        configButton(play,"src/main/resources/images/play-pause.png",50,false,
+                "src/main/resources/images/play-pausePressed.png");
+        principal.getChildren().add(play);
+        Button miniFor = new Button("⏵");
+        miniFor.setLayoutX(638);
+        miniFor.setLayoutY(410);
+        configButton(miniFor,"src/main/resources/images/miniFw.png",64,false,
+                "src/main/resources/images/miniFwPressed.png");
+        principal.getChildren().add(miniFor);
+        Button For = new Button("⏩");
+        For.setLayoutX(722);
+        For.setLayoutY(417);
+        configButton(For,"src/main/resources/images/forward.png",50,false,
+                "src/main/resources/images/forwardPressed.png");
+        principal.getChildren().add(For);
+        Button bigFor = new Button("⏭");
+        bigFor.setLayoutX(806);
+        bigFor.setLayoutY(417);
+        configButton(bigFor,"src/main/resources/images/forward-fast.png",50,false,
+                "src/main/resources/images/forward-fastPressed.png");
+        principal.getChildren().add(bigFor);
     }
     private void initKeyboard(){
         this.principal.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
@@ -533,15 +483,8 @@ public class editorController {
      */
     private Song construirSong(){
         Song nuevaCancion;
-        if (!editado){
-
-            nuevaCancion = new Song(this.songName.getText(),changePath(this.songName.getText(),
-                    this.songPath.getText()), this.mediaPlayer.getTotalDuration().toMillis());
-        }
-        else {
-            nuevaCancion = new Song(this.songName.getText(),this.songPath.getText(),
-                    this.mediaPlayer.getTotalDuration().toMillis());
-        }
+        nuevaCancion = new Song(this.songName.getText(),this.songPath,
+                this.mediaPlayer.getTotalDuration().toMillis());
 
         nuevaCancion.ConstruirGrafo(getTeclasPulsadas(this.teclasExistentes.getItems()));
 
@@ -551,7 +494,7 @@ public class editorController {
 
     //Funciones estaticas
 
-    private static String switchColores(int numColor){
+    public static String switchColores(int numColor){
         switch (numColor){
             case 0: return "Rojo";
             case 1: return "Azul";
@@ -603,23 +546,6 @@ public class editorController {
         return teclas;
     }
 
-    /**
-     * Metodo que dada la referencia de un archivo, crea una copia del mismo en los archivos locales del proyecto
-     * @param name  nombre del archivo sin ruta
-     * @param path ruta absoluta donde se encuentra actualmente el archivo
-     * @return  String de la ruta relativa al proyecto despues de hacer la copia
-     */
-    private static String changePath(String name,String path){
-        final String target = "src/main/resources/songs/" + File.separator + name;
-        Path rutaAntigua = Paths.get(path);
-        Path rutaNueva = Paths.get(target);
-        try {
-            Files.copy(rutaAntigua,rutaNueva);
-        }catch (IOException e){
-            e.printStackTrace();
-        }
-        return target;
-    }
 
     private static int loadSong2DB(MySqlConn conn,String name, String path, double duracion){
         final String query = "INSERT INTO song (name, sourcePath, duracion) VALUES(\"" + name + "\",\"" + path +
@@ -669,5 +595,35 @@ public class editorController {
     private static boolean del2DB(MySqlConn conn, int idSong) {
         final String query = "DELETE FROM teclas WHERE idSong = " + idSong;
         return conn.uptade(query) > 0;
+    }
+
+    private static String getRelativePath(Media media){
+        // Obtener la URI del Media
+        URI mediaUri = URI.create(media.getSource());
+
+        // Convertir la URI a un Path
+        Path mediaPath = Paths.get(mediaUri);
+
+        // Obtener la ruta relativa del archivo
+        Path projectPath = Paths.get(System.getProperty("user.dir"));
+        Path relativePath = projectPath.relativize(mediaPath);
+
+        return relativePath.toString();
+    }
+
+    private void configButton(Button btn, String imgSource, int tam, boolean reverse, String imgReverseSource){
+        Image icon = new Image(Paths.get(imgSource).toUri().toString());
+        Image iconHover = new Image(Paths.get(imgReverseSource).toUri().toString());
+        ImageView imgVw = new ImageView(icon);
+        imgVw.setFitHeight(tam);
+        imgVw.setFitWidth(tam);
+        if (reverse){
+            imgVw.setRotate(180);
+        }
+        btn.setGraphic(imgVw);
+        btn.setOnMouseEntered(e -> imgVw.setImage(iconHover));
+        btn.setOnMouseExited(e -> imgVw.setImage(icon));
+        btn.setOnAction(this::handleButtonEvent);
+        btn.getStyleClass().add("icon-button");
     }
 }

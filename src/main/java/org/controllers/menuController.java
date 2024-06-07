@@ -119,7 +119,7 @@ public class menuController {
 
     public void switchToEditor(ActionEvent event) throws IOException {
         mediaPlayer.stop();
-        Pane root = loadFXML("Editor");
+        Pane root = loadFXML("menuEditor");
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);
