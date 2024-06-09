@@ -379,7 +379,16 @@ public class selectorController {
     }
 
     private void loadLocalMultiplayer(ActionEvent event) throws IOException{
-        //Logica para el multi local
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("Local.fxml"));
+
+        Pane root = loader.load();
+        juegoLocalController controller = loader.getController();
+        controller.loadSongFromDB(canciones[show-1].getFirst());
+        controller.postInitialize();
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
     }
 
     private void loadOnlineMultiPlayer(ActionEvent event) throws IOException, InterruptedException{
