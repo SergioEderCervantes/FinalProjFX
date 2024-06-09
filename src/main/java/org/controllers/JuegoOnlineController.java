@@ -163,7 +163,7 @@ public class JuegoOnlineController implements Initializable {
         //parte multijugador
         try {
             connector.sendData(String.valueOf(puntaje));
-            score2.setText(connector.getLastRecieved());
+            score2.setText(connector.getLastReceived());
 
         } catch (IOException e) {
             System.err.println("Error d multi:" + e.getMessage());

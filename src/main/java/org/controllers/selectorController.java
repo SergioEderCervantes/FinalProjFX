@@ -188,9 +188,13 @@ public class selectorController {
                 case ONLINE_MULTIPLAYER:
                     try{
                         loadOnlineMultiPlayer(event);
-                    }catch (Exception e){}
+                    }catch (Exception e){
+                        System.err.println(e.getMessage());
+                    }
                     break;
             }
+        }else {
+            System.out.println("NO ES STRING");
         }
     }
     public void back(ActionEvent event) throws IOException {
@@ -381,9 +385,11 @@ public class selectorController {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("juegoOnline.fxml"));
         Pane root = loader.load();
         JuegoOnlineController controller = loader.getController();
+        String dato = String.valueOf(canciones[show-1].getFirst());
+        connector.sendData(dato);
         controller.loadSongFromDB(canciones[show-1].getFirst());
         connector.sendData("Ready");
-        while (!connector.getLastRecieved().equals("Ready")){
+        while (!connector.getLastReceived().equals("Ready")){
             Thread.sleep(20);
         }
         controller.setConnector(connector);

@@ -120,7 +120,10 @@ public class MenuLineaController implements Initializable {
         this.unirsePane.setDisable(true);
         this.crearPane.setVisible(true);
         this.crearPane.setDisable(false);
-
+        if (conexionUdp != null) {
+            conexionUdp.killConnection();
+            conexionUdp = null;
+        }
     }
 
     @FXML
@@ -140,13 +143,18 @@ public class MenuLineaController implements Initializable {
         this.crearPane.setDisable(true);
         this.unirsePane.setVisible(true);
         this.unirsePane.setDisable(false);
+        if (conexionUdp != null) {
+            conexionUdp.killConnection();
+            conexionUdp = null;
+        }
     }
 
     @FXML
     private void testConection(ActionEvent event) {
         try {
             this.testConn();
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             //Todo poner mensaje grafico de error
             System.out.println("ERROR EN CONEXION: " + e.getMessage());
         }
@@ -176,6 +184,7 @@ public class MenuLineaController implements Initializable {
                     Pane root = loader.load();
                     EsperandoSeleccionController controller = loader.getController();
                     controller.setConnector(conexionUdp);
+                    controller.waiting();
                     Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                     Scene scene = new Scene(root);
                     stage.setScene(scene);
@@ -198,10 +207,10 @@ public class MenuLineaController implements Initializable {
     private void customIp(ActionEvent event) {
         Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Pane dialogPane = new Pane();
-        dialogPane.setStyle("-fx-background-color: lightgray; -fx-border-color: black;");
+        dialogPane.setStyle("-fx-background-color: #5e5c5c; -fx-border-color: black;");
         dialogPane.setPrefSize(200, 150);
 
-        Label label = new Label("Enter something:");
+        Label label = new Label("Ingresa tu IP custom:");
         TextField textField = new TextField();
         Button confirmButton = new Button("Confirm");
         Button closeButton = new Button("X");
@@ -281,42 +290,66 @@ public class MenuLineaController implements Initializable {
     }
 
 
-    private void testConn() throws Exception {
+    private void testConn() throws Exception  {
         String response = "";
         boolean makeIt = false;
         long timeConnectionInit = System.currentTimeMillis();
         if (creando) {
-            conexionUdp = new Conexion_UDP("ConnServThread", this.ipServer.getText(),
-                    this.ipCliente.getText(), true);
-            conexionUdp.resumeConnection();
-            conexionUdp.sendData("Hello");
-            while (!response.equals("Response") || (System.currentTimeMillis() - timeConnectionInit < 10000)) {
-                response = conexionUdp.getLastRecieved();
-                Thread.sleep(50);
+            try {
+                conexionUdp = new Conexion_UDP("ConnServThread", this.ipServer.getText(), this.ipCliente.getText(), true);
+                conexionUdp.resumeConnection();
+                while (!response.equals("Hello") && (System.currentTimeMillis() - timeConnectionInit < 10000)) {
+                    response = conexionUdp.getLastReceived();
+                    Thread.sleep(50);
+                }
+                if (response.equals("Hello")) {
+                    conexionUdp.sendData("Response");
+                    timeConnectionInit = System.currentTimeMillis();
+                }
+                while (!response.equals("ConnectionEstablished") && (System.currentTimeMillis() - timeConnectionInit < 10000)) {
+                    response = conexionUdp.getLastReceived();
+                    Thread.sleep(50);
+                }
+                if (response.equals("ConnectionEstablished")) {
+                    makeIt = true;
+                    conexionUdp.sendData("ConnectionEstablished");
+                }
+            } catch (IOException e) {
+                System.err.println("ERROR EN CONEXION: " + e.getMessage());
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
             }
-            if (response.equals("Response")) {
-                makeIt = true;
-                conexionUdp.sendData("Connection stablished");
-            }
-
-
         } else {
-            conexionUdp = new Conexion_UDP("ConnClientThread", this.ipCliente.getText(),
-                    this.ipServer.getText(), false);
-            while (!response.equals("Response") || (System.currentTimeMillis() - timeConnectionInit < 10000)) {
-                response = conexionUdp.getLastRecieved();
-                Thread.sleep(50);
-            }
-            if (response.equals("Response")) {
-                makeIt = true;
+            try {
+                conexionUdp = new Conexion_UDP("ConnClientThread", this.ipCliente.getText(), this.ipServer.getText(), false);
+                conexionUdp.resumeConnection();
+
+                conexionUdp.sendData("Hello");
+                while (!response.equals("Response") && (System.currentTimeMillis() - timeConnectionInit < 10000)) {
+                    response = conexionUdp.getLastReceived();
+                    Thread.sleep(50);
+                }
+                if (response.equals("Response")) {
+                    conexionUdp.sendData("ConnectionEstablished");
+                    makeIt = true;
+                }
+            } catch (IOException e) {
+                System.err.println("ERROR EN CONEXION: " + e.getMessage());
+                conexionUdp.killConnection();
+                conexionUdp = null;
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                conexionUdp.killConnection();
+                conexionUdp = null;
             }
         }
         if (makeIt) {
-            //Todo poner conexion exitosa
+            // Todo: poner conexion exitosa
             this.conexionLista = true;
         } else {
             throw new Exception("Waiting timeout");
         }
+
 
     }
 
