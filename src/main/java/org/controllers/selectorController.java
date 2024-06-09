@@ -27,12 +27,14 @@ import java.sql.SQLException;
 
 import static org.controllers.App.loadFXML;
 
+
 public class selectorController {
     private Stage stage;
     private Scene scene;
     static Pair<Integer,String>[] canciones;
     private GAME_MODE gameMode;
     Conexion_UDP connector;
+    int show=1;
     @FXML
     private ImageView uno;
     @FXML
@@ -67,7 +69,6 @@ public class selectorController {
     private ImageView note;
     @FXML
     private MediaView backgSelect;
-    int show=1;
     @FXML
     private Label num;
     @FXML
