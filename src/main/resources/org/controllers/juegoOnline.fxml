@@ -19,7 +19,7 @@
     <children>
         <ImageView fx:id="img" fitHeight="590.0" fitWidth="600.0" layoutX="300.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" smooth="false">
             <image>
-                <Image url="@../../images/backg.jpg" />
+                <Image url="@../../images/backgame.jpg" />
             </image>
         </ImageView>
         <Line fx:id="l1" endX="-9.0" endY="574.0" layoutX="400.0" startX="53.0" startY="184.0" styleClass="track-line" />
