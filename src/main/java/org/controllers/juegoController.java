@@ -4,6 +4,7 @@ package org.controllers;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -16,6 +17,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
@@ -69,8 +72,6 @@ public class juegoController implements Initializable {
     @FXML
     Rectangle HorizontalRect;
     @FXML
-    ImageView img;
-    @FXML
     Line l1;
     @FXML
     Line l2;
@@ -81,17 +82,41 @@ public class juegoController implements Initializable {
     @FXML
     Line l5;
     @FXML
-    Label score;
-    @FXML
     Label scoref;
     @FXML
     Label multiplo;
     @FXML
     Pane finalPanel;
-
+    @FXML
+    ImageView bateria;
+    @FXML
+    ImageView mano;
+    @FXML
+    ImageView guitarra;
+    @FXML
+    ImageView pulse;
+    @FXML
+    ImageView pulse2;
+    @FXML
+    ImageView pulse3;
+    @FXML
+    ImageView pulse4;
+    @FXML
+    ImageView pulse5;
+    @FXML
+    ImageView backg1;
+    @FXML
+    ImageView backg2;
+    @FXML
+    ProgressBar BarraM;
+    @FXML
+    ProgressBar BarraP1;
     //Test
     private long test_time_inicio;
-
+    Sprite sprite;
+    Sprite guitar;
+    Sprite bate;
+    Sprite b1,b2,b3,b4,b5;
     public void setCancionSeleccionada(Song cancionSeleccionada) {
         this.cancionSeleccionada = cancionSeleccionada;
     }
@@ -116,6 +141,54 @@ public class juegoController implements Initializable {
         this.initTimeline();
         this.timeline.play();
         this.test_time_inicio = System.currentTimeMillis();
+        Image img = new Image(Paths.get("src/main/resources/images/mano.png").toUri().toString());
+        Image img2 = new Image(Paths.get("src/main/resources/images/guitarra.gif").toUri().toString());
+        Image img3 = new Image(Paths.get("src/main/resources/images/bateria.gif").toUri().toString());
+        Image img4 = new Image(Paths.get("src/main/resources/images/pulso.png").toUri().toString());
+        mano.setImage(img);
+        guitarra.setImage(img2);
+        bateria.setImage(img3);
+        pulse.setImage(img4);
+        pulse2.setImage(img4);
+        pulse3.setImage(img4);
+        pulse4.setImage(img4);
+        pulse5.setImage(img4);
+
+        this.sprite = new Sprite(mano,4,4,(int)17.5,27,400);
+        this.sprite.setCycleCount(Transition.INDEFINITE);
+        this.sprite.resetAnimation();
+        this.sprite.setAutoReverse(true);
+        sprite.play();
+        this.guitar = new Sprite(guitarra,6,6,(int)51.2,54,400);
+        this.guitar.setCycleCount(Transition.INDEFINITE);
+        this.guitar.resetAnimation();
+        this.guitar.setAutoReverse(true);
+        guitar.play();
+        this.bate = new Sprite(bateria,3,3,(int)87.3,69,400);
+        this.bate.setCycleCount(Transition.INDEFINITE);
+        this.bate.resetAnimation();
+        this.bate.setAutoReverse(true);
+        bate.play();
+        b1 = new Sprite(pulse,23,23,64,64,250);
+        b1.setCycleCount(1);
+        b1.resetAnimation();
+        b1.setAutoReverse(true);
+        b2 = new Sprite(pulse2,23,23,64,64,250);
+        b2.setCycleCount(1);
+        b2.resetAnimation();
+        b2.setAutoReverse(true);
+        b3 = new Sprite(pulse3,23,23,64,64,250);
+        b3.setCycleCount(1);
+        b3.resetAnimation();
+        b3.setAutoReverse(true);
+        b4 = new Sprite(pulse4,23,23,64,64,250);
+        b4.setCycleCount(1);
+        b4.resetAnimation();
+        b4.setAutoReverse(true);
+        b5 = new Sprite(pulse5,23,23,64,64,250);
+        b5.setCycleCount(1);
+        b5.resetAnimation();
+        b5.setAutoReverse(true);
     }
 
 
@@ -146,6 +219,8 @@ public class juegoController implements Initializable {
         long test_time_fin = System.currentTimeMillis();
         double frameDt = test_time_fin - test_time_inicio;
         test_time_inicio = test_time_fin;
+        updateProgress();
+        updateScoreProgress();
         int xDef = 0;
         Tecla lastTecla = null;
         long t_final = System.currentTimeMillis();
@@ -155,8 +230,6 @@ public class juegoController implements Initializable {
             reproduciendo = true;
             reproductor.play();
         }
-
-        score.setText(String.valueOf(puntaje));
 
         multiplo.setVisible(multiplicador != 1);
         multiplo.setText("x" + multiplicador);
@@ -271,6 +344,11 @@ public class juegoController implements Initializable {
         this.YellowButton.toFront();
         this.GreenButton.toFront();
         this.OrangeButton.toFront();
+        pulse.toFront();
+        pulse2.toFront();
+        pulse3.toFront();
+        pulse4.toFront();
+        pulse5.toFront();
         //Configurar el efecto de presionado de un boton
         this.effect = (Button btn, Color color) -> {
             Rectangle aux = new Rectangle();
@@ -307,6 +385,7 @@ public class juegoController implements Initializable {
         YellowButton.setDisable(true);
         GreenButton.setDisable(true);
         OrangeButton.setDisable(true);
+        finalPanel.toFront();
         finalPanel.setVisible(true);
     }
 
@@ -318,8 +397,9 @@ public class juegoController implements Initializable {
         YellowButton.setDisable(true);
         GreenButton.setDisable(true);
         OrangeButton.setDisable(true);
-        PausePane.setVisible(true);
         PausePane.toFront();
+        PausePane.setVisible(true);
+
     }
 
 
@@ -338,7 +418,7 @@ public class juegoController implements Initializable {
 
     @FXML //TODO Retorno al menu
     public void back(ActionEvent event) throws IOException {
-        Pane root = loadFXML("Selector");
+        Pane root = loadFXML("Menu");
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Scene scene = new Scene(root);
         stage.setScene(scene);
@@ -352,6 +432,7 @@ public class juegoController implements Initializable {
     @FXML
     private void btnRActivado(){
         Rectangle rect = this.makeRect(RedButton);
+        b1.play();
         checkColitions(rect);
         effect.run(RedButton,Color.RED);
     }
@@ -360,6 +441,7 @@ public class juegoController implements Initializable {
     @FXML
     private void btnBActivado(){
         Rectangle rect = this.makeRect(BlueButton);
+        b2.play();
         checkColitions(rect);
         effect.run(BlueButton,Color.BLUE);
     }
@@ -368,6 +450,7 @@ public class juegoController implements Initializable {
     @FXML
     private void btnYActivado(){
         Rectangle rect = this.makeRect(YellowButton);
+        b3.play();
         checkColitions(rect);
         effect.run(YellowButton,Color.YELLOW);
     }
@@ -376,6 +459,7 @@ public class juegoController implements Initializable {
     @FXML
     private void btnGActivado(){
         Rectangle rect = this.makeRect(GreenButton);
+        b4.play();
         checkColitions(rect);
         effect.run(GreenButton,Color.GREEN);
     }
@@ -384,6 +468,7 @@ public class juegoController implements Initializable {
     @FXML
     private void btnOActivado(){
         Rectangle rect = this.makeRect(OrangeButton);
+        b5.play();
         checkColitions(rect);
         effect.run(OrangeButton,Color.ORANGE);
     }
@@ -399,7 +484,10 @@ public class juegoController implements Initializable {
         this.l3.toBack();
         this.l4.toBack();
         this.l5.toBack();
-        this.img.toBack();
+        this.backg2.toBack();
+        this.backg1.toBack();
+        this.finalPanel.toFront();
+        this.PausePane.toFront();
     }
 
     private void checkColitions(Rectangle rect){
@@ -506,6 +594,19 @@ public class juegoController implements Initializable {
         }else if(circulo.getCenterX() >600){
             circulo.setCenterX(circulo.getCenterX() + factor2);
         }
+    }
+    private void updateProgress() {
+        if (reproductor != null && reproductor.getStatus() == MediaPlayer.Status.PLAYING) {
+            double currentTime = reproductor.getCurrentTime().toMillis();
+            double total = reproductor.getTotalDuration().toMillis();
+            BarraM.setProgress(currentTime / total);
+        }
+    }
+
+    private void updateScoreProgress() {
+        double score1Percentage = Math.min(puntaje / 50000.0, 1);
+        BarraP1.setProgress(score1Percentage);
+
     }
 }
 

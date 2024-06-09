@@ -54,7 +54,7 @@ public class juegoLocalController implements Initializable{
     private Tecla aux2;
     private final ArrayList<Circle> teclasEnPantalla = new ArrayList<>();
     private final ArrayList<Circle> teclasEnPantalla2 = new ArrayList<>();
-
+    private CustomRunnable<Button,Color> effect;
     private long t_inicio;      //Tiempo global
     private boolean reproduciendo;
     //Delay necesario para que las teclas aparezcan on time, se modifica en funcion de la velocidad de bajada de las teclas
@@ -542,8 +542,30 @@ public class juegoLocalController implements Initializable{
         pulse8.toFront();
         pulse9.toFront();
         pulse10.toFront();
+        this.effect = (Button btn, Color color) -> {
+            Rectangle aux = new Rectangle();
+            aux.setWidth(btn.getWidth());
+            aux.setHeight(btn.getHeight());
+            aux.setArcWidth(30);
+            aux.setArcHeight(30);
+            aux.setFill(color.deriveColor(1, 1, 1, 0.5));
+            aux.setX(btn.getLayoutX());
+            aux.setY(btn.getLayoutY());
 
+            principal.getChildren().add(aux);
 
+            Timeline timeline = new Timeline();
+            KeyValue kvWidth = new KeyValue(aux.widthProperty(), btn.getWidth() * 2);
+            KeyValue kvHeight = new KeyValue(aux.heightProperty(), btn.getHeight() * 2);
+            KeyValue kvX = new KeyValue(aux.xProperty(), btn.getLayoutX() - btn.getWidth() / 2);
+            KeyValue kvY = new KeyValue(aux.yProperty(), btn.getLayoutY() - btn.getHeight() / 2);
+            KeyValue kvOpacity = new KeyValue(aux.opacityProperty(), 0);
+            KeyFrame kf = new KeyFrame(Duration.millis(500), kvWidth, kvOpacity, kvX, kvHeight, kvY);
+
+            timeline.getKeyFrames().add(kf);
+            timeline.setOnFinished(event -> principal.getChildren().remove(aux));
+            timeline.play();
+        };
     }
     private void pantallaFinal(){
         if(puntaje > puntaje1){
@@ -628,6 +650,8 @@ public class juegoLocalController implements Initializable{
         Rectangle rect = this.makeRect(RedButton);
         b1.play();
         checkColitions(rect);
+        effect.run(RedButton,Color.RED);
+
     }
 
 
@@ -636,6 +660,8 @@ public class juegoLocalController implements Initializable{
         Rectangle rect = this.makeRect(BlueButton);
         b2.play();
         checkColitions(rect);
+        effect.run(BlueButton,Color.BLUE);
+
 
     }
 
@@ -645,6 +671,8 @@ public class juegoLocalController implements Initializable{
         Rectangle rect = this.makeRect(YellowButton);
         b3.play();
         checkColitions(rect);
+        effect.run(YellowButton,Color.YELLOW);
+
 
     }
 
@@ -654,6 +682,8 @@ public class juegoLocalController implements Initializable{
         Rectangle rect = this.makeRect(GreenButton);
         b4.play();
         checkColitions(rect);
+        effect.run(GreenButton,Color.GREEN);
+
 
     }
 
@@ -663,6 +693,7 @@ public class juegoLocalController implements Initializable{
         Rectangle rect = this.makeRect(OrangeButton);
         b5.play();
         checkColitions(rect);
+        effect.run(OrangeButton,Color.ORANGE);
 
     }
     @FXML
@@ -670,6 +701,8 @@ public class juegoLocalController implements Initializable{
         Rectangle rect = this.makeRect(RedButton1);
         b6.play();
         checkColitions2(rect);
+        effect.run(RedButton1,Color.RED);
+
     }
 
 
@@ -678,6 +711,7 @@ public class juegoLocalController implements Initializable{
         Rectangle rect = this.makeRect(BlueButton1);
         b7.play();
         checkColitions2(rect);
+        effect.run(BlueButton1,Color.BLUE);
 
 
     }
@@ -688,6 +722,7 @@ public class juegoLocalController implements Initializable{
         Rectangle rect = this.makeRect(YellowButton1);
         b8.play();
         checkColitions2(rect);
+        effect.run(YellowButton1,Color.YELLOW);
 
     }
 
@@ -697,6 +732,7 @@ public class juegoLocalController implements Initializable{
         Rectangle rect = this.makeRect(GreenButton1);
         b9.play();
         checkColitions2(rect);
+        effect.run(GreenButton1,Color.GREEN);
 
     }
 
@@ -706,6 +742,7 @@ public class juegoLocalController implements Initializable{
         Rectangle rect = this.makeRect(OrangeButton1);
         b10.play();
         checkColitions2(rect);
+        effect.run(OrangeButton1,Color.ORANGE);
 
     }
 
@@ -743,7 +780,7 @@ public class juegoLocalController implements Initializable{
                     rect.contains(circle.getCenterX(), circle.getCenterY() + circle.getRadius()) ||
                     rect.contains(circle.getCenterX(), circle.getCenterY() - circle.getRadius())){
 
-                puntaje = puntaje+(multiplicador * 25);
+                puntaje = puntaje+(multiplicador * 15);
                 cont++;
 
                 if(cont>10 && cont<16){
