@@ -104,7 +104,7 @@ public class editorController {
         //Configurar el slider de reproducccion
         initButtons();
         configSlider();
-        Image img = new Image(Paths.get("src/main/resources/images/WavesSprite1.png").toUri().toString());
+        Image img = new Image(Paths.get("src/main/resources/images/barritas.png").toUri().toString());
         Animacion.setImage(img);
         this.effect = (Button btn,Color color) -> {
             Circle aux = new Circle();
@@ -123,14 +123,14 @@ public class editorController {
 
             timeline.getKeyFrames().add(kf);
             timeline.setOnFinished(e -> principal.getChildren().remove(aux));
-
+            this.principal.requestFocus();
             timeline.play();
         };
 
-        this.sprite = new Sprite(Animacion,16,4,463,244,1500);
+        this.sprite = new Sprite(Animacion,16,4,240,136,1500);
         this.sprite.setCycleCount(Transition.INDEFINITE);
         this.sprite.resetAnimation();
-        this.sprite.setAutoReverse(true);
+
         this.animacionReproduccion = new Timeline(new KeyFrame(Duration.millis(1000),event1 -> actualizarSlider(0)));
         animacionReproduccion.setCycleCount(Timeline.INDEFINITE);
         this.initKeyboard();
@@ -611,7 +611,7 @@ public class editorController {
         return relativePath.toString();
     }
 
-    private void configButton(Button btn, String imgSource, int tam, boolean reverse, String imgReverseSource){
+    public void configButton(Button btn, String imgSource, int tam, boolean reverse, String imgReverseSource){
         Image icon = new Image(Paths.get(imgSource).toUri().toString());
         Image iconHover = new Image(Paths.get(imgReverseSource).toUri().toString());
         ImageView imgVw = new ImageView(icon);

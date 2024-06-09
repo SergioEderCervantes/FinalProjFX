@@ -33,7 +33,7 @@ public class multijugadorController {
 
     }
     public void Linea(ActionEvent event) throws IOException {
-        Pane root = loadFXML("Linea");
+        Pane root = loadFXML("MenuLinea");
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);

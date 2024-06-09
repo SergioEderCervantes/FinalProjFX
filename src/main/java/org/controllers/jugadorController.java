@@ -25,7 +25,8 @@ public class jugadorController {
         stage.show();
 
 
-    } public void switchToSelector(ActionEvent event) throws IOException {
+    }
+    public void switchToSelector(ActionEvent event) throws IOException {
         Pane root = loadFXML("Selector");
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root);

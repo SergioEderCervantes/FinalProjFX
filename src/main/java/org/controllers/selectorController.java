@@ -16,6 +16,8 @@ import javafx.scene.media.MediaView;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import org.Modules.Conexion_UDP;
+import org.Modules.GAME_MODE;
 import org.Modules.MySqlConn;
 import org.Modules.Pair;
 
@@ -29,6 +31,8 @@ public class selectorController {
     private Stage stage;
     private Scene scene;
     static Pair<Integer,String>[] canciones;
+    private GAME_MODE gameMode;
+    Conexion_UDP connector;
     @FXML
     private ImageView uno;
     @FXML
@@ -73,6 +77,12 @@ public class selectorController {
     @FXML
     private MediaPlayer fondo;
 
+    public void setGameMode(GAME_MODE gameMode) {
+        this.gameMode = gameMode;
+    }
+    public void setConnector(Conexion_UDP connector) {
+        this.connector = connector;
+    }
     private static void search(){
         final String query = "SELECT idSong, name FROM song";
         MySqlConn conn = new MySqlConn();
@@ -113,115 +123,33 @@ public class selectorController {
     public void initialize() {
         search();
         URL videoUrl = getClass().getResource("/images/cc.mp4");
-                if (videoUrl != null) {
-                    Media media = new Media(videoUrl.toExternalForm());
-                    fondo = new MediaPlayer(media);
-                    fondo.setCycleCount(MediaPlayer.INDEFINITE); // Hacer que el video se repita indefinidamente
-                    backgSelect.setMediaPlayer(fondo);
-                    fondo.play(); // Reproducir el video
-                    backgSelect.toBack();
-                }
+        if (videoUrl != null) {
+            Media media = new Media(videoUrl.toExternalForm());
+            fondo = new MediaPlayer(media);
+            fondo.setCycleCount(MediaPlayer.INDEFINITE); // Hacer que el video se repita indefinidamente
+            backgSelect.setMediaPlayer(fondo);
+            fondo.play(); // Reproducir el video
+            backgSelect.toBack();
+        }
 
         uno.setFitWidth(255);
         uno.setFitHeight(270);
 
-        // Crear un rectángulo con bordes redondeados
-        Rectangle clip = new Rectangle(uno.getFitWidth(), uno.getFitHeight());
-        clip.setArcWidth(50);
-        clip.setArcHeight(50);
-        uno.setClip(clip);
-
-
-        // Crear un rectángulo con bordes redondeados
-         clip = new Rectangle(dos.getFitWidth(), dos.getFitHeight());
-        clip.setArcWidth(50);
-        clip.setArcHeight(50);
-        dos.setClip(clip);
-
-
-        // Crear un rectángulo con bordes redondeados
-         clip = new Rectangle(tres.getFitWidth(), tres.getFitHeight());
-        clip.setArcWidth(50);
-        clip.setArcHeight(50);
-        tres.setClip(clip);
-
-
-        // Crear un rectángulo con bordes redondeados
-         clip = new Rectangle(cuatro.getFitWidth(), cuatro.getFitHeight());
-        clip.setArcWidth(50);
-        clip.setArcHeight(50);
-        cuatro.setClip(clip);
-
-
-        // Crear un rectángulo con bordes redondeados
-        clip = new Rectangle(cinco.getFitWidth(), cinco.getFitHeight());
-        clip.setArcWidth(50);
-        clip.setArcHeight(50);
-        cinco.setClip(clip);
-
-
-
-        clip = new Rectangle(seis.getFitWidth(), seis.getFitHeight());
-        clip.setArcWidth(50);
-        clip.setArcHeight(50);
-        seis.setClip(clip);
-
-
-        // Crear un rectángulo con bordes redondeados
-         clip = new Rectangle(siete.getFitWidth(), siete.getFitHeight());
-        clip.setArcWidth(50);
-        clip.setArcHeight(50);
-        siete.setClip(clip);
-
-
-        // Crear un rectángulo con bordes redondeados
-         clip = new Rectangle(ocho.getFitWidth(), ocho.getFitHeight());
-        clip.setArcWidth(50);
-        clip.setArcHeight(50);
-        ocho.setClip(clip);
-
-
-        // Crear un rectángulo con bordes redondeados
-         clip = new Rectangle(nueve.getFitWidth(), nueve.getFitHeight());
-        clip.setArcWidth(50);
-        clip.setArcHeight(50);
-        nueve.setClip(clip);
-
-
-        // Crear un rectángulo con bordes redondeados
-        clip = new Rectangle(diez.getFitWidth(), diez.getFitHeight());
-        clip.setArcWidth(50);
-        clip.setArcHeight(50);
-        diez.setClip(clip);
-
-
-        // Crear un rectángulo con bordes redondeados
-        clip = new Rectangle(once.getFitWidth(), once.getFitHeight());
-        clip.setArcWidth(50);
-        clip.setArcHeight(50);
-        once.setClip(clip);
-
-        clip = new Rectangle(doce.getFitWidth(), doce.getFitHeight());
-        clip.setArcWidth(50);
-        clip.setArcHeight(50);
-        doce.setClip(clip);
-
-        clip = new Rectangle(trece.getFitWidth(), trece.getFitHeight());
-        clip.setArcWidth(50);
-        clip.setArcHeight(50);
-        trece.setClip(clip);
-
-
-        clip = new Rectangle(catorce.getFitWidth(), catorce.getFitHeight());
-        clip.setArcWidth(50);
-        clip.setArcHeight(50);
-        catorce.setClip(clip);
-
-
-        clip = new Rectangle(quince.getFitWidth(), quince.getFitHeight());
-        clip.setArcWidth(50);
-        clip.setArcHeight(50);
-        quince.setClip(clip);
+        configRect(uno);
+        configRect(dos);
+        configRect(tres);
+        configRect(cuatro);
+        configRect(cinco);
+        configRect(seis);
+        configRect(siete);
+        configRect(ocho);
+        configRect(nueve);
+        configRect(diez);
+        configRect(once);
+        configRect(doce);
+        configRect(trece);
+        configRect(catorce);
+        configRect(quince);
 
 
         URL overlayImageUrl = getClass().getResource("/images/carr.png");
@@ -250,24 +178,20 @@ public class selectorController {
     public void switchTojuego(ActionEvent event) throws IOException {
         if( canciones[show-1].getSecond() instanceof String){
             fondo.stop();
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("juego.fxml"));
-
-
-                Pane root = loader.load();
-                juegoController controller = loader.getController();
-                controller.loadSongFromDB(canciones[show-1].getFirst());
-                controller.postInitialize();
-                stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                scene = new Scene(root);
-                stage.setScene(scene);
-                stage.show();
-
-
-
-
+            switch (gameMode){
+                case SINGLE_PLAYER:
+                    loadSinglePlayer(event);
+                    break;
+                case LOCAL_MULTIPLAYER:
+                    loadLocalMultiplayer(event);
+                    break;
+                case ONLINE_MULTIPLAYER:
+                    try{
+                        loadOnlineMultiPlayer(event);
+                    }catch (Exception e){}
+                    break;
+            }
         }
-
-
     }
     public void back(ActionEvent event) throws IOException {
         fondo.stop();
@@ -435,5 +359,46 @@ public class selectorController {
             default:
         }
         name.setText(canciones[show-1].getSecond());
+    }
+
+    private void loadSinglePlayer(ActionEvent event) throws IOException{
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("juego.fxml"));
+        Pane root = loader.load();
+        juegoController controller = loader.getController();
+        controller.loadSongFromDB(canciones[show-1].getFirst());
+        controller.postInitialize();
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    private void loadLocalMultiplayer(ActionEvent event) throws IOException{
+        //Logica para el multi local
+    }
+
+    private void loadOnlineMultiPlayer(ActionEvent event) throws IOException, InterruptedException{
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("juegoOnline.fxml"));
+        Pane root = loader.load();
+        JuegoOnlineController controller = loader.getController();
+        controller.loadSongFromDB(canciones[show-1].getFirst());
+        connector.sendData("Ready");
+        while (!connector.getLastRecieved().equals("Ready")){
+            Thread.sleep(20);
+        }
+        controller.setConnector(connector);
+        controller.postInitialize();
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+
+    }
+
+    private static void configRect(ImageView target){
+        Rectangle clip = new Rectangle(target.getFitWidth(), target.getFitHeight());
+        clip.setArcWidth(50);
+        clip.setArcHeight(50);
+        target.setClip(clip);
     }
 }

@@ -1,0 +1,5 @@
+package org.Modules;
+
+public enum GAME_MODE {
+    SINGLE_PLAYER, LOCAL_MULTIPLAYER, ONLINE_MULTIPLAYER;
+}

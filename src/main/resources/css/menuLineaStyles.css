@@ -1,0 +1,77 @@
+.principal{
+
+    -fx-background-color: linear-gradient(
+            from 0% 0% to 100% 100%,
+            #2f2f2f ,
+            #2f2f2f 80%,
+            #a140fd
+    );
+}
+
+
+.button {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 10%;
+    -fx-cursor: hand;
+
+}
+.outSideButton{
+    -fx-background-color: transparent   ;
+    -fx-font-family: 'Neon', sans-serif;
+    -fx-font-size: 20px;
+}
+.redText{
+    -fx-text-fill: RED;
+}
+.whiteText{
+    -fx-text-fill: WHITE;
+}
+.label {
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 15px;
+}
+
+.icon-button {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-text-fill: transparent;
+}
+.rectangle{
+    -fx-arc-height: 20;
+    -fx-arc-width: 20;
+}
+.insideButton {
+    -fx-alignment: center;
+    -fx-background-color: linear-gradient(to right, #AF40FF, #5B42F3 50%, #00DDEB);
+    -fx-background-radius: 8;
+    -fx-border-color: transparent;
+    -fx-border-radius: 8;
+    -fx-box-shadow: rgba(151, 65, 252, 0.2) 0 15px 30px -5px;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-family: 'Phantomsans', sans-serif;
+    -fx-font-size: 20px;
+    -fx-padding: 3px;
+    -fx-cursor: hand;
+}
+
+
+.insideButton:hover {
+    -fx-effect: null;
+}
+
+.customHover {
+    -fx-background-color: rgb(5, 6, 45);
+    -fx-border-width: 5px;
+    -fx-border-radius: 5px;
+    -fx-border-color: linear-gradient(to right, #AF40FF, #5B42F3 50%, #00DDEB);;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-family: 'Phantomsans', sans-serif;
+    -fx-font-size: 20px;
+    -fx-padding: 3px;
+    -fx-cursor: hand;
+    -fx-transition: 300ms;
+}
+
+.button-64:hover .customHover {
+    -fx-background-color: transparent;
+}

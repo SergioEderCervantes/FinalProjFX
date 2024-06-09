@@ -35,7 +35,7 @@ import javafx.scene.layout.Pane;
 
 import static org.controllers.App.loadFXML;
 
-public class juegoController implements Initializable {
+public class JuegoOnlineController implements Initializable {
     public static final Color[] ColoresPosibles =
             {Color.RED, Color.BLUE, Color.YELLOW, Color.GREEN, Color.ORANGE};
 
@@ -51,6 +51,9 @@ public class juegoController implements Initializable {
     //Delay necesario para que las teclas aparezcan on time, se modifica en funcion de la velocidad de bajada de las teclas
     private MediaPlayer reproductor;
     private CustomRunnable<Button,Color> effect;
+
+    //Variable multijugador
+    Conexion_UDP connector;
 
     //Variables de componentes del FXML
     @FXML
@@ -89,13 +92,16 @@ public class juegoController implements Initializable {
     Label multiplo;
     @FXML
     Pane finalPanel;
+    @FXML
+    Label score2;
 
     //Test
-    private long test_time_inicio;
+    private long frame_time_inicio;
 
-    public void setCancionSeleccionada(Song cancionSeleccionada) {
-        this.cancionSeleccionada = cancionSeleccionada;
+    public void setConnector(Conexion_UDP connector) {
+        this.connector = connector;
     }
+
 
     /**
      *Metodo de inicializacion para la Ventana juego, en la cual se settean varios parametros importantes para el juego
@@ -114,7 +120,7 @@ public class juegoController implements Initializable {
         this.initReproduction();
         this.initTimeline();
         this.timeline.play();
-        this.test_time_inicio = System.currentTimeMillis();
+        this.frame_time_inicio = System.currentTimeMillis();
     }
 
 
@@ -142,9 +148,9 @@ public class juegoController implements Initializable {
     }
 
     private void print() {
-        long test_time_fin = System.currentTimeMillis();
-        double frameDt = test_time_fin - test_time_inicio;
-        test_time_inicio = test_time_fin;
+        long frame_time_fin = System.currentTimeMillis();
+        double frameDt = frame_time_fin - frame_time_inicio;
+        frame_time_inicio = frame_time_fin;
         int xDef = 0;
         Tecla lastTecla = null;
         long t_final = System.currentTimeMillis();
@@ -154,7 +160,14 @@ public class juegoController implements Initializable {
             reproduciendo = true;
             reproductor.play();
         }
+        //parte multijugador
+        try {
+            connector.sendData(String.valueOf(puntaje));
+            score2.setText(connector.getLastRecieved());
 
+        } catch (IOException e) {
+            System.err.println("Error d multi:" + e.getMessage());
+        }
         score.setText(String.valueOf(puntaje));
 
         multiplo.setVisible(multiplicador != 1);
@@ -235,30 +248,30 @@ public class juegoController implements Initializable {
                         this.RedButton.setFocusTraversable(true);
                         this.RedButton.fire();
 
-                    break;
-                case W:
-                    this.BlueButton.setFocusTraversable(true);
-                    this.BlueButton.fire();
-                    break;
-                case E:
-                    this.YellowButton.setFocusTraversable(true);
-                    this.YellowButton.fire();
+                        break;
+                    case W:
+                        this.BlueButton.setFocusTraversable(true);
+                        this.BlueButton.fire();
+                        break;
+                    case E:
+                        this.YellowButton.setFocusTraversable(true);
+                        this.YellowButton.fire();
 
-                    break;
-                case O:
-                    this.GreenButton.setFocusTraversable(true);
-                    this.GreenButton.fire();
+                        break;
+                    case O:
+                        this.GreenButton.setFocusTraversable(true);
+                        this.GreenButton.fire();
 
-                    break;
-                case P:
-                    this.OrangeButton.setFocusTraversable(true);
-                    this.OrangeButton.fire();
-                    break;
-                case ESCAPE:
-                    pause();
-                    break;
-                default:
-                    break;
+                        break;
+                    case P:
+                        this.OrangeButton.setFocusTraversable(true);
+                        this.OrangeButton.fire();
+                        break;
+                    case ESCAPE:
+                        pause();
+                        break;
+                    default:
+                        break;
                 }
             }
         });
@@ -290,7 +303,7 @@ public class juegoController implements Initializable {
             KeyValue kvY = new KeyValue(aux.yProperty(),btn.getLayoutY() - btn.getHeight() / 2);
             KeyValue kvOpacity = new KeyValue(aux.opacityProperty(), 0);
             KeyFrame kf = new KeyFrame(Duration.millis(500), kvWidth, kvOpacity,kvX,kvHeight,kvY);
-            
+
             timeline.getKeyFrames().add(kf);
             timeline.setOnFinished(event -> principal.getChildren().remove(aux));
             timeline.play();
@@ -430,7 +443,7 @@ public class juegoController implements Initializable {
                 //TODO sprite de explosion de circulo, aumentar el marcador
                 circle.setVisible(false);
 
-                    //Esto es mil veces mejor que destruirlo aqui
+                //Esto es mil veces mejor que destruirlo aqui
                 return;
             }
 

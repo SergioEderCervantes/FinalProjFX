@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="principal" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseEntered="#hoverIn" onMouseExited="#hoverOut" prefHeight="600.0" prefWidth="1200.0" styleClass="principal" stylesheets="@../../css/menuLineaStyles.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.controllers.MenuLineaController">
+   <children>
+      <Rectangle fx:id="animationRectangle" arcHeight="5.0" arcWidth="5.0" fill="#51bfff" height="59.0" layoutX="158.0" layoutY="19.0" stroke="BLACK" strokeType="INSIDE" styleClass="rectangle" width="136.0" />
+      <HBox alignment="CENTER" layoutX="116.0" layoutY="14.0" prefHeight="70.0" prefWidth="358.0">
+         <children>
+            <Button fx:id="crearBtn" alignment="CENTER" mnemonicParsing="false" onAction="#switchCrear" prefHeight="59.0" prefWidth="136.0" text="Crear" textAlignment="CENTER" HBox.hgrow="ALWAYS">
+               <styleClass>
+                  <String fx:value="outSideButton" />
+                  <String fx:value="whiteText" />
+               </styleClass></Button>
+            <Button fx:id="unirseBtn" alignment="CENTER" mnemonicParsing="false" onAction="#switchUnirse" prefHeight="59.0" prefWidth="136.0" text="Unirse" HBox.hgrow="ALWAYS">
+               <font>
+                  <Font name="Berlin Sans FB Demi Bold" size="29.0" />
+               </font>
+               <styleClass>
+                  <String fx:value="outSideButton" />
+                  <String fx:value="redText" />
+               </styleClass>
+            </Button>
+         </children>
+      </HBox>
+      <Pane fx:id="crearPane" layoutX="54.0" layoutY="100.0" prefHeight="517.0" prefWidth="1175.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="54.0" AnchorPane.rightAnchor="-23.59999999999991" AnchorPane.topAnchor="100.0">
+         <children>
+            <Label layoutX="502.0" layoutY="36.0" styleClass="specialLabel" text="Crear Partida" textFill="#bf00ff">
+               <font>
+                  <Font name="Bodoni MT Poster Compressed" size="38.0" />
+               </font>
+            </Label>
+            <Button layoutX="56.0" layoutY="415.0" mnemonicParsing="false" onAction="#testConection" onMouseEntered="#hoverIn" onMouseExited="#hoverOut" prefHeight="58.0" prefWidth="169.0" styleClass="insideButton" text="Probar Conexion" />
+            <Button fx:id="jugarBtn" layoutX="919.0" layoutY="415.0" mnemonicParsing="false" onAction="#initGame" onMouseEntered="#hoverIn" onMouseExited="#hoverOut" prefHeight="58.0" prefWidth="148.0" styleClass="insideButton" text="Empezar Juego" />
+            <HBox layoutX="56.0" layoutY="250.0" prefHeight="52.0" prefWidth="329.0">
+               <children>
+                  <Label text="IP del dispositivo:" textFill="WHITE">
+                     <font>
+                        <Font name="Comic Sans MS" size="18.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="ipPropio" prefHeight="19.0" prefWidth="159.0" wrapText="true" HBox.hgrow="ALWAYS">
+                     <font>
+                        <Font size="23.0" />
+                     </font></Label>
+               </children>
+            </HBox>
+            <HBox layoutX="61.0" layoutY="114.0" prefHeight="44.0" prefWidth="318.0">
+               <children>
+                  <Label text="IP del Host:" textFill="WHITE">
+                     <font>
+                        <Font name="Comic Sans MS" size="18.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="ipServer" prefHeight="19.0" prefWidth="148.0" HBox.hgrow="ALWAYS">
+                     <font>
+                        <Font size="23.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox layoutX="736.0" layoutY="110.0" prefHeight="52.0" prefWidth="302.0">
+               <children>
+                  <Label text="IP del invitado: " textFill="WHITE">
+                     <font>
+                        <Font name="Comic Sans MS" size="18.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="ipCliente" prefHeight="31.0" prefWidth="168.0" HBox.hgrow="ALWAYS" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" layoutX="30.0" layoutY="302.0" prefHeight="70.0" prefWidth="311.0">
+               <children>
+                  <Button alignment="CENTER" minWidth="62.0" mnemonicParsing="false" onAction="#customIp" onMouseEntered="#hoverIn" onMouseExited="#hoverOut" prefHeight="38.0" prefWidth="106.0" styleClass="insideButton" text="CambiarIo" textAlignment="CENTER" HBox.hgrow="ALWAYS" />
+                  <Label prefHeight="70.0" prefWidth="154.0" text="Esta no es la IP que quieres usar? cámbiala" textAlignment="CENTER" textFill="WHITE" wrapText="true">
+                     <font>
+                        <Font name="Comic Sans MS" size="14.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+         </children>
+      </Pane>
+      <Pane fx:id="unirsePane" disable="true" layoutX="54.0" layoutY="100.0" prefHeight="517.0" prefWidth="1175.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="54.0" AnchorPane.rightAnchor="-29.600000000000136" AnchorPane.topAnchor="100.0">
+         <children>
+            <Label layoutX="492.0" layoutY="35.0" styleClass="specialLabel" text="Unirse a Partida" textFill="#bf00ff">
+               <font>
+                  <Font name="Bodoni MT Poster Compressed" size="38.0" />
+               </font>
+            </Label>
+            <Button layoutX="56.0" layoutY="415.0" mnemonicParsing="false" onAction="#testConection" prefHeight="58.0" prefWidth="169.0" styleClass="insideButton" text="Probar Conexion" />
+            <Button fx:id="jugarBtn1" layoutX="919.0" layoutY="415.0" mnemonicParsing="false" onAction="#initGame" prefHeight="58.0" prefWidth="148.0" styleClass="insideButton" text="Empezar Juego" />
+            <HBox alignment="CENTER" layoutX="30.0" layoutY="305.0" prefHeight="70.0" prefWidth="311.0">
+               <children>
+                  <Button alignment="CENTER" minWidth="62.0" mnemonicParsing="false" onAction="#customIp" prefHeight="38.0" prefWidth="106.0" styleClass="insideButton" text="CambiarIo" textAlignment="CENTER" HBox.hgrow="ALWAYS" />
+                  <Label prefHeight="70.0" prefWidth="154.0" text="Esta no es la IP que quieres usar? cámbiala" textAlignment="CENTER" textFill="WHITE" wrapText="true">
+                     <font>
+                        <Font name="Comic Sans MS" size="14.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox layoutX="56.0" layoutY="250.0" prefHeight="52.0" prefWidth="329.0">
+               <children>
+                  <Label text="IP del dispositivo:" textFill="WHITE">
+                     <font>
+                        <Font name="Comic Sans MS" size="18.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="ipPropio1" prefHeight="19.0" prefWidth="159.0" wrapText="true" HBox.hgrow="ALWAYS">
+                     <font>
+                        <Font size="23.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox layoutX="61.0" layoutY="114.0" prefHeight="44.0" prefWidth="318.0">
+               <children>
+                  <Label text="IP del Host:" textFill="WHITE">
+                     <font>
+                        <Font name="Comic Sans MS" size="18.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="ipServer1" />
+               </children>
+            </HBox>
+            <HBox layoutX="736.0" layoutY="110.0" prefHeight="52.0" prefWidth="302.0">
+               <children>
+                  <Label text="IP del invitado: " textFill="WHITE">
+                     <font>
+                        <Font name="Comic Sans MS" size="18.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="ipCliente1" prefHeight="26.0" prefWidth="168.0" />
+               </children>
+            </HBox>
+         </children>
+      </Pane>
+      <Button fx:id="exitBtn" layoutX="37.0" layoutY="28.0" mnemonicParsing="false" onAction="#back" styleClass="icon-button" />
+   </children>
+</AnchorPane>
