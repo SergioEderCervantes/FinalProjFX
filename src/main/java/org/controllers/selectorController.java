@@ -271,7 +271,7 @@ public class selectorController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("Local.fxml"));
 
             Pane root = loader.load();
-            juegoController controller = loader.getController();
+            juegoLocalController controller = loader.getController();
             controller.loadSongFromDB(canciones[show-1].getFirst());
             controller.postInitialize();
             stage = (Stage) ((Node) event.getSource()).getScene().getWindow();

@@ -1,12 +1,3 @@
-.track-pane {
-    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #3b1d64, #1a0842);
-    -fx-padding: 10;
-    -fx-border-color: #FFFFFF;
-    -fx-border-width: 2;
-    -fx-border-radius: 10;
-    -fx-background-radius: 10;
-    -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 10, 0.5, 0, 0);
-}
 
 .track-line {
     -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #ff0000, #ff6600);
@@ -17,20 +8,10 @@
     -fx-effect: dropshadow(gaussian, rgba(255,255,255,1.0), 15, 0.8, 0, 0);
 }
 
-.track-line.red {
-    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #ff0000, #ff6600);
-}
-
-.track-line.green {
-    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #00ff00, #66ff66);
-}
-
-.track-line.blue {
-    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #0000ff, #6666ff);
-}
-
-.track-line.yellow {
-    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #ffff00, #ffff66);
+.pause-pane {
+    -fx-background-color: rgba(50, 0, 50, 0.9);
+    -fx-background-radius: 20;
+    -fx-effect: dropshadow(three-pass-box, rgba(148, 0, 211, 0.8), 20, 0, 0, 0);
 }
 .track-button {
     -fx-background-color: transparent;
@@ -132,4 +113,3 @@
     -fx-effect: dropshadow(gaussian, rgba(255, 255, 255, 0.8), 10, 0.5, 0, 0), /* Sombra blanca brillante */
     glow(75);
 }
-

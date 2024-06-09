@@ -26,7 +26,7 @@ public class multijugadorController {
     }
     public void Local(ActionEvent event) throws IOException {
         band=1;
-        Pane root = loadFXML("Local");
+        Pane root = loadFXML("Selector");
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);

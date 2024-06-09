@@ -70,28 +70,7 @@
     -fx-stroke-width: 2; /* Ancho del borde */
     -fx-effect: dropshadow(gaussian, rgba(255, 255, 255, 0.8), 10, 0.5, 0, 0); /* Sombra blanca brillante */
 }
-.progressbar {
-    -fx-background-color: transparent;
-    -fx-padding: 0.5em;
-}
 
-.progressbar .track {
-    -fx-background-color: rgba(255, 255, 255, 0.1); /* Fondo transparente */
-    -fx-background-radius: 10;
-}
-
-.progressbar .bar {
-    -fx-background-color: linear-gradient(
-            to right,
-            #FF4500, /* Rojo anaranjado */
-            #1E90FF, /* Azul brillante */
-            #FFD700, /* Amarillo dorado */
-            #32CD32, /* Verde lima */
-            #FF4500  /* Rojo anaranjado */
-    ); /* Gradiente de colores */
-    -fx-background-radius: 10;
-    -fx-effect: dropshadow(gaussian, rgba(255, 255, 255, 0.8), 10, 0, 0, 0); /* Efecto de sombra brillante */
-}
 .neon-button {
     -fx-background-color: linear-gradient(to bottom, #3c3c3c, #0f0f0f);
     -fx-background-radius: 10;

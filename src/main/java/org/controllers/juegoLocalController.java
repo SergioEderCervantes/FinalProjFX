@@ -4,12 +4,12 @@ package org.controllers;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
-import javafx.animation.Animation;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
+
+import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -17,6 +17,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
@@ -40,13 +42,19 @@ public class juegoLocalController implements Initializable{
             {Color.RED, Color.BLUE, Color.YELLOW, Color.GREEN, Color.ORANGE};
 
     private int puntaje=0;
+    private int puntaje1=0;
     private int multiplicador=1;
+    private int multiplicador1=1;
+    private int cont2=0;
     private int cont=0;
     private Song cancionSeleccionada;
     public Timeline timeline;
+    public Timeline timeline2;
     private Tecla aux;
+    private Tecla aux2;
     private final ArrayList<Circle> teclasEnPantalla = new ArrayList<>();
-    private long t_Nuevo;       //Tiempo medido para iteraciones
+    private final ArrayList<Circle> teclasEnPantalla2 = new ArrayList<>();
+
     private long t_inicio;      //Tiempo global
     private boolean reproduciendo;
     //Delay necesario para que las teclas aparezcan on time, se modifica en funcion de la velocidad de bajada de las teclas
@@ -66,11 +74,19 @@ public class juegoLocalController implements Initializable{
     @FXML
     Button OrangeButton;
     @FXML
+    Button RedButton1;
+    @FXML
+    Button BlueButton1;
+    @FXML
+    Button YellowButton1;
+    @FXML
+    Button GreenButton1;
+    @FXML
+    Button OrangeButton1;
+    @FXML
     Pane PausePane;
     @FXML
     Rectangle HorizontalRect;
-    @FXML
-    ImageView img;
     @FXML
     Line l1;
     @FXML
@@ -82,17 +98,73 @@ public class juegoLocalController implements Initializable{
     @FXML
     Line l5;
     @FXML
-    Label score;
+    Rectangle HorizontalRect1;
+    @FXML
+    Line l11;
+    @FXML
+    Line l21;
+    @FXML
+    Line l31;
+    @FXML
+    Line l41;
+    @FXML
+    Line l51;
     @FXML
     Label scoref;
     @FXML
+    Label scoref1;
+    @FXML
     Label multiplo;
     @FXML
+    Label multiplo1;
+    @FXML
+    Label Ganador;
+    @FXML
     Pane finalPanel;
+    @FXML
+    ImageView bateria;
+    @FXML
+    ImageView mano;
+    @FXML
+    ImageView guitarra;
+    @FXML
+    ImageView pulse;
+    @FXML
+    ImageView pulse2;
+    @FXML
+    ImageView pulse3;
+    @FXML
+    ImageView pulse4;
+    @FXML
+    ImageView pulse5;
+    @FXML
+    ImageView pulse6;
+    @FXML
+    ImageView pulse7;
+    @FXML
+    ImageView pulse8;
+    @FXML
+    ImageView pulse9;
+    @FXML
+    ImageView pulse10;
+    @FXML
+    ImageView backg1;
+    @FXML
+    ImageView backg2;
+    @FXML
+    ProgressBar BarraM;
+    @FXML
+    ProgressBar BarraP1;
+    @FXML
+    ProgressBar BarraP2;
 
     //Test
-    private long test_time_inicio;
-
+    private long test_time_inicio1;
+    private long test_time_inicio2;
+    Sprite sprite;
+    Sprite guitar;
+    Sprite bate;
+    Sprite b1,b2,b3,b4,b5,b6,b7,b8,b9,b10;
     public void setCancionSeleccionada(Song cancionSeleccionada) {
         this.cancionSeleccionada = cancionSeleccionada;
     }
@@ -107,15 +179,94 @@ public class juegoLocalController implements Initializable{
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.initKeyboard();
         this.initButtons();
-        this.t_inicio = this.t_Nuevo = System.currentTimeMillis();
-
+        this.t_inicio = System.currentTimeMillis();
+        this.Ganador.setText("");
     }
+
     //TODO comentar que es esto
     public void postInitialize(){
         this.initReproduction();
         this.initTimeline();
+
         this.timeline.play();
-        this.test_time_inicio = System.currentTimeMillis();
+        this.timeline2.play();
+        this.test_time_inicio1 = System.currentTimeMillis();
+        this.test_time_inicio2 = System.currentTimeMillis();
+        Image img = new Image(Paths.get("src/main/resources/images/mano.png").toUri().toString());
+        Image img2 = new Image(Paths.get("src/main/resources/images/guitarra.gif").toUri().toString());
+        Image img3 = new Image(Paths.get("src/main/resources/images/bateria.gif").toUri().toString());
+        Image img4 = new Image(Paths.get("src/main/resources/images/pulso.png").toUri().toString());
+        mano.setImage(img);
+        guitarra.setImage(img2);
+        bateria.setImage(img3);
+        pulse.setImage(img4);
+        pulse2.setImage(img4);
+        pulse3.setImage(img4);
+        pulse4.setImage(img4);
+        pulse5.setImage(img4);
+        pulse6.setImage(img4);
+        pulse7.setImage(img4);
+        pulse8.setImage(img4);
+        pulse9.setImage(img4);
+        pulse10.setImage(img4);
+
+        this.sprite = new Sprite(mano,4,4,(int)17.5,27,400);
+        this.sprite.setCycleCount(Transition.INDEFINITE);
+        this.sprite.resetAnimation();
+        this.sprite.setAutoReverse(true);
+        sprite.play();
+        this.guitar = new Sprite(guitarra,6,6,(int)51.2,54,400);
+        this.guitar.setCycleCount(Transition.INDEFINITE);
+        this.guitar.resetAnimation();
+        this.guitar.setAutoReverse(true);
+        guitar.play();
+        this.bate = new Sprite(bateria,3,3,(int)87.3,69,400);
+        this.bate.setCycleCount(Transition.INDEFINITE);
+        this.bate.resetAnimation();
+        this.bate.setAutoReverse(true);
+        bate.play();
+        b1 = new Sprite(pulse,23,23,64,64,250);
+        b1.setCycleCount(1);
+        b1.resetAnimation();
+        b1.setAutoReverse(true);
+        b2 = new Sprite(pulse2,23,23,64,64,250);
+        b2.setCycleCount(1);
+        b2.resetAnimation();
+        b2.setAutoReverse(true);
+        b3 = new Sprite(pulse3,23,23,64,64,250);
+        b3.setCycleCount(1);
+        b3.resetAnimation();
+        b3.setAutoReverse(true);
+        b4 = new Sprite(pulse4,23,23,64,64,250);
+        b4.setCycleCount(1);
+        b4.resetAnimation();
+        b4.setAutoReverse(true);
+        b5 = new Sprite(pulse5,23,23,64,64,250);
+        b5.setCycleCount(1);
+        b5.resetAnimation();
+        b5.setAutoReverse(true);
+        b6 = new Sprite(pulse6,23,23,64,64,250);
+        b6.setCycleCount(1);
+        b6.resetAnimation();
+        b6.setAutoReverse(true);
+        b7 = new Sprite(pulse7,23,23,64,64,250);
+        b7.setCycleCount(1);
+        b7.resetAnimation();
+        b7.setAutoReverse(true);
+        b8 = new Sprite(pulse8,23,23,64,64,250);
+        b8.setCycleCount(1);
+        b8.resetAnimation();
+        b8.setAutoReverse(true);
+        b9 = new Sprite(pulse9,23,23,64,64,250);
+        b9.setCycleCount(1);
+        b9.resetAnimation();
+        b9.setAutoReverse(true);
+        b10 = new Sprite(pulse10,23,23,64,64,250);
+        b10.setCycleCount(1);
+        b10.resetAnimation();
+        b10.setAutoReverse(true);
+
+
     }
 
 
@@ -127,6 +278,8 @@ public class juegoLocalController implements Initializable{
 
         this.timeline = new Timeline(new KeyFrame(Duration.millis(REPETITION_MILIS), event -> print()));    //Animacion
         this.timeline.setCycleCount(Timeline.INDEFINITE);   //Ciclos que durara la animacion
+        this.timeline2 = new Timeline(new KeyFrame(Duration.millis(REPETITION_MILIS), event -> print2()));    //Animacion
+        this.timeline2.setCycleCount(Timeline.INDEFINITE);   //Ciclos que durara la animacion
         this.t_inicio = System.currentTimeMillis();
     }
 
@@ -135,6 +288,7 @@ public class juegoLocalController implements Initializable{
 
 //        this.cancionSeleccionada = TestGraph.RealizarTest();
         this.aux = cancionSeleccionada.getTeclas_pulsadas().getVertice(0);
+        this.aux2 = cancionSeleccionada.getTeclas_pulsadas().getVertice(0);
 
         //Settea reproductor con la cancion seleccionada
         String audioFilePath = cancionSeleccionada.getRuta();
@@ -147,8 +301,10 @@ public class juegoLocalController implements Initializable{
 
     private void print() {
         long test_time_fin = System.currentTimeMillis();
-        double frameDt = test_time_fin - test_time_inicio;
-        test_time_inicio = test_time_fin;
+        double frameDt = test_time_fin - test_time_inicio1;
+        test_time_inicio1 = test_time_fin;
+        updateProgress();
+        updateScoreProgress();
         int xDef = 0;
         Tecla lastTecla = null;
         long t_final = System.currentTimeMillis();
@@ -159,10 +315,8 @@ public class juegoLocalController implements Initializable{
             reproductor.play();
         }
 
-        score.setText(String.valueOf(puntaje));//no
-
         multiplo.setVisible(multiplicador != 1);//no
-        multiplo.setText("x" + multiplicador);//no
+        multiplo.setText("x" + multiplicador);
 
         //Primero desplaza todas las que ya existen hacia abajo y elimina del ArrayList y el Panel las teclas que ya no se ven
         try{
@@ -181,23 +335,23 @@ public class juegoLocalController implements Initializable{
         //Agregamos las nuevas teclas si deben de aparecer
         if (aux.getNumAristasAdyacentes() != 0) {
             if (aux.getTeclaSig().getTiempoInicio() - DELAY <= this.reproductor.getCurrentTime().toMillis()) {   //
-                t_Nuevo = t_final;
+
                 for (Arista i : aux.getAristasAdyacentes()) {
                     switch (i.destino().numColor) { //Dependiendo del color se inician en coordenadas en X diferentes
                         case 0:
-                            xDef = 460;
+                            xDef = 161;
                             break;
                         case 1:
-                            xDef = 525;
+                            xDef = 222;
                             break;
                         case 2:
-                            xDef = 600;
+                            xDef = 285;
                             break;
                         case 3:
-                            xDef = 675;
+                            xDef = 343;
                             break;
                         case 4:
-                            xDef = 740;
+                            xDef = 406;
                             break;
                     }
                     Circle circle = new Circle(xDef, 155, 20, ColoresPosibles[i.destino().numColor]);
@@ -216,10 +370,87 @@ public class juegoLocalController implements Initializable{
             }
         }
     }
+    private void print2() {
+        long test_time_fin = System.currentTimeMillis();
+        double frameDt2 = test_time_fin - test_time_inicio2;
+        test_time_inicio2 = test_time_fin;
+        updateScoreProgress();
+        int xDef = 0;
+        Tecla lastTecla = null;
+        long t_final = System.currentTimeMillis();
+        //Esto sera en milisegundos
+        final long DELAY = 1580;
+        if (t_final - t_inicio > DELAY && !reproduciendo) {//no
+            reproduciendo = true;
+            reproductor.play();
+        }
+
+        multiplo1.setVisible(multiplicador1 != 1);//no
+        multiplo1.setText("x" + multiplicador1);
+
+        //Primero desplaza todas las que ya existen hacia abajo y elimina del ArrayList y el Panel las teclas que ya no se ven
+        try{
+            for (Circle circulo : teclasEnPantalla2) {
+                fisicaCirculo2(circulo, frameDt2);
+
+                if (circulo.getCenterY() > 620) {
+                    if(circulo.isVisible()){
+                        multiplicador1=1;
+                        cont2 = 0;
+                    }
+                    this.removeCircle2(circulo);
+                }
+            }
+        }catch (Exception ignored){}
+        //Agregamos las nuevas teclas si deben de aparecer
+        if (aux2.getNumAristasAdyacentes() != 0) {
+            if (aux2.getTeclaSig().getTiempoInicio() - DELAY <= this.reproductor.getCurrentTime().toMillis()) {   //
+
+                for (Arista i : aux2.getAristasAdyacentes()) {
+                    switch (i.destino().numColor) { //Dependiendo del color se inician en coordenadas en X diferentes
+                        case 0:
+                            xDef = 797;
+                            break;
+                        case 1:
+                            xDef = 860;
+                            break;
+                        case 2:
+                            xDef = 915;
+                            break;
+                        case 3:
+                            xDef = 968;
+                            break;
+                        case 4:
+                            xDef = 1031;
+                            break;
+                    }
+                    Circle circle = new Circle(xDef, 155, 20, ColoresPosibles[i.destino().numColor]);
+                    principal.getChildren().add(circle);
+                    teclasEnPantalla2.add(circle);
+                    circle.toBack();
+                    lastTecla = i.destino();
+                }
+                aux2 = lastTecla;
+            }
+            this.setPositions();
+        }else {
+            if (teclasEnPantalla2.isEmpty()) {
+                scoref1.setText(String.valueOf(puntaje1));
+                pantallaFinal();
+            }
+        }
+    }
     public void removeCircle(Circle circle) {
         Platform.runLater(() -> {
             principal.getChildren().remove(circle);
             teclasEnPantalla.remove(circle);
+        });
+
+    }
+    public void removeCircle2(Circle circle) {
+        Platform.runLater(() -> {
+            principal.getChildren().remove(circle);
+            teclasEnPantalla2.remove(circle);
         });
 
     }
@@ -249,14 +480,36 @@ public class juegoLocalController implements Initializable{
                         this.YellowButton.fire();
 
                         break;
-                    case O:
+                    case S:
                         this.GreenButton.setFocusTraversable(true);
                         this.GreenButton.fire();
 
                         break;
-                    case P:
+                    case D:
                         this.OrangeButton.setFocusTraversable(true);
                         this.OrangeButton.fire();
+                        break;
+                    case I:
+                        this.RedButton1.setFocusTraversable(true);
+                        this.RedButton1.fire();
+                        break;
+                    case O:
+                        this.BlueButton1.setFocusTraversable(true);
+                        this.BlueButton1.fire();
+                        break;
+                    case P:
+                        this.YellowButton1.setFocusTraversable(true);
+                        this.YellowButton1.fire();
+
+                        break;
+                    case L:
+                        this.GreenButton1.setFocusTraversable(true);
+                        this.GreenButton1.fire();
+
+                        break;
+                    case K:
+                        this.OrangeButton1.setFocusTraversable(true);
+                        this.OrangeButton1.fire();
                         break;
                     case ESCAPE:
                         pause();
@@ -274,29 +527,66 @@ public class juegoLocalController implements Initializable{
         this.YellowButton.toFront();
         this.GreenButton.toFront();
         this.OrangeButton.toFront();
+        this.RedButton1.toFront();
+        this.BlueButton1.toFront();
+        this.YellowButton1.toFront();
+        this.GreenButton1.toFront();
+        this.OrangeButton1.toFront();
+        pulse.toFront();
+        pulse2.toFront();
+        pulse3.toFront();
+        pulse4.toFront();
+        pulse5.toFront();
+        pulse6.toFront();
+        pulse7.toFront();
+        pulse8.toFront();
+        pulse9.toFront();
+        pulse10.toFront();
 
 
     }
     private void pantallaFinal(){
+        if(puntaje > puntaje1){
+            Ganador.setText("Player 1");
+        } else if (puntaje == puntaje1) {
+            Ganador.setText("Draw");
+        } else{
+            Ganador.setText("Player 2");
+        }
+
         timeline.pause();
+        timeline2.pause();
         RedButton.setDisable(true);
         BlueButton.setDisable(true);
         YellowButton.setDisable(true);
         GreenButton.setDisable(true);
         OrangeButton.setDisable(true);
+        RedButton1.setDisable(true);
+        BlueButton1.setDisable(true);
+        YellowButton1.setDisable(true);
+        GreenButton1.setDisable(true);
+        OrangeButton1.setDisable(true);
+        finalPanel.toFront();
         finalPanel.setVisible(true);
     }
 
     private void pause(){
         timeline.pause();
+        timeline2.pause();
         reproductor.pause();
         RedButton.setDisable(true);
         BlueButton.setDisable(true);
         YellowButton.setDisable(true);
         GreenButton.setDisable(true);
         OrangeButton.setDisable(true);
-        PausePane.setVisible(true);
+        RedButton1.setDisable(true);
+        BlueButton1.setDisable(true);
+        YellowButton1.setDisable(true);
+        GreenButton1.setDisable(true);
+        OrangeButton1.setDisable(true);
         PausePane.toFront();
+        PausePane.setVisible(true);
+
     }
 
 
@@ -308,20 +598,27 @@ public class juegoLocalController implements Initializable{
         YellowButton.setDisable(false);
         GreenButton.setDisable(false);
         OrangeButton.setDisable(false);
+        RedButton1.setDisable(false);
+        BlueButton1.setDisable(false);
+        YellowButton1.setDisable(false);
+        GreenButton1.setDisable(false);
+        OrangeButton1.setDisable(false);
         timeline.play();
+        timeline2.play();
         reproductor.play();
     }
 
 
     @FXML //TODO Retorno al menu
     public void back(ActionEvent event) throws IOException {
-        Pane root = loadFXML("Selector");
+        Pane root = loadFXML("Menu");
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
         reproductor.stop();
         timeline.stop();
+        timeline2.stop();
 
 
 
@@ -329,6 +626,7 @@ public class juegoLocalController implements Initializable{
     @FXML
     private void btnRActivado(){
         Rectangle rect = this.makeRect(RedButton);
+        b1.play();
         checkColitions(rect);
     }
 
@@ -336,6 +634,7 @@ public class juegoLocalController implements Initializable{
     @FXML
     private void btnBActivado(){
         Rectangle rect = this.makeRect(BlueButton);
+        b2.play();
         checkColitions(rect);
 
     }
@@ -344,6 +643,7 @@ public class juegoLocalController implements Initializable{
     @FXML
     private void btnYActivado(){
         Rectangle rect = this.makeRect(YellowButton);
+        b3.play();
         checkColitions(rect);
 
     }
@@ -352,6 +652,7 @@ public class juegoLocalController implements Initializable{
     @FXML
     private void btnGActivado(){
         Rectangle rect = this.makeRect(GreenButton);
+        b4.play();
         checkColitions(rect);
 
     }
@@ -360,7 +661,51 @@ public class juegoLocalController implements Initializable{
     @FXML
     private void btnOActivado(){
         Rectangle rect = this.makeRect(OrangeButton);
+        b5.play();
         checkColitions(rect);
+
+    }
+    @FXML
+    private void btnR1Activado(){
+        Rectangle rect = this.makeRect(RedButton1);
+        b6.play();
+        checkColitions2(rect);
+    }
+
+
+    @FXML
+    private void btnB1Activado(){
+        Rectangle rect = this.makeRect(BlueButton1);
+        b7.play();
+        checkColitions2(rect);
+
+
+    }
+
+
+    @FXML
+    private void btnY1Activado(){
+        Rectangle rect = this.makeRect(YellowButton1);
+        b8.play();
+        checkColitions2(rect);
+
+    }
+
+
+    @FXML
+    private void btnG1Activado(){
+        Rectangle rect = this.makeRect(GreenButton1);
+        b9.play();
+        checkColitions2(rect);
+
+    }
+
+
+    @FXML
+    private void btnO1Activado(){
+        Rectangle rect = this.makeRect(OrangeButton1);
+        b10.play();
+        checkColitions2(rect);
 
     }
 
@@ -369,13 +714,23 @@ public class juegoLocalController implements Initializable{
     }
 
     private void setPositions(){
+
         this.HorizontalRect.toBack();
         this.l1.toBack();
         this.l2.toBack();
         this.l3.toBack();
         this.l4.toBack();
         this.l5.toBack();
-        this.img.toBack();
+        this.HorizontalRect1.toBack();
+        this.l11.toBack();
+        this.l21.toBack();
+        this.l31.toBack();
+        this.l41.toBack();
+        this.l51.toBack();
+        this.backg2.toBack();
+        this.backg1.toBack();
+        this.finalPanel.toFront();
+        this.PausePane.toFront();
     }
 
     private void checkColitions(Rectangle rect){
@@ -391,21 +746,57 @@ public class juegoLocalController implements Initializable{
                 puntaje = puntaje+(multiplicador * 25);
                 cont++;
 
-                if(cont>=8 && cont<12){
+                if(cont>10 && cont<16){
                     multiplicador=2;
                 }
                 else {
-                    if (cont >= 12 && cont < 24) {
+                    if (cont >= 16 && cont < 35) {
                         multiplicador = 4;
                     }
                     else {
-                        if (cont >= 24) {
+                        if (cont >= 35) {
                             multiplicador = 8;
                         }
                     }
                 }
                 //TODO sprite de explosion de circulo, aumentar el marcador
                 circle.setVisible(false);
+
+                //Esto es mil veces mejor que destruirlo aqui
+                return;
+            }
+
+        }
+        //TODO Quitar puntos porque se presiono una tecla cuando no habia nada
+    }
+    private void checkColitions2(Rectangle rect){
+
+        for (Circle circle1 : teclasEnPantalla2) {
+
+
+//            System.out.println(band);
+            if (rect.contains(circle1.getCenterX(), circle1.getCenterY()) ||
+                    rect.contains(circle1.getCenterX(), circle1.getCenterY() + circle1.getRadius()) ||
+                    rect.contains(circle1.getCenterX(), circle1.getCenterY() - circle1.getRadius())){
+
+                puntaje1 = puntaje1+(multiplicador1 * 15);
+                cont2++;
+
+                if(cont2>10 && cont2<16){
+                    multiplicador1=2;
+                }
+                else {
+                    if (cont2 >= 16 && cont2 < 35) {
+                        multiplicador1 = 4;
+                    }
+                    else {
+                        if (cont2 >= 35) {
+                            multiplicador1 = 8;
+                        }
+                    }
+                }
+                //TODO sprite de explosion de circulo, aumentar el marcador
+                circle1.setVisible(false);
 
                 //Esto es mil veces mejor que destruirlo aqui
                 return;
@@ -471,17 +862,51 @@ public class juegoLocalController implements Initializable{
         double factor1 = factor / 6;
         double factor2 = factor / 12;
         circulo.setCenterY(circulo.getCenterY() + factor);
-        if(circulo.getCenterX() < 461 ){
+        if(circulo.getCenterX() < 160 ){
             circulo.setCenterX(circulo.getCenterX() - factor1);
         }
-        else if(circulo.getCenterX() > 739){
+        else if(circulo.getCenterX() > 405){
             circulo.setCenterX(circulo.getCenterX() + factor1);
         }
-        else if(circulo.getCenterX() < 600){
+        else if(circulo.getCenterX() < 285){
             circulo.setCenterX(circulo.getCenterX() - factor2);
-        }else if(circulo.getCenterX() >600){
+        }else if(circulo.getCenterX() > 285){
             circulo.setCenterX(circulo.getCenterX() + factor2);
         }
     }
+    public static void fisicaCirculo2(Circle circulo,double dt){
+        double factor = dt / 4 ;
+        double factor1 = factor / 6;
+        double factor2 = factor / 12;
+        circulo.setCenterY(circulo.getCenterY() + factor);
+        if(circulo.getCenterX() < 796 ){
+            circulo.setCenterX(circulo.getCenterX() - factor1);
+        }
+        else if(circulo.getCenterX() >1030){
+            circulo.setCenterX(circulo.getCenterX() + factor1);
+        }
+        else if(circulo.getCenterX() < 915){
+            circulo.setCenterX(circulo.getCenterX() - factor2);
+        }else if(circulo.getCenterX() > 915){
+            circulo.setCenterX(circulo.getCenterX() + factor2);
+        }
+    }
+    private void updateProgress() {
+        if (reproductor != null && reproductor.getStatus() == MediaPlayer.Status.PLAYING) {
+            double currentTime = reproductor.getCurrentTime().toMillis();
+            double total = reproductor.getTotalDuration().toMillis();
+            BarraM.setProgress(currentTime / total);
+        }
+    }
+
+    private void updateScoreProgress() {
+        double score1Percentage = Math.min(puntaje / 50000.0, 1);
+        BarraP1.setProgress(score1Percentage);
+
+        double score2Percentage = Math.min(puntaje1 / 50000.0, 1);
+        BarraP2.setProgress(score2Percentage);
+    }
 
 }
+
+

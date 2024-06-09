@@ -1,0 +1,34 @@
+
+.score-bar {
+    -fx-accent: #12c2e9; /* Color principal para la barra de progreso */
+}
+
+.progress-bar {
+    -fx-background-color: #2a2a2a;
+    -fx-background-radius: 30;
+    -fx-padding: 4;
+    -fx-effect: innershadow(gaussian, rgba(0, 0, 0, 0.8), 10, 0.0, 0, 2);
+}
+
+.progress-bar > .bar {
+    -fx-background-color: linear-gradient(from 0% 50% to 100% 50%, #12c2e9, #c471ed, #f64f59);
+    -fx-background-radius: 28;
+    -fx-effect: innershadow(gaussian, rgba(255, 255, 255, 0.4), 5, 0.0, 0, 1);
+}
+
+.progress-bar > .track {
+    -fx-background-color: #1e1e1e;
+    -fx-background-radius: 30;
+    -fx-opacity: 0.85;
+}
+.svg-star {
+    -fx-fill: #ffcc00; /* Color de relleno amarillo-naranja */
+    -fx-stroke: #ffaa00; /* Borde de un amarillo-naranja más intenso */
+    -fx-stroke-width: 0; /* Ancho del borde fino */
+    -fx-stroke-line-cap: round; /* Terminaciones de la línea redondeadas */
+    -fx-stroke-line-join: round; /* Uniones de la línea redondeadas */
+    -fx-effect: dropshadow(gaussian, #FFFFFF, 3, 0, 0, 0); /* Sombra más sutil */
+}
+
+
+

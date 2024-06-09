@@ -1,7 +1,6 @@
 package org.controllers;
 
 
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -47,7 +46,6 @@ public class juegoController implements Initializable {
     public Timeline timeline;
     private Tecla aux;
     private final ArrayList<Circle> teclasEnPantalla = new ArrayList<>();
-    private long t_Nuevo;       //Tiempo medido para iteraciones
     private long t_inicio;      //Tiempo global
     private boolean reproduciendo;
     //Delay necesario para que las teclas aparezcan on time, se modifica en funcion de la velocidad de bajada de las teclas
@@ -108,7 +106,7 @@ public class juegoController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.initKeyboard();
         this.initButtons();
-        this.t_inicio = this.t_Nuevo = System.currentTimeMillis();
+        this.t_inicio = System.currentTimeMillis();
 
     }
     //TODO comentar que es esto
@@ -182,7 +180,7 @@ public class juegoController implements Initializable {
         //Agregamos las nuevas teclas si deben de aparecer
         if (aux.getNumAristasAdyacentes() != 0) {
             if (aux.getTeclaSig().getTiempoInicio() - DELAY <= this.reproductor.getCurrentTime().toMillis()) {   //
-                t_Nuevo = t_final;
+
                 for (Arista i : aux.getAristasAdyacentes()) {
                     switch (i.destino().numColor) { //Dependiendo del color se inician en coordenadas en X diferentes
                         case 0:
@@ -389,18 +387,18 @@ public class juegoController implements Initializable {
                     rect.contains(circle.getCenterX(), circle.getCenterY() + circle.getRadius()) ||
                     rect.contains(circle.getCenterX(), circle.getCenterY() - circle.getRadius())){
 
-                puntaje = puntaje+(multiplicador * 25);
+                puntaje = puntaje+(multiplicador * 15);
                 cont++;
 
-                if(cont>=8 && cont<12){
+                if(cont>10 && cont<16){
                     multiplicador=2;
                 }
                 else {
-                    if (cont >= 12 && cont < 24) {
+                    if (cont >= 16 && cont < 35) {
                         multiplicador = 4;
                     }
                     else {
-                        if (cont >= 24) {
+                        if (cont >= 35) {
                             multiplicador = 8;
                         }
                     }
