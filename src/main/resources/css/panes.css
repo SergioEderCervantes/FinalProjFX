@@ -1,0 +1,59 @@
+
+.pause-button {
+    -fx-background-color: #800080;
+    -fx-text-fill: #dab0ff;
+    -fx-font-weight: bold;
+    -fx-background-radius: 10;
+    -fx-padding: 10 20;
+    -fx-effect: dropshadow(three-pass-box, #9400d3, 5, 0.5, 0, 0);
+}
+.pause-button:hover {
+    -fx-background-color: #9400d3;
+    -fx-text-fill: #ffffff;
+}
+.pause-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #dab0ff; /* Púrpura neón más claro para el texto */
+    -fx-effect: dropshadow(gaussian, rgba(148, 0, 211, 0.8), 10, 0.5, 0, 0);
+}
+.player-score-label {
+    -fx-font-size: 20px;
+    -fx-font-family: 'Consolas', monospace;
+    -fx-text-fill: #dab0ff; /* Púrpura neón más claro */
+    -fx-background-color: transparent;
+    -fx-effect: none;
+}
+.score-number-label {
+    -fx-font-size: 22px; /* Tamaño de fuente prominente para destacar el puntaje */
+    -fx-font-family: 'Consolas', monospace; /* Fuente monoespaciada para un look digital */
+    -fx-text-fill: linear-gradient(to top, #a335ee, #d383ec); /* Gradiente de púrpura oscuro a claro */
+    -fx-background-color: rgba(15, 15, 30, 0.8); /* Fondo oscuro semi-transparente */
+    -fx-background-radius: 20px; /* Bordes redondeados para suavizar el diseño */
+    -fx-padding: 12px 24px; /* Espaciado interno generoso */
+    -fx-effect: dropshadow(three-pass-box, #c084f5, 12, 0.6, 0, 0) blur(2.0); /* Sombra suave para crear un efecto de brillo */
+}
+
+.score-label {
+    -fx-font-size: 26px; /* Tamaño de fuente para buena legibilidad */
+    -fx-font-family: 'Arial', sans-serif; /* Fuente clara y moderna */
+    -fx-text-fill: #dab0ff; /* Púrpura neón más claro para el texto */
+    -fx-background-color: transparent; /* Fondo transparente para un diseño limpio */
+    -fx-effect: dropshadow(three-pass-box, #9400d3, 10, 0.5, 0, 0) blur(1.0); /* Sombra púrpura con desenfoque para efecto glow */
+}
+.winner-label {
+    -fx-font-size: 24px; /* Tamaño de fuente grande para destacar */
+    -fx-font-family: 'Arial', sans-serif; /* Fuente clara y fácil de leer */
+    -fx-text-fill: linear-gradient(to right, #bc13fe 0%, #dfc2ff 50%, #bc13fe 100%); /* Gradiente de púrpura brillante a claro */
+    -fx-background-color: rgba(0, 0, 0, 0.8); /* Fondo oscuro para mayor contraste */
+    -fx-background-radius: 20; /* Bordes redondeados */
+    -fx-padding: 10px 20px; /* Espaciado interno */
+    -fx-effect: dropshadow(three-pass-box, rgba(188, 19, 254, 0.9), 20, 0, 0, 0) blur(1.0); /* Sombra con efecto de brillo */
+    -fx-animation: glowing 1500ms infinite; /* Animación de brillo */
+}
+
+@keyframes glowing {
+    0% { -fx-text-fill: #bc13fe; }
+    50% { -fx-text-fill: #dfc2ff; }
+    100% { -fx-text-fill: #bc13fe; }
+}

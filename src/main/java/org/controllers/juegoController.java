@@ -1,7 +1,6 @@
 package org.controllers;
 
 
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -108,6 +107,8 @@ public class juegoController implements Initializable {
         this.initKeyboard();
         this.initButtons();
         this.t_inicio = System.currentTimeMillis();
+
+
     }
     //TODO comentar que es esto
     public void postInitialize(){
@@ -290,7 +291,7 @@ public class juegoController implements Initializable {
             KeyValue kvY = new KeyValue(aux.yProperty(),btn.getLayoutY() - btn.getHeight() / 2);
             KeyValue kvOpacity = new KeyValue(aux.opacityProperty(), 0);
             KeyFrame kf = new KeyFrame(Duration.millis(500), kvWidth, kvOpacity,kvX,kvHeight,kvY);
-            
+
             timeline.getKeyFrames().add(kf);
             timeline.setOnFinished(event -> principal.getChildren().remove(aux));
             timeline.play();
@@ -411,18 +412,18 @@ public class juegoController implements Initializable {
                     rect.contains(circle.getCenterX(), circle.getCenterY() + circle.getRadius()) ||
                     rect.contains(circle.getCenterX(), circle.getCenterY() - circle.getRadius())){
 
-                puntaje = puntaje+(multiplicador * 25);
+                puntaje = puntaje+(multiplicador * 15);
                 cont++;
 
-                if(cont>=8 && cont<12){
+                if(cont>10 && cont<16){
                     multiplicador=2;
                 }
                 else {
-                    if (cont >= 12 && cont < 24) {
+                    if (cont >= 16 && cont < 35) {
                         multiplicador = 4;
                     }
                     else {
-                        if (cont >= 24) {
+                        if (cont >= 35) {
                             multiplicador = 8;
                         }
                     }

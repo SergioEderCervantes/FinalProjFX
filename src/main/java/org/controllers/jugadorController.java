@@ -11,6 +11,8 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import org.Modules.GAME_MODE;
+
 import static org.controllers.App.loadFXML;
 
 public class jugadorController {
@@ -27,7 +29,10 @@ public class jugadorController {
 
     }
     public void switchToSelector(ActionEvent event) throws IOException {
-        Pane root = loadFXML("Selector");
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("Selector.fxml"));
+        Pane root = loader.load();
+        selectorController controller = loader.getController();
+        controller.setGameMode(GAME_MODE.SINGLE_PLAYER);
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);

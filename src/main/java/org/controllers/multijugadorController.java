@@ -1,6 +1,7 @@
 package org.controllers;
 
 import javafx.event.ActionEvent;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
@@ -27,7 +28,10 @@ public class multijugadorController {
     }
     public void Local(ActionEvent event) throws IOException {
         this.gm = GAME_MODE.LOCAL_MULTIPLAYER;
-        Pane root = loadFXML("Local");
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("Selector.fxml"));
+        Pane root = loader.load();
+        selectorController controller = loader.getController();
+        controller.setGameMode(gm);
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);
