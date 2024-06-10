@@ -7,8 +7,6 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.effect.ColorAdjust?>
-<?import javafx.scene.effect.Light.Distant?>
-<?import javafx.scene.effect.Lighting?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -125,7 +123,7 @@
             <ColorAdjust brightness="-0.02" hue="0.89" saturation="-0.16" />
          </effect>
       </ImageView>
-      <ImageView fitHeight="68.0" fitWidth="69.0" layoutX="46.0" layoutY="271.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="68.0" fitWidth="69.0" layoutX="54.0" layoutY="271.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../../images/tt.gif" />
          </image>
@@ -174,6 +172,8 @@
                 <String fx:value="track-button" />
                 <String fx:value="red" />
             </styleClass></Button>
+        <ImageView fx:id="manos" fitHeight="117.0" fitWidth="161.0" layoutX="40.0" layoutY="247.0" pickOnBounds="true" preserveRatio="true" />
+
         <Line fx:id="l2" endX="-12.0" endY="571.0" layoutX="202.0" layoutY="-13.0" startX="20.0" startY="174.0" styleClass="track-line" />
         <Line fx:id="l3" endY="576.0" layoutX="285.0" layoutY="-10.0" startY="177.0" styleClass="track-line" />
         <Line fx:id="l4" endX="10.0" endY="574.0" layoutX="367.0" layoutY="-10.0" startX="-24.0" startY="172.0" styleClass="track-line" />
@@ -256,16 +256,6 @@
             <Font size="28.0" />
          </font>
       </Label>
-      <ImageView fx:id="pulse" fitHeight="68.0" fitWidth="67.0" layoutX="61.0" layoutY="526.0" onDragDetected="#btnRActivado" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fx:id="pulse7" fitHeight="68.0" fitWidth="67.0" layoutX="796.0" layoutY="524.0" onDragDetected="#btnB1Activado" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fx:id="pulse10" fitHeight="68.0" fitWidth="67.0" layoutX="1064.0" layoutY="525.0" onDragDetected="#btnO1Activado" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fx:id="pulse8" fitHeight="68.0" fitWidth="67.0" layoutX="882.0" layoutY="524.0" onDragDetected="#btnY1Activado" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fx:id="pulse6" fitHeight="68.0" fitWidth="67.0" layoutX="698.0" layoutY="524.0" onDragDetected="#btnR1Activado" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fx:id="pulse9" fitHeight="68.0" fitWidth="67.0" layoutX="969.0" layoutY="524.0" onDragDetected="#btnG1Activado" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fx:id="pulse5" fitHeight="68.0" fitWidth="67.0" layoutX="437.0" layoutY="524.0" onDragDetected="#btnOActivado" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fx:id="pulse4" fitHeight="68.0" fitWidth="67.0" layoutX="345.0" layoutY="524.0" onDragDetected="#btnGActivado" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fx:id="pulse3" fitHeight="68.0" fitWidth="67.0" layoutX="252.0" layoutY="524.0" onDragDetected="#btnYActivado" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fx:id="pulse2" fitHeight="68.0" fitWidth="67.0" layoutX="158.0" layoutY="524.0" onDragDetected="#btnBActivado" pickOnBounds="true" preserveRatio="true" />
     </children>
     <stylesheets>
         <URL value="@../../css/juego.css" />

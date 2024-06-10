@@ -5,10 +5,12 @@ package org.controllers;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
+import com.sun.jdi.IntegerValue;
 import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -17,6 +19,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
@@ -33,6 +37,8 @@ import javafx.util.Duration;
 import org.Modules.*;
 import javafx.scene.layout.Pane;
 
+import static java.lang.Integer.parseInt;
+import static java.lang.Integer.valueOf;
 import static org.controllers.App.loadFXML;
 
 public class JuegoOnlineController implements Initializable {
@@ -40,6 +46,7 @@ public class JuegoOnlineController implements Initializable {
             {Color.RED, Color.BLUE, Color.YELLOW, Color.GREEN, Color.ORANGE};
 
     private int puntaje=0;
+    private int puntaje1=0;
     private int multiplicador=1;
     private int cont=0;
     private Song cancionSeleccionada;
@@ -52,8 +59,7 @@ public class JuegoOnlineController implements Initializable {
     private MediaPlayer reproductor;
     private CustomRunnable<Button,Color> effect;
 
-    //Variable multijugador
-    Conexion_UDP connector;
+
 
     //Variables de componentes del FXML
     @FXML
@@ -73,8 +79,6 @@ public class JuegoOnlineController implements Initializable {
     @FXML
     Rectangle HorizontalRect;
     @FXML
-    ImageView img;
-    @FXML
     Line l1;
     @FXML
     Line l2;
@@ -85,7 +89,9 @@ public class JuegoOnlineController implements Initializable {
     @FXML
     Line l5;
     @FXML
-    Label score;
+    Label Ganador;
+    @FXML
+    Label scoref1;
     @FXML
     Label scoref;
     @FXML
@@ -93,11 +99,32 @@ public class JuegoOnlineController implements Initializable {
     @FXML
     Pane finalPanel;
     @FXML
-    Label score2;
+    ImageView bateria;
+    @FXML
+    ImageView mano;
+    @FXML
+    ImageView manos;
+    @FXML
+    ImageView guitarra;
 
+    @FXML
+    ImageView backg1;
+    @FXML
+    ImageView backg2;
+    @FXML
+    ProgressBar BarraM;
+    @FXML
+    ProgressBar BarraP1;
+    @FXML
+    ProgressBar BarraP2;
+    Sprite sprite;
+    Sprite guitar;
+    Sprite bate;
+    Sprite man;
     //Test
     private long frame_time_inicio;
-
+    //Variable multijugador
+    Conexion_UDP connector;
     public void setConnector(Conexion_UDP connector) {
         this.connector = connector;
     }
@@ -121,6 +148,35 @@ public class JuegoOnlineController implements Initializable {
         this.initTimeline();
         this.timeline.play();
         this.frame_time_inicio = System.currentTimeMillis();
+        Image img = new Image(Paths.get("src/main/resources/images/mano.png").toUri().toString());
+        Image img2 = new Image(Paths.get("src/main/resources/images/guitarra.gif").toUri().toString());
+        Image img3 = new Image(Paths.get("src/main/resources/images/bateria.gif").toUri().toString());
+        Image img4 = new Image(Paths.get("src/main/resources/images/manis.png").toUri().toString());
+        mano.setImage(img);
+        guitarra.setImage(img2);
+        bateria.setImage(img3);
+        manos.setImage(img4);
+
+        this.sprite = new Sprite(mano,4,4,(int)17.5,27,400);
+        this.sprite.setCycleCount(Transition.INDEFINITE);
+        this.sprite.resetAnimation();
+        this.sprite.setAutoReverse(true);
+        sprite.play();
+        this.guitar = new Sprite(guitarra,6,6,(int)51.2,54,400);
+        this.guitar.setCycleCount(Transition.INDEFINITE);
+        this.guitar.resetAnimation();
+        this.guitar.setAutoReverse(true);
+        guitar.play();
+        this.bate = new Sprite(bateria,3,3,(int)87.3,69,400);
+        this.bate.setCycleCount(Transition.INDEFINITE);
+        this.bate.resetAnimation();
+        this.bate.setAutoReverse(true);
+        bate.play();
+        this.man = new Sprite(manos,3,3,(int)38.6,66,400);
+        this.man.setCycleCount(Transition.INDEFINITE);
+        this.man.resetAnimation();
+        this.man.setAutoReverse(true);
+        man.play();
     }
 
 
@@ -151,6 +207,8 @@ public class JuegoOnlineController implements Initializable {
         long frame_time_fin = System.currentTimeMillis();
         double frameDt = frame_time_fin - frame_time_inicio;
         frame_time_inicio = frame_time_fin;
+        updateProgress();
+        updateScoreProgress();
         int xDef = 0;
         Tecla lastTecla = null;
         long t_final = System.currentTimeMillis();
@@ -162,13 +220,13 @@ public class JuegoOnlineController implements Initializable {
         }
         //parte multijugador
         try {
+            puntaje1= (parseInt(connector.getLastReceived()));
             connector.sendData(String.valueOf(puntaje));
-            score2.setText(connector.getLastReceived());
+            scoref1.setText(connector.getLastReceived());
 
         } catch (IOException e) {
             System.err.println("Error d multi:" + e.getMessage());
         }
-        score.setText(String.valueOf(puntaje));
 
         multiplo.setVisible(multiplicador != 1);
         multiplo.setText("x" + multiplicador);
@@ -220,7 +278,9 @@ public class JuegoOnlineController implements Initializable {
             this.setPositions();
         }else {
             if (teclasEnPantalla.isEmpty()) {
+
                 scoref.setText(String.valueOf(puntaje));
+                scoref1.setText(String.valueOf(puntaje1));
                 pantallaFinal();
             }
         }
@@ -267,9 +327,6 @@ public class JuegoOnlineController implements Initializable {
                         this.OrangeButton.setFocusTraversable(true);
                         this.OrangeButton.fire();
                         break;
-                    case ESCAPE:
-                        pause();
-                        break;
                     default:
                         break;
                 }
@@ -313,40 +370,23 @@ public class JuegoOnlineController implements Initializable {
 
     }
     private void pantallaFinal(){
+        if(puntaje > puntaje1){
+            Ganador.setText("You");
+        } else if (puntaje == puntaje1) {
+            Ganador.setText("Draw");
+        } else{
+            Ganador.setText("Player 2");
+        }
         timeline.pause();
         RedButton.setDisable(true);
         BlueButton.setDisable(true);
         YellowButton.setDisable(true);
         GreenButton.setDisable(true);
         OrangeButton.setDisable(true);
+
+        finalPanel.toFront();
         finalPanel.setVisible(true);
     }
-
-    private void pause(){
-        timeline.pause();
-        reproductor.pause();
-        RedButton.setDisable(true);
-        BlueButton.setDisable(true);
-        YellowButton.setDisable(true);
-        GreenButton.setDisable(true);
-        OrangeButton.setDisable(true);
-        PausePane.setVisible(true);
-        PausePane.toFront();
-    }
-
-
-    @FXML
-    public void continuar() {
-        PausePane.setVisible(false);
-        RedButton.setDisable(false);
-        BlueButton.setDisable(false);
-        YellowButton.setDisable(false);
-        GreenButton.setDisable(false);
-        OrangeButton.setDisable(false);
-        timeline.play();
-        reproductor.play();
-    }
-
 
     @FXML //TODO Retorno al menu
     public void back(ActionEvent event) throws IOException {
@@ -411,7 +451,10 @@ public class JuegoOnlineController implements Initializable {
         this.l3.toBack();
         this.l4.toBack();
         this.l5.toBack();
-        this.img.toBack();
+        this.backg2.toBack();
+        this.backg1.toBack();
+        this.finalPanel.toFront();
+        this.PausePane.toFront();
     }
 
     private void checkColitions(Rectangle rect){
@@ -424,18 +467,18 @@ public class JuegoOnlineController implements Initializable {
                     rect.contains(circle.getCenterX(), circle.getCenterY() + circle.getRadius()) ||
                     rect.contains(circle.getCenterX(), circle.getCenterY() - circle.getRadius())){
 
-                puntaje = puntaje+(multiplicador * 25);
+                puntaje = puntaje+(multiplicador * 15);
                 cont++;
 
-                if(cont>=8 && cont<12){
+                if(cont>=10 && cont<16){
                     multiplicador=2;
                 }
                 else {
-                    if (cont >= 12 && cont < 24) {
+                    if (cont >= 16 && cont < 35) {
                         multiplicador = 4;
                     }
                     else {
-                        if (cont >= 24) {
+                        if (cont >= 35) {
                             multiplicador = 8;
                         }
                     }
@@ -518,6 +561,21 @@ public class JuegoOnlineController implements Initializable {
         }else if(circulo.getCenterX() >600){
             circulo.setCenterX(circulo.getCenterX() + factor2);
         }
+    }
+    private void updateProgress() {
+        if (reproductor != null && reproductor.getStatus() == MediaPlayer.Status.PLAYING) {
+            double currentTime = reproductor.getCurrentTime().toMillis();
+            double total = reproductor.getTotalDuration().toMillis();
+            BarraM.setProgress(currentTime / total);
+        }
+    }
+
+    private void updateScoreProgress() {
+        double score1Percentage = Math.min(puntaje / 50000.0, 1);
+        BarraP1.setProgress(score1Percentage);
+
+        double score2Percentage = Math.min(puntaje1/ 50000.0, 1);
+        BarraP2.setProgress(score2Percentage);
     }
 }
 
