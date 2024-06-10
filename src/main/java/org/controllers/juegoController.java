@@ -183,10 +183,16 @@ public class juegoController implements Initializable {
         //Settea reproductor con la cancion seleccionada
         String audioFilePath = cancionSeleccionada.getRuta();
         String mediaUrl = new File(audioFilePath).toURI().toString();
-        Media media = new Media(mediaUrl);
-        this.reproductor = new MediaPlayer(media);
-        this.reproduciendo = false;
-        this.reproductor.setVolume(0.5);
+        try{
+            Media media = new Media(mediaUrl);
+            this.reproductor = new MediaPlayer(media);
+            this.reproduciendo = false;
+        }catch(Exception e) { 
+            System.out.println(mediaUrl);
+        }
+        
+        
+//        this.reproductor.setVolume(0.5);
     }
 
     private void print() {
