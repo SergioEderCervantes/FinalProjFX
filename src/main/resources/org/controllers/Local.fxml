@@ -7,8 +7,6 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.effect.ColorAdjust?>
-<?import javafx.scene.effect.Light.Distant?>
-<?import javafx.scene.effect.Lighting?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -125,7 +123,7 @@
             <ColorAdjust brightness="-0.02" hue="0.89" saturation="-0.16" />
          </effect>
       </ImageView>
-      <ImageView fitHeight="68.0" fitWidth="69.0" layoutX="46.0" layoutY="271.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="68.0" fitWidth="69.0" layoutX="54.0" layoutY="271.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../../images/tt.gif" />
          </image>
@@ -174,6 +172,8 @@
                 <String fx:value="track-button" />
                 <String fx:value="red" />
             </styleClass></Button>
+        <ImageView fx:id="manos" fitHeight="117.0" fitWidth="161.0" layoutX="40.0" layoutY="247.0" pickOnBounds="true" preserveRatio="true" />
+
         <Line fx:id="l2" endX="-12.0" endY="571.0" layoutX="202.0" layoutY="-13.0" startX="20.0" startY="174.0" styleClass="track-line" />
         <Line fx:id="l3" endY="576.0" layoutX="285.0" layoutY="-10.0" startY="177.0" styleClass="track-line" />
         <Line fx:id="l4" endX="10.0" endY="574.0" layoutX="367.0" layoutY="-10.0" startX="-24.0" startY="172.0" styleClass="track-line" />

@@ -70,11 +70,7 @@ public class selectorController {
     @FXML
     private MediaView backgSelect;
     @FXML
-    private Label num;
-    @FXML
     private Label name;
-    @FXML
-    private Label err;
     @FXML
     private MediaPlayer fondo;
 
@@ -214,72 +210,58 @@ public class selectorController {
             case 1:
                 translateAnimation(0.5,dos,1200);
 
-                num.setText("1/15");
                 break;
             case 2:
                 translateAnimation(0.5,tres,1200);
                 show--;
-                num.setText("2/15");
                 break;
             case 3:
                 translateAnimation(0.5,cuatro,1200);
                 show--;
-                num.setText("3/15");
                 break;
             case 4:
                 translateAnimation(0.5,cinco,1200);
                 show--;
-                num.setText("4/15");
                 break;
             case 5:
                 translateAnimation(0.5,seis,1200);
                 show--;
-                num.setText("5/15");
                 break;
             case 6:
                 translateAnimation(0.5,siete,1200);
                 show--;
-                num.setText("6/15");
                 break;
             case 7:
                 translateAnimation(0.5,ocho,1200);
                 show--;
-                num.setText("7/15");
                 break;
             case 8:
                 translateAnimation(0.5,nueve,1200);
                 show--;
-                num.setText("8/15");
                 break;
             case 9:
                 translateAnimation(0.5,diez,1200);
                 show--;
-                num.setText("9/15");
                 break;
             case 10:
                 translateAnimation(0.5,once,1200);
                 show--;
-                num.setText("10/15");
                 break;
             case 11:
                 translateAnimation(0.5,doce,1200);
                 show--;
-                num.setText("11/15");
                 break;
             case 12:
                 translateAnimation(0.5,trece,1200);
                 show--;
-                num.setText("12/15");
                 break;
             case 13:
                 translateAnimation(0.5,catorce,1200);
                 show--;
-                num.setText("13/15");
                 break;
             case 14:
                 translateAnimation(0.5,quince,1200);
                 show--;
-                num.setText("14/15");
                 break;
             default:
 
@@ -294,72 +276,57 @@ public class selectorController {
             case 1:
                 translateAnimation(0.5,dos,-1200);
                 show++;
-                num.setText("2/15");
                 break;
             case 2:
                 translateAnimation(0.5,tres,-1200);
                 show++;
-                num.setText("3/15");
                 break;
             case 3:
                 translateAnimation(0.5,cuatro,-1200);
                 show++;
-                num.setText("4/15");
                 break;
             case 4:
                 translateAnimation(0.5,cinco,-1200);
                 show++;
-                num.setText("5/15");
                 break;
             case 5:
                 translateAnimation(0.5,seis,-1200);
                 show++;
-                num.setText("6/15");
                 break;
             case 6:
                 translateAnimation(0.5,siete,-1200);
                 show++;
-                num.setText("7/15");
                 break;
             case 7:
                 translateAnimation(0.5,ocho,-1200);
                 show++;
-                num.setText("8/15");
                 break;
             case 8:
                 translateAnimation(0.5,nueve,-1200);
                 show++;
-                num.setText("9/15");
                 break;
             case 9:
                 translateAnimation(0.5,diez,-1200);
                 show++;
-                num.setText("10/15");
                 break;
             case 10:
                 translateAnimation(0.5,once,-1200);
                 show++;
-                num.setText("11/15");
                 break;
             case 11:
                 translateAnimation(0.5,doce,-1200);
                 show++;
-                num.setText("12/15");
                 break;
             case 12:
                 translateAnimation(0.5,trece,-1200);
                 show++;
-                num.setText("13/15");
                 break;
             case 13:
                 translateAnimation(0.5,catorce,-1200);
                 show++;
-                num.setText("14/15");
                 break;
             case 14:
                 translateAnimation(0.5,quince,-1200);
-
-                num.setText("15/15");
                 break;
             default:
         }

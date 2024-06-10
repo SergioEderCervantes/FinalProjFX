@@ -321,7 +321,7 @@ public class MenuLineaController implements Initializable {
             }
         } else {
             try {
-                conexionUdp = new Conexion_UDP("ConnClientThread", this.ipCliente.getText(), this.ipServer.getText(), false);
+                conexionUdp = new Conexion_UDP("ConnClientThread", this.ipCliente1.getText(), this.ipServer1.getText(), false);
                 conexionUdp.resumeConnection();
 
                 conexionUdp.sendData("Hello");

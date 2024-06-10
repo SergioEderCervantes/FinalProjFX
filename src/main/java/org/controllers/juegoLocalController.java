@@ -128,25 +128,7 @@ public class juegoLocalController implements Initializable{
     @FXML
     ImageView guitarra;
     @FXML
-    ImageView pulse;
-    @FXML
-    ImageView pulse2;
-    @FXML
-    ImageView pulse3;
-    @FXML
-    ImageView pulse4;
-    @FXML
-    ImageView pulse5;
-    @FXML
-    ImageView pulse6;
-    @FXML
-    ImageView pulse7;
-    @FXML
-    ImageView pulse8;
-    @FXML
-    ImageView pulse9;
-    @FXML
-    ImageView pulse10;
+    ImageView manos;
     @FXML
     ImageView backg1;
     @FXML
@@ -164,7 +146,7 @@ public class juegoLocalController implements Initializable{
     Sprite sprite;
     Sprite guitar;
     Sprite bate;
-    Sprite b1,b2,b3,b4,b5,b6,b7,b8,b9,b10;
+    Sprite man;
     public void setCancionSeleccionada(Song cancionSeleccionada) {
         this.cancionSeleccionada = cancionSeleccionada;
     }
@@ -195,20 +177,11 @@ public class juegoLocalController implements Initializable{
         Image img = new Image(Paths.get("src/main/resources/images/mano.png").toUri().toString());
         Image img2 = new Image(Paths.get("src/main/resources/images/guitarra.gif").toUri().toString());
         Image img3 = new Image(Paths.get("src/main/resources/images/bateria.gif").toUri().toString());
-        Image img4 = new Image(Paths.get("src/main/resources/images/pulso.png").toUri().toString());
+        Image img4 = new Image(Paths.get("src/main/resources/images/manis.png").toUri().toString());
         mano.setImage(img);
         guitarra.setImage(img2);
         bateria.setImage(img3);
-        pulse.setImage(img4);
-        pulse2.setImage(img4);
-        pulse3.setImage(img4);
-        pulse4.setImage(img4);
-        pulse5.setImage(img4);
-        pulse6.setImage(img4);
-        pulse7.setImage(img4);
-        pulse8.setImage(img4);
-        pulse9.setImage(img4);
-        pulse10.setImage(img4);
+        manos.setImage(img4);
 
         this.sprite = new Sprite(mano,4,4,(int)17.5,27,400);
         this.sprite.setCycleCount(Transition.INDEFINITE);
@@ -225,46 +198,11 @@ public class juegoLocalController implements Initializable{
         this.bate.resetAnimation();
         this.bate.setAutoReverse(true);
         bate.play();
-        b1 = new Sprite(pulse,23,23,64,64,250);
-        b1.setCycleCount(1);
-        b1.resetAnimation();
-        b1.setAutoReverse(true);
-        b2 = new Sprite(pulse2,23,23,64,64,250);
-        b2.setCycleCount(1);
-        b2.resetAnimation();
-        b2.setAutoReverse(true);
-        b3 = new Sprite(pulse3,23,23,64,64,250);
-        b3.setCycleCount(1);
-        b3.resetAnimation();
-        b3.setAutoReverse(true);
-        b4 = new Sprite(pulse4,23,23,64,64,250);
-        b4.setCycleCount(1);
-        b4.resetAnimation();
-        b4.setAutoReverse(true);
-        b5 = new Sprite(pulse5,23,23,64,64,250);
-        b5.setCycleCount(1);
-        b5.resetAnimation();
-        b5.setAutoReverse(true);
-        b6 = new Sprite(pulse6,23,23,64,64,250);
-        b6.setCycleCount(1);
-        b6.resetAnimation();
-        b6.setAutoReverse(true);
-        b7 = new Sprite(pulse7,23,23,64,64,250);
-        b7.setCycleCount(1);
-        b7.resetAnimation();
-        b7.setAutoReverse(true);
-        b8 = new Sprite(pulse8,23,23,64,64,250);
-        b8.setCycleCount(1);
-        b8.resetAnimation();
-        b8.setAutoReverse(true);
-        b9 = new Sprite(pulse9,23,23,64,64,250);
-        b9.setCycleCount(1);
-        b9.resetAnimation();
-        b9.setAutoReverse(true);
-        b10 = new Sprite(pulse10,23,23,64,64,250);
-        b10.setCycleCount(1);
-        b10.resetAnimation();
-        b10.setAutoReverse(true);
+        this.man = new Sprite(manos,3,3,(int)38.6,66,400);
+        this.man.setCycleCount(Transition.INDEFINITE);
+        this.man.resetAnimation();
+        this.man.setAutoReverse(true);
+        man.play();
 
 
     }
@@ -532,16 +470,6 @@ public class juegoLocalController implements Initializable{
         this.YellowButton1.toFront();
         this.GreenButton1.toFront();
         this.OrangeButton1.toFront();
-        pulse.toFront();
-        pulse2.toFront();
-        pulse3.toFront();
-        pulse4.toFront();
-        pulse5.toFront();
-        pulse6.toFront();
-        pulse7.toFront();
-        pulse8.toFront();
-        pulse9.toFront();
-        pulse10.toFront();
         this.effect = (Button btn, Color color) -> {
             Rectangle aux = new Rectangle();
             aux.setWidth(btn.getWidth());
@@ -648,7 +576,6 @@ public class juegoLocalController implements Initializable{
     @FXML
     private void btnRActivado(){
         Rectangle rect = this.makeRect(RedButton);
-        b1.play();
         checkColitions(rect);
         effect.run(RedButton,Color.RED);
 
@@ -658,7 +585,6 @@ public class juegoLocalController implements Initializable{
     @FXML
     private void btnBActivado(){
         Rectangle rect = this.makeRect(BlueButton);
-        b2.play();
         checkColitions(rect);
         effect.run(BlueButton,Color.BLUE);
 
@@ -669,7 +595,6 @@ public class juegoLocalController implements Initializable{
     @FXML
     private void btnYActivado(){
         Rectangle rect = this.makeRect(YellowButton);
-        b3.play();
         checkColitions(rect);
         effect.run(YellowButton,Color.YELLOW);
 
@@ -680,7 +605,6 @@ public class juegoLocalController implements Initializable{
     @FXML
     private void btnGActivado(){
         Rectangle rect = this.makeRect(GreenButton);
-        b4.play();
         checkColitions(rect);
         effect.run(GreenButton,Color.GREEN);
 
@@ -691,7 +615,6 @@ public class juegoLocalController implements Initializable{
     @FXML
     private void btnOActivado(){
         Rectangle rect = this.makeRect(OrangeButton);
-        b5.play();
         checkColitions(rect);
         effect.run(OrangeButton,Color.ORANGE);
 
@@ -699,7 +622,6 @@ public class juegoLocalController implements Initializable{
     @FXML
     private void btnR1Activado(){
         Rectangle rect = this.makeRect(RedButton1);
-        b6.play();
         checkColitions2(rect);
         effect.run(RedButton1,Color.RED);
 
@@ -709,7 +631,6 @@ public class juegoLocalController implements Initializable{
     @FXML
     private void btnB1Activado(){
         Rectangle rect = this.makeRect(BlueButton1);
-        b7.play();
         checkColitions2(rect);
         effect.run(BlueButton1,Color.BLUE);
 
@@ -720,7 +641,6 @@ public class juegoLocalController implements Initializable{
     @FXML
     private void btnY1Activado(){
         Rectangle rect = this.makeRect(YellowButton1);
-        b8.play();
         checkColitions2(rect);
         effect.run(YellowButton1,Color.YELLOW);
 
@@ -730,7 +650,6 @@ public class juegoLocalController implements Initializable{
     @FXML
     private void btnG1Activado(){
         Rectangle rect = this.makeRect(GreenButton1);
-        b9.play();
         checkColitions2(rect);
         effect.run(GreenButton1,Color.GREEN);
 
@@ -740,7 +659,6 @@ public class juegoLocalController implements Initializable{
     @FXML
     private void btnO1Activado(){
         Rectangle rect = this.makeRect(OrangeButton1);
-        b10.play();
         checkColitions2(rect);
         effect.run(OrangeButton1,Color.ORANGE);
 
