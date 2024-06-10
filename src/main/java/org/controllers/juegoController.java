@@ -92,17 +92,10 @@ public class juegoController implements Initializable {
     @FXML
     ImageView mano;
     @FXML
+    ImageView manos;
+    @FXML
     ImageView guitarra;
-    @FXML
-    ImageView pulse;
-    @FXML
-    ImageView pulse2;
-    @FXML
-    ImageView pulse3;
-    @FXML
-    ImageView pulse4;
-    @FXML
-    ImageView pulse5;
+
     @FXML
     ImageView backg1;
     @FXML
@@ -116,7 +109,7 @@ public class juegoController implements Initializable {
     Sprite sprite;
     Sprite guitar;
     Sprite bate;
-    Sprite b1,b2,b3,b4,b5;
+    Sprite man;
     public void setCancionSeleccionada(Song cancionSeleccionada) {
         this.cancionSeleccionada = cancionSeleccionada;
     }
@@ -144,15 +137,11 @@ public class juegoController implements Initializable {
         Image img = new Image(Paths.get("src/main/resources/images/mano.png").toUri().toString());
         Image img2 = new Image(Paths.get("src/main/resources/images/guitarra.gif").toUri().toString());
         Image img3 = new Image(Paths.get("src/main/resources/images/bateria.gif").toUri().toString());
-        Image img4 = new Image(Paths.get("src/main/resources/images/pulso.png").toUri().toString());
+        Image img4 = new Image(Paths.get("src/main/resources/images/manis.png").toUri().toString());
         mano.setImage(img);
         guitarra.setImage(img2);
         bateria.setImage(img3);
-        pulse.setImage(img4);
-        pulse2.setImage(img4);
-        pulse3.setImage(img4);
-        pulse4.setImage(img4);
-        pulse5.setImage(img4);
+        manos.setImage(img4);
 
         this.sprite = new Sprite(mano,4,4,(int)17.5,27,400);
         this.sprite.setCycleCount(Transition.INDEFINITE);
@@ -169,26 +158,11 @@ public class juegoController implements Initializable {
         this.bate.resetAnimation();
         this.bate.setAutoReverse(true);
         bate.play();
-        b1 = new Sprite(pulse,23,23,64,64,250);
-        b1.setCycleCount(1);
-        b1.resetAnimation();
-        b1.setAutoReverse(true);
-        b2 = new Sprite(pulse2,23,23,64,64,250);
-        b2.setCycleCount(1);
-        b2.resetAnimation();
-        b2.setAutoReverse(true);
-        b3 = new Sprite(pulse3,23,23,64,64,250);
-        b3.setCycleCount(1);
-        b3.resetAnimation();
-        b3.setAutoReverse(true);
-        b4 = new Sprite(pulse4,23,23,64,64,250);
-        b4.setCycleCount(1);
-        b4.resetAnimation();
-        b4.setAutoReverse(true);
-        b5 = new Sprite(pulse5,23,23,64,64,250);
-        b5.setCycleCount(1);
-        b5.resetAnimation();
-        b5.setAutoReverse(true);
+        this.man = new Sprite(manos,3,3,(int)38.6,66,400);
+        this.man.setCycleCount(Transition.INDEFINITE);
+        this.man.resetAnimation();
+        this.man.setAutoReverse(true);
+        man.play();
     }
 
 
@@ -344,11 +318,7 @@ public class juegoController implements Initializable {
         this.YellowButton.toFront();
         this.GreenButton.toFront();
         this.OrangeButton.toFront();
-        pulse.toFront();
-        pulse2.toFront();
-        pulse3.toFront();
-        pulse4.toFront();
-        pulse5.toFront();
+
         //Configurar el efecto de presionado de un boton
         this.effect = (Button btn, Color color) -> {
             Rectangle aux = new Rectangle();
@@ -432,7 +402,6 @@ public class juegoController implements Initializable {
     @FXML
     private void btnRActivado(){
         Rectangle rect = this.makeRect(RedButton);
-        b1.play();
         checkColitions(rect);
         effect.run(RedButton,Color.RED);
     }
@@ -441,7 +410,6 @@ public class juegoController implements Initializable {
     @FXML
     private void btnBActivado(){
         Rectangle rect = this.makeRect(BlueButton);
-        b2.play();
         checkColitions(rect);
         effect.run(BlueButton,Color.BLUE);
     }
@@ -450,7 +418,6 @@ public class juegoController implements Initializable {
     @FXML
     private void btnYActivado(){
         Rectangle rect = this.makeRect(YellowButton);
-        b3.play();
         checkColitions(rect);
         effect.run(YellowButton,Color.YELLOW);
     }
@@ -459,7 +426,6 @@ public class juegoController implements Initializable {
     @FXML
     private void btnGActivado(){
         Rectangle rect = this.makeRect(GreenButton);
-        b4.play();
         checkColitions(rect);
         effect.run(GreenButton,Color.GREEN);
     }
@@ -468,7 +434,6 @@ public class juegoController implements Initializable {
     @FXML
     private void btnOActivado(){
         Rectangle rect = this.makeRect(OrangeButton);
-        b5.play();
         checkColitions(rect);
         effect.run(OrangeButton,Color.ORANGE);
     }

@@ -92,13 +92,6 @@
 
 }
 
-.rectangle {
-    -fx-fill: linear-gradient(from 0% 0% to 100% 100%, #3b1d64, #1a0842);
-    -fx-stroke: #ffffff;
-    -fx-stroke-width: 2;
-    -fx-effect: dropshadow(gaussian, rgba(72,61,139,0.75), 15, 0.5, 0, 0);
-}
-
 .transparent-black-rectangle {
     -fx-fill: rgba(0, 0, 0, 0.5); /* Fondo negro semitransparente */
     -fx-stroke: white; /* Borde blanco */
