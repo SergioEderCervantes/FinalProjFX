@@ -1,13 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane prefHeight="600.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.controllers.multijugadorController">
+<AnchorPane prefHeight="600.0" prefWidth="1200.0" stylesheets="@../../css/styles.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.controllers.multijugadorController">
    <children>
+      <ImageView fitHeight="600.0" fitWidth="1200.0" pickOnBounds="true">
+         <image>
+            <Image url="@../../images/6d7832d7-5cb0-4b94-b69b-045bc29e3a0d.jpg" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="457.0" fitWidth="1200.0" layoutY="93.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../images/cyberpunk-street.png" />
+         </image>
+      </ImageView>
       <Button layoutX="468.0" layoutY="200.0" mnemonicParsing="false" onAction="#Local" text="Local" textAlignment="CENTER" textOverrun="CLIP">
          <font>
             <Font name="Microsoft YaHei" size="18.0" />
@@ -15,6 +27,10 @@
          <padding>
             <Insets bottom="20.0" left="110.0" right="110.0" top="20.0" />
          </padding>
+         <styleClass>
+            <String fx:value="button-glow" />
+            <String fx:value="button" />
+         </styleClass>
       </Button>
       <Button layoutX="468.0" layoutY="306.0" mnemonicParsing="false" onAction="#Linea" text="Linea" textAlignment="CENTER" textOverrun="CLIP">
          <font>
@@ -23,11 +39,19 @@
          <padding>
             <Insets bottom="20.0" left="110.0" right="110.0" top="20.0" />
          </padding>
+         <styleClass>
+            <String fx:value="button-glow" />
+            <String fx:value="button" />
+         </styleClass>
       </Button>
       <Button layoutX="30.0" layoutY="555.0" mnemonicParsing="false" onAction="#back" text="Atrás">
          <font>
             <Font name="Microsoft YaHei" size="12.0" />
          </font>
+         <styleClass>
+            <String fx:value="button-glow" />
+            <String fx:value="button" />
+         </styleClass>
       </Button>
    </children>
 </AnchorPane>
