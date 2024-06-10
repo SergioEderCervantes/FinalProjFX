@@ -256,16 +256,6 @@
             <Font size="28.0" />
          </font>
       </Label>
-      <ImageView fx:id="pulse" fitHeight="68.0" fitWidth="67.0" layoutX="61.0" layoutY="526.0" onDragDetected="#btnRActivado" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fx:id="pulse7" fitHeight="68.0" fitWidth="67.0" layoutX="796.0" layoutY="524.0" onDragDetected="#btnB1Activado" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fx:id="pulse10" fitHeight="68.0" fitWidth="67.0" layoutX="1064.0" layoutY="525.0" onDragDetected="#btnO1Activado" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fx:id="pulse8" fitHeight="68.0" fitWidth="67.0" layoutX="882.0" layoutY="524.0" onDragDetected="#btnY1Activado" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fx:id="pulse6" fitHeight="68.0" fitWidth="67.0" layoutX="698.0" layoutY="524.0" onDragDetected="#btnR1Activado" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fx:id="pulse9" fitHeight="68.0" fitWidth="67.0" layoutX="969.0" layoutY="524.0" onDragDetected="#btnG1Activado" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fx:id="pulse5" fitHeight="68.0" fitWidth="67.0" layoutX="437.0" layoutY="524.0" onDragDetected="#btnOActivado" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fx:id="pulse4" fitHeight="68.0" fitWidth="67.0" layoutX="345.0" layoutY="524.0" onDragDetected="#btnGActivado" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fx:id="pulse3" fitHeight="68.0" fitWidth="67.0" layoutX="252.0" layoutY="524.0" onDragDetected="#btnYActivado" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fx:id="pulse2" fitHeight="68.0" fitWidth="67.0" layoutX="158.0" layoutY="524.0" onDragDetected="#btnBActivado" pickOnBounds="true" preserveRatio="true" />
     </children>
     <stylesheets>
         <URL value="@../../css/juego.css" />
