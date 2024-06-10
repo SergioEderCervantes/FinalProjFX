@@ -103,6 +103,10 @@ public class editorController {
         this.songName.setText(songName);
     }
 
+    public void setEditado(boolean editado) {
+        this.editado = editado;
+    }
+
 
     public void Postinitialize(){
         //Configurar el slider de reproducccion
@@ -327,9 +331,8 @@ public class editorController {
 
         }else {
             //borrar todas las teclas de la cancion que existia en la base de datos y despues volver a cargarla
-            if(!del2DB(conn,this.idSong)){
-                System.out.println("No se puede borrar las teclas");
-            } else if (!loadTeclas2DB(this.teclasExistentes.getItems(),conn,this.idSong)) {
+            del2DB(conn,this.idSong);
+             if (!loadTeclas2DB(this.teclasExistentes.getItems(),conn,this.idSong)) {
                 System.out.println("No se puede agregar las nuevas teclas");
             }
         }

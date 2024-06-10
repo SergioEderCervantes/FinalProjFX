@@ -220,6 +220,7 @@ public class MenuEditorController {
             controller.setSongName(this.cancionSeleccion);
             controller.setMediaPlayer(this.pistaSeleccion);
             controller.setTeclas(this.teclasSeleccion);
+            controller.setEditado(this.editado);
             controller.Postinitialize();
 
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
