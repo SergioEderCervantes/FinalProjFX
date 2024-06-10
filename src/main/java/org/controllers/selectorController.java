@@ -206,58 +206,60 @@ public class selectorController implements Initializable {
         switch (show){
 
             case 1:
-                translateAnimation(0.5,dos,1200);
-
                 break;
             case 2:
-                translateAnimation(0.5,tres,1200);
+                translateAnimation(0.5,dos,1200);
                 show--;
                 break;
             case 3:
-                translateAnimation(0.5,cuatro,1200);
+                translateAnimation(0.5,tres,1200);
                 show--;
                 break;
             case 4:
-                translateAnimation(0.5,cinco,1200);
+                translateAnimation(0.5,cuatro,1200);
                 show--;
                 break;
             case 5:
-                translateAnimation(0.5,seis,1200);
+                translateAnimation(0.5,cinco,1200);
                 show--;
                 break;
             case 6:
-                translateAnimation(0.5,siete,1200);
+                translateAnimation(0.5,seis,1200);
                 show--;
                 break;
             case 7:
-                translateAnimation(0.5,ocho,1200);
+                translateAnimation(0.5,siete,1200);
                 show--;
                 break;
             case 8:
-                translateAnimation(0.5,nueve,1200);
+                translateAnimation(0.5,ocho,1200);
                 show--;
                 break;
             case 9:
-                translateAnimation(0.5,diez,1200);
+                translateAnimation(0.5,nueve,1200);
                 show--;
                 break;
             case 10:
-                translateAnimation(0.5,once,1200);
+                translateAnimation(0.5,diez,1200);
                 show--;
                 break;
             case 11:
-                translateAnimation(0.5,doce,1200);
+                translateAnimation(0.5,once,1200);
                 show--;
                 break;
             case 12:
-                translateAnimation(0.5,trece,1200);
+                translateAnimation(0.5,doce,1200);
                 show--;
                 break;
             case 13:
-                translateAnimation(0.5,catorce,1200);
+                translateAnimation(0.5,trece,1200);
                 show--;
                 break;
             case 14:
+                translateAnimation(0.5,catorce,1200);
+                show--;
+                break;
+            case 15:
                 translateAnimation(0.5,quince,1200);
                 show--;
                 break;
@@ -325,6 +327,7 @@ public class selectorController implements Initializable {
                 break;
             case 14:
                 translateAnimation(0.5,quince,-1200);
+                show++;
                 break;
             default:
         }

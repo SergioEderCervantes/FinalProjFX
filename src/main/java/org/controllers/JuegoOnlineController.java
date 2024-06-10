@@ -220,8 +220,9 @@ public class JuegoOnlineController implements Initializable {
         }
         //parte multijugador
         try {
-            puntaje1= (parseInt(connector.getLastReceived()));
+
             connector.sendData(String.valueOf(puntaje));
+            puntaje1= (parseInt(connector.getLastReceived()));
             scoref1.setText(connector.getLastReceived());
 
         } catch (IOException e) {
@@ -390,7 +391,7 @@ public class JuegoOnlineController implements Initializable {
 
     @FXML //TODO Retorno al menu
     public void back(ActionEvent event) throws IOException {
-        Pane root = loadFXML("Selector");
+        Pane root = loadFXML("Main");
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Scene scene = new Scene(root);
         stage.setScene(scene);
@@ -454,7 +455,6 @@ public class JuegoOnlineController implements Initializable {
         this.backg2.toBack();
         this.backg1.toBack();
         this.finalPanel.toFront();
-        this.PausePane.toFront();
     }
 
     private void checkColitions(Rectangle rect){

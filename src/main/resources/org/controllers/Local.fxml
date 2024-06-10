@@ -172,7 +172,7 @@
                 <String fx:value="track-button" />
                 <String fx:value="red" />
             </styleClass></Button>
-        <ImageView fx:id="manos" fitHeight="117.0" fitWidth="161.0" layoutX="40.0" layoutY="247.0" pickOnBounds="true" preserveRatio="true" />
+        <ImageView fx:id="manos" fitHeight="117.0" fitWidth="161.0" layoutX="61.0" layoutY="247.0" pickOnBounds="true" preserveRatio="true" />
 
         <Line fx:id="l2" endX="-12.0" endY="571.0" layoutX="202.0" layoutY="-13.0" startX="20.0" startY="174.0" styleClass="track-line" />
         <Line fx:id="l3" endY="576.0" layoutX="285.0" layoutY="-10.0" startY="177.0" styleClass="track-line" />
@@ -206,7 +206,7 @@
             <children>
                 <Button layoutX="429.0" layoutY="274.0" mnemonicParsing="false" onAction="#back" styleClass="pause-button" text="Continuar" />
                 <Label alignment="CENTER" contentDisplay="CENTER" layoutX="155.0" layoutY="28.0" prefHeight="68.0" prefWidth="647.0" styleClass="score-label" text="SCORE" />
-                <Label fx:id="scoref" layoutX="111.0" layoutY="182.0" prefHeight="46.0" prefWidth="97.0" styleClass="score-number-label" text="0000" />
+                <Label fx:id="scoref" alignment="CENTER" layoutX="97.0" layoutY="182.0" prefHeight="50.0" prefWidth="117.0" styleClass="score-number-label" text="0000" />
                 <ImageView fitHeight="118.0" fitWidth="119.0" layoutX="-24.0" layoutY="-28.0" pickOnBounds="true" preserveRatio="true" rotate="-131.6">
                     <image>
                         <Image url="@../../images/vic-removebg-preview.png" />
@@ -219,8 +219,8 @@
                 </ImageView>
             <Label layoutX="111.0" layoutY="137.0" styleClass="player-score-label" text="Player 1" />
             <Label layoutX="765.0" layoutY="137.0" styleClass="player-score-label" text="Player 2" />
-            <Label fx:id="scoref1" layoutX="766.0" layoutY="182.0" styleClass="score-number-label" text="0000" />
-            <Label layoutX="408.0" layoutY="186.0" styleClass="winner-label" text="WINNER" />
+            <Label fx:id="scoref1" alignment="CENTER" layoutX="750.0" layoutY="182.0" prefHeight="50.0" prefWidth="117.0" styleClass="score-number-label" text="0000" />
+            <Label alignment="CENTER" layoutX="425.0" layoutY="184.0" styleClass="winner-label" text="WINS" />
             <Label fx:id="Ganador" layoutX="406.0" layoutY="127.0" styleClass="label-mult" text="Player 0" />
             </children>
         </Pane>
