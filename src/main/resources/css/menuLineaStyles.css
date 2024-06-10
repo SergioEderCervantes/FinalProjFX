@@ -1,7 +1,7 @@
 .principal{
 
     -fx-background-color: linear-gradient(
-            from 0% 0% to 100% 100%,
+            from 100% 0% to 0% 100%,
             #2f2f2f ,
             #2f2f2f 80%,
             #a140fd

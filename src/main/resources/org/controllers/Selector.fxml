@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.net.URL?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.effect.ColorAdjust?>
@@ -10,10 +11,10 @@
 <?import javafx.scene.media.MediaView?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="600.0" prefWidth="1200.0" style="-fx-background-color: #000000;" stylesheets="@../../css/juego.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.controllers.selectorController">
+<AnchorPane prefHeight="600.0" prefWidth="1200.0" style="-fx-background-color: #000000;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.controllers.selectorController">
    <children>
       <MediaView fx:id="backgSelect" fitHeight="600.0" fitWidth="1200.0" opacity="0.76" preserveRatio="false" />
-      <Pane prefHeight="551.0" prefWidth="1200.0" style="-fx-background-color: transparent;">
+      <Pane prefHeight="551.0" prefWidth="1200.0" styleClass="customPane">
          <children>
             <ImageView fx:id="uno" fitHeight="270.0" fitWidth="261.0" layoutX="478.0" layoutY="49.0" pickOnBounds="true">
                <image>
@@ -21,37 +22,37 @@
                </image></ImageView>
          </children>
       </Pane>
-      <Pane prefHeight="551.0" prefWidth="1200.0" style="-fx-background-color: transparent;">
+      <Pane prefHeight="551.0" prefWidth="1200.0" styleClass="customPane">
          <children>
             <ImageView fx:id="dos" fitHeight="270.0" fitWidth="261.0" layoutX="476.0" layoutY="49.0" pickOnBounds="true" />
          </children>
       </Pane>
-      <Pane prefHeight="551.0" prefWidth="1200.0" style="-fx-background-color: transparent;">
+      <Pane prefHeight="551.0" prefWidth="1200.0" styleClass="customPane">
          <children>
             <ImageView fx:id="tres" fitHeight="270.0" fitWidth="261.0" layoutX="478.0" layoutY="49.0" pickOnBounds="true" />
          </children>
       </Pane>
-      <Pane prefHeight="551.0" prefWidth="1200.0" style="-fx-background-color: transparent;">
+      <Pane prefHeight="551.0" prefWidth="1200.0" styleClass="customPane">
          <children>
             <ImageView fx:id="cuatro" fitHeight="270.0" fitWidth="261.0" layoutX="478.0" layoutY="49.0" pickOnBounds="true" />
          </children>
       </Pane>
-      <Pane prefHeight="551.0" prefWidth="1200.0" style="-fx-background-color: transparent;">
+      <Pane prefHeight="551.0" prefWidth="1200.0" styleClass="customPane">
          <children>
             <ImageView fx:id="cinco" fitHeight="270.0" fitWidth="261.0" layoutX="478.0" layoutY="49.0" pickOnBounds="true" />
          </children>
       </Pane>
-      <Pane prefHeight="551.0" prefWidth="1200.0" style="-fx-background-color: transparent00;">
+      <Pane prefHeight="551.0" prefWidth="1200.0" styleClass="customPane">
          <children>
             <ImageView fx:id="seis" fitHeight="270.0" fitWidth="261.0" layoutX="478.0" layoutY="49.0" pickOnBounds="true" />
          </children>
       </Pane>
-      <Pane prefHeight="551.0" prefWidth="1200.0" style="-fx-background-color: transparent;">
+      <Pane prefHeight="551.0" prefWidth="1200.0" styleClass="customPane">
          <children>
             <ImageView fx:id="siete" fitHeight="270.0" fitWidth="261.0" layoutX="478.0" layoutY="49.0" pickOnBounds="true" />
          </children>
       </Pane>
-      <Pane prefHeight="551.0" prefWidth="1200.0" style="-fx-background-color: transparent;">
+      <Pane prefHeight="551.0" prefWidth="1200.0" styleClass="customPane">
          <children>
             <ImageView fx:id="ocho" fitHeight="270.0" fitWidth="261.0" layoutX="478.0" layoutY="49.0" pickOnBounds="true">
                <image>
@@ -59,44 +60,44 @@
                </image></ImageView>
          </children>
       </Pane>
-      <Pane prefHeight="551.0" prefWidth="1200.0" style="-fx-background-color: transparent;">
+      <Pane prefHeight="551.0" prefWidth="1200.0" styleClass="customPane">
          <children>
             <ImageView fx:id="nueve" fitHeight="270.0" fitWidth="265.0" layoutX="478.0" layoutY="51.0" pickOnBounds="true" />
          </children>
       </Pane>
-      <Pane prefHeight="551.0" prefWidth="1200.0" style="-fx-background-color: transparent;">
+      <Pane prefHeight="551.0" prefWidth="1200.0" styleClass="customPane">
          <children>
             <ImageView fx:id="diez" fitHeight="270.0" fitWidth="261.0" layoutX="478.0" layoutY="49.0" pickOnBounds="true" />
          </children>
       </Pane>
-      <Pane prefHeight="551.0" prefWidth="1200.0" style="-fx-background-color: transparent;">
+      <Pane prefHeight="551.0" prefWidth="1200.0" styleClass="customPane">
          <children>
             <ImageView fx:id="once" fitHeight="270.0" fitWidth="261.0" layoutX="476.0" layoutY="49.0" pickOnBounds="true" />
          </children>
       </Pane>
-      <Pane prefHeight="551.0" prefWidth="1200.0" style="-fx-background-color: transparent;">
+      <Pane prefHeight="551.0" prefWidth="1200.0" styleClass="customPane">
          <children>
             <ImageView fx:id="doce" fitHeight="270.0" fitWidth="261.0" layoutX="478.0" layoutY="49.0" pickOnBounds="true" />
          </children>
       </Pane>
-      <Pane prefHeight="551.0" prefWidth="1200.0" style="-fx-background-color: transparent;">
+      <Pane prefHeight="551.0" prefWidth="1200.0" styleClass="customPane">
          <children>
             <ImageView fx:id="trece" fitHeight="270.0" fitWidth="261.0" layoutX="478.0" layoutY="49.0" pickOnBounds="true" />
          </children>
       </Pane>
-      <Pane prefHeight="551.0" prefWidth="1200.0" style="-fx-background-color: transparent;">
+      <Pane prefHeight="551.0" prefWidth="1200.0" styleClass="customPane">
          <children>
             <ImageView fx:id="catorce" fitHeight="270.0" fitWidth="261.0" layoutX="478.0" layoutY="49.0" pickOnBounds="true" />
          </children>
       </Pane>
-      <Pane prefHeight="551.0" prefWidth="1200.0" style="-fx-background-color: transparent;">
+      <Pane prefHeight="551.0" prefWidth="1200.0" styleClass="customPane">
          <children>
             <ImageView fx:id="quince" fitHeight="270.0" fitWidth="261.0" layoutX="478.0" layoutY="49.0" pickOnBounds="true" />
          </children>
       </Pane>
       <Pane layoutY="550.0" prefHeight="50.0" prefWidth="1200.0" style="-fx-background-color: #720000;">
          <children>
-            <Button layoutX="14.0" layoutY="13.0" mnemonicParsing="false" onAction="#back" prefHeight="25.0" prefWidth="56.0" text="atrás" />
+            <Button layoutX="14.0" layoutY="10.0" mnemonicParsing="false" onAction="#back" prefHeight="25.0" prefWidth="56.0" styleClass="button-glow" text="atrás" />
             <Label fx:id="num" layoutX="595.0" layoutY="13.0" text="1/15" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="14.0" />
@@ -130,4 +131,8 @@
          </font>
       </Label>
    </children>
+   <stylesheets>
+      <URL value="@../../css/juego.css" />
+      <URL value="@../../css/styles.css" />
+   </stylesheets>
 </AnchorPane>

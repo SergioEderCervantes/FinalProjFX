@@ -1,19 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.effect.Reflection?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.controllers.jugadorController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1200.0" stylesheets="@../../css/styles.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.controllers.jugadorController">
    <children>
-      <Button layoutX="462.0" layoutY="213.0" mnemonicParsing="false" onAction="#switchToSelector" text="Un Jugador" textAlignment="CENTER" textOverrun="CLIP" AnchorPane.topAnchor="213.0">
+      <ImageView fitHeight="600.0" fitWidth="1200.0" pickOnBounds="true">
+         <image>
+            <Image url="@../../images/6d7832d7-5cb0-4b94-b69b-045bc29e3a0d.jpg" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="457.0" fitWidth="1200.0" layoutY="93.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../images/cyberpunk-street.png" />
+         </image>
+      </ImageView>
+      <Button layoutX="462.0" layoutY="213.0" mnemonicParsing="false" onAction="#switchToSelector" styleClass="button-glow" text="Un Jugador" textAlignment="CENTER" textOverrun="CLIP" AnchorPane.topAnchor="213.0">
          <padding>
             <Insets bottom="20.0" left="88.0" right="88.0" top="20.0" />
          </padding>
          <font>
             <Font name="Microsoft YaHei" size="18.0" />
          </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
       </Button>
       <Button layoutX="464.0" layoutY="322.0" mnemonicParsing="false" onAction="#switchToMulti" text="Multijugador" textOverrun="CLIP">
          <padding>
@@ -22,10 +40,24 @@
          <font>
             <Font name="Microsoft YaHei" size="18.0" />
          </font>
+         <styleClass>
+            <String fx:value="button" />
+            <String fx:value="button-glow" />
+         </styleClass>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+         <effect>
+            <Reflection />
+         </effect>
       </Button>
       <Button layoutX="39.0" layoutY="546.0" mnemonicParsing="false" onAction="#back" text="Atrás">
          <font>
             <Font name="Microsoft YaHei" size="12.0" />
-         </font></Button>
+         </font>
+         <styleClass>
+            <String fx:value="button-glow" />
+            <String fx:value="button" />
+         </styleClass></Button>
    </children>
 </AnchorPane>

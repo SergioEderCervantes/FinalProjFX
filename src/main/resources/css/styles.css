@@ -15,3 +15,6 @@
     -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #9065CA	, #FF000000);
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.9), 10, 0.5, 0, 0);
 }
+.customPane{
+    -fx-background-color: transparent;
+}

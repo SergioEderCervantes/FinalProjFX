@@ -4,6 +4,7 @@ import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -21,19 +22,22 @@ import org.Modules.GAME_MODE;
 import org.Modules.MySqlConn;
 import org.Modules.Pair;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.ResourceBundle;
 
 import static org.controllers.App.loadFXML;
 
 
-public class selectorController {
+public class selectorController implements Initializable {
     private Stage stage;
     private Scene scene;
     static Pair<Integer,String>[] canciones;
     private GAME_MODE gameMode;
     Conexion_UDP connector;
+    private int attempt = 0;
     int show=1;
     @FXML
     private ImageView uno;
@@ -121,17 +125,11 @@ public class selectorController {
         translateTransition.setByX(width);
         translateTransition.play();
     }
-    public void initialize() {
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
         search();
-        URL videoUrl = getClass().getResource("/images/cc.mp4");
-        if (videoUrl != null) {
-            Media media = new Media(videoUrl.toExternalForm());
-            fondo = new MediaPlayer(media);
-            fondo.setCycleCount(MediaPlayer.INDEFINITE); // Hacer que el video se repita indefinidamente
-            backgSelect.setMediaPlayer(fondo);
-            fondo.play(); // Reproducir el video
-            backgSelect.toBack();
-        }
+        this.loadVideo();
 
         uno.setFitWidth(255);
         uno.setFitHeight(270);
@@ -417,4 +415,28 @@ public class selectorController {
         clip.setArcHeight(50);
         target.setClip(clip);
     }
+
+    private void loadVideo() {
+        attempt++;
+        String videoUrl = new File("src/main/resources/images/cc.mp4").toURI().toString();
+        Media media = new Media(videoUrl);
+        fondo = new MediaPlayer(media);
+        fondo.setCycleCount(MediaPlayer.INDEFINITE); // Hacer que el video se repita indefinidamente
+        backgSelect.setMediaPlayer(fondo);
+
+        fondo.setOnReady(() -> {
+            fondo.play(); // Reproducir el video cuando esté listo
+        });
+
+        fondo.setOnError(() -> {
+            System.out.println("Error al cargar el video: " + fondo.getError().getMessage());
+            if (attempt < 3) {
+                loadVideo();
+            } else {
+                System.out.println("No se pudo cargar el video después de " + 3 + " intentos.");
+            }
+        });
+    }
+
+
 }

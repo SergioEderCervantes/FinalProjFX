@@ -33,6 +33,8 @@ import javafx.util.Duration;
 import org.Modules.*;
 import javafx.scene.layout.Pane;
 
+
+
 import static org.controllers.App.loadFXML;
 
 public class JuegoOnlineController implements Initializable {
@@ -266,9 +268,6 @@ public class JuegoOnlineController implements Initializable {
                     case P:
                         this.OrangeButton.setFocusTraversable(true);
                         this.OrangeButton.fire();
-                        break;
-                    case ESCAPE:
-                        pause();
                         break;
                     default:
                         break;
