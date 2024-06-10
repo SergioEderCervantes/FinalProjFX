@@ -14,6 +14,8 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -23,7 +25,9 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
@@ -625,5 +629,59 @@ public class editorController {
         btn.setOnMouseExited(e -> imgVw.setImage(icon));
         btn.setOnAction(this::handleButtonEvent);
         btn.getStyleClass().add("icon-button");
+    }
+    @FXML
+    private void editTecla() {
+        String selectedItem = teclasExistentes.getSelectionModel().getSelectedItem();
+        if (selectedItem == null) {
+            showAlert("No selection", "Please select an item from the list.");
+            return;
+        }
+
+        DialogPane dialogPane = new DialogPane();
+        dialogPane.setHeaderText("Edit Item");
+
+        Label label = new Label("Selected Item:");
+        TextField textField = new TextField(selectedItem);
+
+        HBox buttonBox = gethBox(dialogPane, selectedItem, textField);
+        buttonBox.setAlignment(Pos.CENTER_RIGHT);
+
+        VBox dialogContent = new VBox(10, label, textField, buttonBox);
+        dialogContent.setPadding(new Insets(10));
+
+        dialogPane.setContent(dialogContent);
+
+
+        principal.getChildren().add(dialogPane);
+    }
+
+    private HBox gethBox(DialogPane dialogPane, String selectedItem, TextField textField) {
+        Button cancelButton = new Button("Cancelar");
+        cancelButton.setOnAction(event -> principal.getChildren().remove(dialogPane));
+
+        Button deleteButton = new Button("Eliminar");
+        deleteButton.setOnAction(event -> {
+            teclasExistentes.getItems().remove(selectedItem);
+            principal.getChildren().remove(dialogPane);
+        });
+
+        Button confirmButton = new Button("Confirmar");
+        confirmButton.setOnAction(event -> {
+            int selectedIndex = teclasExistentes.getSelectionModel().getSelectedIndex();
+            teclasExistentes.getItems().set(selectedIndex, textField.getText());
+            principal.getChildren().remove(dialogPane);
+        });
+
+        HBox buttonBox = new HBox(10, cancelButton, deleteButton, confirmButton);
+        return buttonBox;
+    }
+
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }

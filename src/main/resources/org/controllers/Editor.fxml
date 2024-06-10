@@ -34,7 +34,7 @@
                         <Font size="11.0" />
                      </font>
                   </Button>
-                  <Button layoutX="14.0" layoutY="489.0" mnemonicParsing="false" prefHeight="54.0" prefWidth="98.0" text="Eliminar Tecla" wrapText="true" />
+                  <Button layoutX="14.0" layoutY="489.0" mnemonicParsing="false" onAction="#editTecla" prefHeight="54.0" prefWidth="98.0" text="Editar Tecla" wrapText="true" />
                   <Button fx:id="saveBtn" layoutX="42.0" layoutY="16.0" mnemonicParsing="false" onAction="#handleButtonEvent" styleClass="icon-button" text="s" />
                   <TextField fx:id="songName" editable="false" layoutX="63.0" layoutY="94.0" />
                   <Button fx:id="exitBtn" layoutY="16.0" mnemonicParsing="false" onAction="#handleButtonEvent" prefHeight="27.0" prefWidth="20.0" text="b" textOverrun="CLIP">
