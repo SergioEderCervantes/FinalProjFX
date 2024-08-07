@@ -129,7 +129,9 @@ public class JuegoOnlineController implements Initializable {
         this.connector = connector;
     }
 
-
+    public void setCancionSeleccionada(Song cancionSeleccionada){
+        this.cancionSeleccionada = cancionSeleccionada;
+    }
     /**
      *Metodo de inicializacion para la Ventana juego, en la cual se settean varios parametros importantes para el juego
      * como lo son la timeLine de la animacion, la inicializacion de los eventos de teclado y botones, la

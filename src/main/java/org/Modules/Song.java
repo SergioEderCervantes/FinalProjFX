@@ -9,10 +9,16 @@ public class Song {
     private double duracion;
     Grafo teclas_pulsadas;
 
+    public Song() {
+        this.name = "";
+        this.ruta = "";
+        this.duracion = 0;
+        this.teclas_pulsadas = new Grafo();
+    }
+
     public Song(String name, String ruta, double duracion) {
         this.name = name;
         this.ruta = ruta;
-        //Se necesita saber como chingados vamos a obteber la duracion de la cancion, por el momento se pasa como argunemto
         this.duracion = duracion;
         this.teclas_pulsadas = new Grafo();
     }
