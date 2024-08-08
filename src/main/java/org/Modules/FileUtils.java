@@ -8,9 +8,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.nio.file.Files;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class FileUtils {
-
+    private static final String directoryPath = "src/main/resources/songs/";
     public static void MigrarSong(){
         final ArrayList<String> lines = new ArrayList<>();
         final String query = "SELECT * FROM song WHERE idSong = 11";
@@ -45,7 +46,7 @@ public class FileUtils {
                 e.printStackTrace();
             }
         }
-        final String targetRoot = "src/main/resources/songs/03";
+        final String targetRoot = "src/main/resources/songs/03.txt";
         try{
             Files.write(Paths.get(targetRoot),lines);
         } catch (IOException e) {
@@ -55,6 +56,23 @@ public class FileUtils {
 
     }
 
+    public static Pair<String,String>[] loadSongsNames(){
+        Pair<String,String>[] songs = null;
+        String strPath = directoryPath + "dictionary.txt";
+        try{
+            Path path = Paths.get(strPath);
+            if (!Files.exists(path)) throw new IOException("El diccionario no existe!");
+            List<String> lines = Files.readAllLines(path);
+            songs = new Pair[lines.size()];
+            for (int i = 0; i < lines.size(); i++) {
+                String [] aux = lines.get(i).split("-");
+                songs[i] = new Pair<>(aux[0],aux[1]);
+            }
+        } catch (IOException e){
+            System.out.println(e.getMessage());
+        }
+        return songs;
+    }
     /**
      * Funcion que carga el contenido del archivo con el idProvisto en un objeto Song y lo devuelve
      * @param idSong el id de la cancion seleccionada
@@ -65,8 +83,8 @@ public class FileUtils {
         //Validacion del ID y obtencion de los datos del archivo
         ArrayList<String> data = null;
         try {
-            int id = Integer.parseInt(idSong);
-            String strPath = "src/main/resources/songs/" + idSong;
+            int id = Integer.parseInt(idSong);  //could be better
+            String strPath = directoryPath + idSong + ".txt";
             Path path = Paths.get(strPath);
             if (!Files.exists(path)){ throw new Exception("EL ARCHIVO NO EXISTE");}
             List<String> lines = Files.readAllLines(path);
@@ -90,8 +108,13 @@ public class FileUtils {
     }
 
     public static void main(String[] args) {
-        MigrarSong();
-
+//        MigrarSong();
+        try{
+            Stream<Path> prueba = Files.list(Paths.get(directoryPath));
+            prueba.forEach(e-> System.out.println(e.toString()));
+        } catch (IOException e){
+            System.out.println(e.getMessage());
+        }
     }
 
 }

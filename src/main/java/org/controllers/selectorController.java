@@ -31,7 +31,7 @@ import static org.controllers.App.loadFXML;
 public class selectorController implements Initializable {
     private Stage stage;
     private Scene scene;
-    static Pair<Integer,String>[] canciones;
+    static Pair<String,String>[] canciones;
     private GAME_MODE gameMode;
     Conexion_UDP connector;
     private int attempt = 0;
@@ -81,37 +81,7 @@ public class selectorController implements Initializable {
     public void setConnector(Conexion_UDP connector) {
         this.connector = connector;
     }
-    private static void search(){
-        final String query = "SELECT idSong, name FROM song";
-        MySqlConn conn = new MySqlConn();
-        conn.consult(query);
-        canciones = null;
 
-        int n = 0;
-        if (conn.rs != null){
-
-            try {
-                conn.rs.last();
-                n = conn.rs.getRow();
-                conn.rs.first();
-            }catch (Exception e){
-                System.out.println("Exception:" + e.getMessage());
-            }
-            canciones = new Pair[n];
-
-            for (int i = 0; i < n; i++) {
-                try {
-                    canciones[i] = new Pair<>(conn.rs.getInt(1),conn.rs.getString(2));
-                    conn.rs.next();
-                }catch (SQLException e){
-                    System.out.println("SQLException:" + e.getMessage());
-                }
-            }
-
-        }
-        conn.closeRsStmt();
-
-    }
 
     public void translateAnimation(double duration, Node node, double width){
         TranslateTransition translateTransition=new TranslateTransition(Duration.seconds(duration),node);
@@ -121,7 +91,7 @@ public class selectorController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        search();
+        canciones = FileUtils.loadSongsNames();
         this.loadVideo();
 
         uno.setFitWidth(255);
@@ -337,7 +307,7 @@ public class selectorController implements Initializable {
         juegoController controller = loader.getController();
 
 //        controller.loadSongFromDB(canciones[show-1].getFirst());
-        controller.setCancionSeleccionada(FileUtils.loadSong("01"));
+        controller.setCancionSeleccionada(FileUtils.loadSong(canciones[show-1].getFirst()));
 
         controller.postInitialize();
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -352,7 +322,7 @@ public class selectorController implements Initializable {
         Pane root = loader.load();
         juegoLocalController controller = loader.getController();
 //        controller.loadSongFromDB(canciones[show-1].getFirst());
-        controller.setCancionSeleccionada(FileUtils.loadSong("01"));
+        controller.setCancionSeleccionada(FileUtils.loadSong(canciones[show-1].getFirst()));
         controller.postInitialize();
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root);
@@ -364,10 +334,10 @@ public class selectorController implements Initializable {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("juegoOnline.fxml"));
         Pane root = loader.load();
         JuegoOnlineController controller = loader.getController();
-        String dato = String.valueOf(canciones[show-1].getFirst());
+        String dato = canciones[show-1].getFirst();
         connector.sendData(dato);
 //        controller.loadSongFromDB(canciones[show-1].getFirst());
-        controller.setCancionSeleccionada(FileUtils.loadSong("01"));
+        controller.setCancionSeleccionada(FileUtils.loadSong(canciones[show-1].getFirst()));
         connector.sendData("Ready");
         while (!connector.getLastReceived().equals("Ready")){
             Thread.sleep(20);
