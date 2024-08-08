@@ -17,10 +17,7 @@ import javafx.scene.media.MediaView;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import org.Modules.Conexion_UDP;
-import org.Modules.GAME_MODE;
-import org.Modules.MySqlConn;
-import org.Modules.Pair;
+import org.Modules.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -338,7 +335,10 @@ public class selectorController implements Initializable {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("juego.fxml"));
         Pane root = loader.load();
         juegoController controller = loader.getController();
-        controller.loadSongFromDB(canciones[show-1].getFirst());
+
+//        controller.loadSongFromDB(canciones[show-1].getFirst());
+        controller.setCancionSeleccionada(FileUtils.loadSong("01"));
+
         controller.postInitialize();
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root);
@@ -351,7 +351,8 @@ public class selectorController implements Initializable {
 
         Pane root = loader.load();
         juegoLocalController controller = loader.getController();
-        controller.loadSongFromDB(canciones[show-1].getFirst());
+//        controller.loadSongFromDB(canciones[show-1].getFirst());
+        controller.setCancionSeleccionada(FileUtils.loadSong("01"));
         controller.postInitialize();
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root);
@@ -365,7 +366,8 @@ public class selectorController implements Initializable {
         JuegoOnlineController controller = loader.getController();
         String dato = String.valueOf(canciones[show-1].getFirst());
         connector.sendData(dato);
-        controller.loadSongFromDB(canciones[show-1].getFirst());
+//        controller.loadSongFromDB(canciones[show-1].getFirst());
+        controller.setCancionSeleccionada(FileUtils.loadSong("01"));
         connector.sendData("Ready");
         while (!connector.getLastReceived().equals("Ready")){
             Thread.sleep(20);

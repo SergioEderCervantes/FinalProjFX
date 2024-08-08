@@ -110,6 +110,7 @@ public class juegoController implements Initializable {
     Sprite guitar;
     Sprite bate;
     Sprite man;
+
     public void setCancionSeleccionada(Song cancionSeleccionada) {
         this.cancionSeleccionada = cancionSeleccionada;
     }
