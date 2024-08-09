@@ -75,8 +75,6 @@ public class JuegoOnlineController implements Initializable {
     @FXML
     Button OrangeButton;
     @FXML
-    Pane PausePane;
-    @FXML
     Rectangle HorizontalRect;
     @FXML
     Line l1;
@@ -393,7 +391,7 @@ public class JuegoOnlineController implements Initializable {
 
     @FXML //TODO Retorno al menu
     public void back(ActionEvent event) throws IOException {
-        Pane root = loadFXML("Main");
+        Pane root = loadFXML("Menu");
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Scene scene = new Scene(root);
         stage.setScene(scene);
