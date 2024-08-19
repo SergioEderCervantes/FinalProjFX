@@ -41,6 +41,7 @@ import org.Modules.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -220,7 +221,11 @@ public class editorController {
                 this.back(event);
                 break;
             case "s":
-                this.saveSong();
+                try{
+                    FileUtils.saveSong(this.editado,this.songName.getText(), this.songPath, this.teclasExistentes.getItems());
+                } catch (IOException e){
+                    System.out.println(e.getMessage());
+                }
                 break;
         }
 
@@ -279,7 +284,7 @@ public class editorController {
 
     @FXML
     private void probarSong(ActionEvent event) throws IOException{
-        this.saveSong();
+        FileUtils.saveSong(this.editado,this.songName.getText(), this.songPath, this.teclasExistentes.getItems());
         Song nuevaCancion = construirSong();
         //Switch de escena con el nuevo argumento
         FXMLLoader loader = new FXMLLoader(App.class.getResource("juego.fxml"));
@@ -312,32 +317,7 @@ public class editorController {
         }
     }
 
-    /**
-     * Metodo que guarda la nueva cancion en la base de datos
-     */
-    private void saveSong(){
-        MySqlConn conn = new MySqlConn();
-        System.out.println(this.teclasExistentes.getItems().size());
-        if (!editado){
-            //Cargar la cancion
-            this.idSong = loadSong2DB(conn,this.songName.getText(),this.songPath,
-                    this.mediaPlayer.getTotalDuration().toMillis());
-            if (idSong == 0){
-                System.out.println("No se puede agregar el song");
-            }
-            else if  (loadTeclas2DB(this.teclasExistentes.getItems(),conn,this.idSong)){
-                    System.out.println("SUCCESS");
-                }
 
-        }else {
-            //borrar todas las teclas de la cancion que existia en la base de datos y despues volver a cargarla
-            del2DB(conn,this.idSong);
-             if (!loadTeclas2DB(this.teclasExistentes.getItems(),conn,this.idSong)) {
-                System.out.println("No se puede agregar las nuevas teclas");
-            }
-        }
-        conn.closeRsStmt();
-    }
 
     //Misc
 
@@ -551,57 +531,6 @@ public class editorController {
 
         }
         return teclas;
-    }
-
-
-    private static int loadSong2DB(MySqlConn conn,String name, String path, double duracion){
-        final String query = "INSERT INTO song (name, sourcePath, duracion) VALUES(\"" + name + "\",\"" + path +
-                "\"," + duracion + ");";
-        if (conn.uptade(query) > 0) {
-            final String query2 = "SELECT idSong FROM song WHERE name='" + name + "' AND sourcePath='" + path + "';";
-            conn.consult(query2);
-            if (conn.rs != null){
-                try {
-                    conn.rs.last();
-                    if (conn.rs.getRow() != 1) throw new Exception("Excepcion de logica de base de datos:  mas hayde un registro" +
-                            "con el mismo nombre o no se encontro el registro");
-                    conn.rs.first();
-                    return conn.rs.getInt(1);
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-            }
-        }
-        return 0;
-    }
-
-
-
-    private static boolean loadTeclas2DB(ObservableList<String> list,MySqlConn conn, int idSong) {
-        StringBuilder query = new StringBuilder("INSERT INTO teclas (idSong, numColor,tiempoInicio) VALUES ");
-        for (int i = 0; i < list.size(); i++) {
-            String[] partes = list.get(i).split("--");
-            int numColor = 0;
-            switch (partes[0]){
-                case "Rojo": break;
-                case "Azul": numColor = 1; break;
-                case "Amarillo": numColor = 2; break;
-                case "Verde": numColor = 3; break;
-                case "Naranja": numColor = 4; break;
-            }
-            double tiempoInicio = Double.parseDouble(partes[1]);
-            query.append("(").append(idSong).append(",").append(numColor).append(",").append(tiempoInicio).append(")");
-            if (i != list.size() - 1) {
-                query.append(",");
-            }
-        }
-        query.append(";");
-        return conn.uptade(query.toString()) > 0;
-    }
-
-    private static boolean del2DB(MySqlConn conn, int idSong) {
-        final String query = "DELETE FROM teclas WHERE idSong = " + idSong;
-        return conn.uptade(query) > 0;
     }
 
     private static String getRelativePath(Media media){

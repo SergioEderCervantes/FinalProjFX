@@ -18,6 +18,7 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.Modules.FileUtils;
 import org.Modules.MySqlConn;
 import org.Modules.Pair;
 
@@ -27,6 +28,7 @@ import java.io.IOException;
 import java.nio.file.*;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import static org.controllers.App.loadFXML;
 import static org.controllers.editorController.switchColores;
@@ -34,12 +36,12 @@ import static org.controllers.editorController.switchColores;
 
 public class MenuEditorController {
 
-    private Pair<Integer,String>[] map;
+    private Pair<String,String>[] map;
     private boolean editado;
     MediaPlayer pistaSeleccion;
     ArrayList<String> teclasSeleccion;
     String cancionSeleccion;
-    int idSongAEliminar;
+    String idSongAEliminar;
     final Image closeImg = new Image(Paths.get("src/main/resources/images/cross.png").toUri().toString());
 
     @FXML
@@ -175,18 +177,16 @@ public class MenuEditorController {
 
     @FXML
     private void getSong() {
-        int idSong = this.getIdSong();
+        String idSong = this.getIdSong();
         if (editado){
             try {
                 this.cancionSeleccion = comboBoxEdit.getValue();
-                this.pistaSeleccion = loadMP(idSong);
-                this.teclasSeleccion = loadTl(idSong);
+                this.pistaSeleccion = FileUtils.loadMP(idSong);
+                this.teclasSeleccion = FileUtils.loadTL(idSong);
                 if (pistaSeleccion == null || teclasSeleccion == null){
                     throw new Exception("devolvio un null:");
                 }
 
-            } catch (SQLException sqlException){
-                System.err.println("Error SQL: " + sqlException.getMessage());
             } catch (Exception e){
                 System.err.println("Error: " + e.getMessage());
             }
@@ -238,20 +238,17 @@ public class MenuEditorController {
      */
     @FXML
     private void deleteSong(){
-        MySqlConn conn = new MySqlConn();
-        final String query = "DELETE FROM song WHERE idSong =" + this.idSongAEliminar;
-        int affectedRows = conn.uptade(query);
-        System.out.println(affectedRows);
+        FileUtils.deleteSong(this.idSongAEliminar);
     }
 
     /**
      * @return el idSong de la cancion que fue seleccionada ya sea en el comboBoxEdit o el comboBoxDel
      */
-    private int getIdSong() {
-        int idSong = -1;
+    private String getIdSong() {
+        String idSong = "-1";
 
         if (editado){
-            for (Pair<Integer, String> integerStringPair : map) {
+            for (Pair<String, String> integerStringPair : map) {
                 if (integerStringPair.getSecond().equals(comboBoxEdit.getValue())) {
                     idSong = integerStringPair.getFirst();
 
@@ -259,14 +256,14 @@ public class MenuEditorController {
             }
         }
         else {
-            for (Pair<Integer, String> integerStringPair : map) {
+            for (Pair<String, String> integerStringPair : map) {
                 if (integerStringPair.getSecond().equals(comboBoxDel.getValue())) {
                     idSong = integerStringPair.getFirst();
 
                 }
             }
         }
-        if (idSong == -1){
+        if (Objects.equals(idSong, "-1")){
             //todo error bonito
         }
         return idSong;
@@ -277,9 +274,9 @@ public class MenuEditorController {
      * Configura el comboBoxEdit
      */
     private void initEditionPanel(){
-        this.map = cargarSongs();
+        this.map = FileUtils.loadSongsNames();
         this.comboBoxEdit.getItems().clear();
-        for (Pair<Integer, String> integerStringPair : map) {
+        for (Pair<String, String> integerStringPair : map) {
             this.comboBoxEdit.getItems().add(integerStringPair.getSecond());
         }
     }
@@ -288,9 +285,9 @@ public class MenuEditorController {
      * Configura el comboBoxDel
      */
     private void initDeletionPanel(){
-        this.map = cargarSongs();
+        this.map = FileUtils.loadSongsNames();
         this.comboBoxDel.getItems().clear();
-        for (Pair<Integer, String> integerStringPair : map) {
+        for (Pair<String, String> integerStringPair : map) {
             this.comboBoxDel.getItems().add(integerStringPair.getSecond());
         }
     }
@@ -314,92 +311,6 @@ public class MenuEditorController {
             return false;
         }
         return true;
-    }
-
-    /**
-     * Metodo que hace una llamada a la base de datos para hacer una consulta de los nombres y id de las canciones existentes
-     * @return un arreglo de Pair que contiene todos los id's de las canciones asi como sus nombres
-     */
-    private static Pair <Integer,String>[] cargarSongs(){
-        final String query = "SELECT idSong, name FROM song";
-        MySqlConn conn = new MySqlConn();
-        conn.consult(query);
-        Pair <Integer,String>[] map = null;
-
-        int n = 0;
-        if (conn.rs != null){
-
-            try {
-                conn.rs.last();
-                n = conn.rs.getRow();
-                conn.rs.first();
-            }catch (Exception e){
-                System.out.println("Exception:" + e.getMessage());
-            }
-            map = new Pair[n];
-
-            for (int i = 0; i < n; i++) {
-                try {
-                    map[i] = new Pair<>(conn.rs.getInt(1),conn.rs.getString(2));
-                    conn.rs.next();
-                }catch (SQLException e){
-                    System.out.println("SQLException:" + e.getMessage());
-                }
-            }
-
-        }
-        conn.closeRsStmt();
-        return map;
-    }
-
-    /**
-     * Metodo que carga un MediaPlayer desde la base de datos con el id de la cancion
-     * @param idSong id de la cancion seleccionada
-     * @return MediaPlayer funcional para su uso
-     */
-    private static MediaPlayer loadMP(int idSong) throws SQLException{
-        final String query = "SELECT sourcePath FROM song WHERE idSong = " + idSong;
-        MySqlConn conn = new MySqlConn();
-        conn.consult(query);
-
-        String path;
-        MediaPlayer target = null;
-        if (conn.rs != null){
-            conn.rs.first();
-            path = conn.rs.getString(1);
-            Media media = new Media(new File(path).toURI().toString());
-            target = new MediaPlayer(media);
-
-        }
-        return target;
-    }
-
-    /**
-     * Metodo para cargar todas las teclas relacionadas con el idsong que se pasa
-     * @param idSong el id de la cancion seleccionada
-     * @return ArrayList listo para usarse
-     */
-    private static ArrayList<String> loadTl(int idSong) throws SQLException {
-        final String query = "SELECT numColor,tiempoInicio FROM teclas WHERE idSong = " + idSong;
-        MySqlConn conn = new MySqlConn();
-        conn.consult(query);
-
-        int n;
-        if (conn.rs != null) {
-            conn.rs.last();
-            n = conn.rs.getRow();
-            conn.rs.first();
-
-            ArrayList<String> aux = new ArrayList<>();
-            for (int i = 0; i < n; i++) {
-                String builder = switchColores(conn.rs.getInt(1)) +
-                        "--" +
-                        conn.rs.getString(2);
-                aux.add(builder);
-                conn.rs.next();
-            }
-            return aux;
-        }else return null;
     }
 
     /**

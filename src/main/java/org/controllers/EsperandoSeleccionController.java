@@ -8,6 +8,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import org.Modules.Conexion_UDP;
+import org.Modules.FileUtils;
 
 import java.io.IOException;
 import java.util.concurrent.Executors;
@@ -24,35 +25,27 @@ public class EsperandoSeleccionController {
         this.connector = connector;
     }
     public void waiting() {
-
-
-
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-
-        Runnable task = new Runnable() {
-            @Override
-            public void run() {
-                String songID = connector.getLastReceived();
-                try {
-                    int id = Integer.parseInt(songID);
-                    if (id < 15) {
-                        scheduler.shutdown();
-                        Platform.runLater(() -> switchToJuegoOnline(id));
-                    }
-                } catch (NumberFormatException e) {}
-            }
+        Runnable task = () -> {
+            String songID = connector.getLastReceived();
+            try {
+                if (Integer.parseInt(songID) < 15) {
+                    scheduler.shutdown();
+                    Platform.runLater(() -> switchToJuegoOnline(songID));
+                }
+            } catch (NumberFormatException e) {}
         };
 
         // Programa la tarea para que se ejecute cada 20 milisegundos
         scheduler.scheduleAtFixedRate(task, 1000, 20, TimeUnit.MILLISECONDS);
     }
-    private void switchToJuegoOnline(int id){
+    private void switchToJuegoOnline(String id){
         try{
             System.out.println("JOLA");
             FXMLLoader loader = new FXMLLoader(getClass().getResource("juegoOnline.fxml"));
             Pane root = loader.load();
             JuegoOnlineController controller = loader.getController();
-            controller.loadSongFromDB(id);
+            controller.setCancionSeleccionada(FileUtils.loadSong(id));
             connector.sendData("Ready");
             while (!connector.getLastReceived().equals("Ready")){
                 Thread.sleep(20);
