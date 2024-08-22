@@ -1,6 +1,6 @@
 01
 El fin del Mundo.mp3
-src/main/resources/songs/El fin del Mundo.mp3
+src/main/resources/music/El fin del Mundo.mp3
 194136.0
 2-9750.0
 2-10250.0

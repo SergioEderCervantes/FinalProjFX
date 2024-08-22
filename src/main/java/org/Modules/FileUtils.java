@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.sql.Array;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.nio.file.Files;
@@ -53,7 +52,7 @@ public class FileUtils {
                 e.printStackTrace();
             }
         }
-        final String targetRoot = "src/main/resources/songs/03.txt";
+        final String targetRoot = "src/main/resources/song/03.txt";
         try{
             Files.write(Paths.get(targetRoot),lines);
         } catch (IOException e) {
