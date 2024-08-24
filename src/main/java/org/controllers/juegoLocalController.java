@@ -761,57 +761,6 @@ public class juegoLocalController implements Initializable{
         //TODO Quitar puntos porque se presiono una tecla cuando no habia nada
     }
 
-    public void loadSongFromDB(int idSong){
-        final String query1 = "SELECT * FROM song WHERE idSong = " + idSong;
-        final String query2 = "SELECT numColor, tiempoInicio FROM teclas WHERE idSong = " + idSong;
-        MySqlConn conn = new MySqlConn();
-
-        conn.consult(query1);
-        try {
-            if (conn.rs != null){
-                int n;
-
-                conn.rs.last();
-                n = conn.rs.getRow();
-                conn.rs.first();
-
-                if (n == 1){
-                    this.cancionSeleccionada = new Song(conn.rs.getString(2),
-                            conn.rs.getString(3),conn.rs.getDouble(4));
-                }
-                else throw new Exception("mas de una cancion con el mismo ID");
-            }
-            else throw new Exception("Resulset == null");
-
-        }catch (SQLException sqle){
-            sqle.printStackTrace();
-        }catch (Exception e){
-            System.out.println(e.getMessage());
-        }
-
-        //cargar las teclas
-        conn.consult(query2);
-        ArrayList<Tecla> teclas = new ArrayList<>();
-        try {
-            if (conn.rs != null){
-                int n;
-                conn.rs.last();
-                n = conn.rs.getRow();
-                conn.rs.first();
-                for (int i = 0; i < n; i++) {
-                    teclas.add(new Tecla(i+1,conn.rs.getDouble(2),conn.rs.getInt(1)));
-                    conn.rs.next();
-                }
-            }else throw new Exception("rs == null");
-        } catch (SQLException sqle){
-            sqle.printStackTrace();
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-        this.cancionSeleccionada.ConstruirGrafo(teclas);
-
-    }
-
     public static void fisicaCirculo(Circle circulo,double dt){
         double factor = dt / 4 ;
         double factor1 = factor / 6;

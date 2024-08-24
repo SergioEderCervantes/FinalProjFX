@@ -1,10 +1,7 @@
 03
 Wii Sports.mp3
-src\main\resources\songs\Wii Sports.mp3
+src/main/resources/music/Wii_Sports.mp3
 144096.0
-0-1500.0
-1-1750.0
-2-2250.0
 3-2666.0
 4-3000.0
 3-3333.0

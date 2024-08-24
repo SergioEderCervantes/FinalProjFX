@@ -1,6 +1,6 @@
 02
 adamSong.mp3
-src\main\resources\songs\adamSong.mp3
+src\main\resources\music\adamSong.mp3
 253968.0
 0-1000.0
 1-1250.0
