@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.shape.Rectangle?>
+
+<AnchorPane fx:id="Principal" prefHeight="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.controllers.Pruebas">
+   <children>
+      <Button layoutX="57.0" layoutY="149.0" mnemonicParsing="false" onAction="#inicialLaAnimacion" text="Button" />
+      <!-- Nota larga con efectos -->
+      <Rectangle fx:id="longNote" arcHeight="15" arcWidth="15" fill="deepskyblue" height="30" width="200" x="100" y="50">
+         <!-- Efecto de sombra -->
+         <effect>
+            <DropShadow fx:id="dropShadow">
+               <color>
+                  <Color blue="0.8842105269432068" />
+               </color></DropShadow>
+         </effect>
+      </Rectangle>
+   </children>
+</AnchorPane>
