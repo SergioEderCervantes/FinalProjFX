@@ -251,6 +251,10 @@ public class juegoController implements Initializable {
                             xDef = 740;
                             break;
                     }
+                    //TODO: aqui es donde se va a preguntar, si el nodo i.destino tiene un tiempofinal
+                    // diferente al tiempoInicio, quiere decir que es una tecla larga y se tiene que crear
+                    // un objeto TeclaLarga, si no se crea un circulo normal
+
                     Circle circle = new Circle(xDef, 155, 20, ColoresPosibles[i.destino().numColor]);
                     principal.getChildren().add(circle);
                     teclasEnPantalla.add(circle);
