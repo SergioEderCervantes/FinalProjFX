@@ -106,8 +106,6 @@ public class JuegoOnlineController implements Initializable {
     ImageView guitarra;
 
     @FXML
-    ImageView backg1;
-    @FXML
     ImageView backg2;
     @FXML
     ProgressBar BarraM;
@@ -453,7 +451,6 @@ public class JuegoOnlineController implements Initializable {
         this.l4.toBack();
         this.l5.toBack();
         this.backg2.toBack();
-        this.backg1.toBack();
         this.finalPanel.toFront();
     }
 

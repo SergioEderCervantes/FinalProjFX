@@ -130,7 +130,9 @@ public class juegoLocalController implements Initializable{
     @FXML
     ImageView manos;
     @FXML
-    ImageView backg1;
+    ImageView piso;
+    @FXML
+    ImageView piso1;
     @FXML
     ImageView backg2;
     @FXML
@@ -682,8 +684,9 @@ public class juegoLocalController implements Initializable{
         this.l31.toBack();
         this.l41.toBack();
         this.l51.toBack();
+        this.piso.toBack();
+        this.piso1.toBack();
         this.backg2.toBack();
-        this.backg1.toBack();
         this.finalPanel.toFront();
         this.PausePane.toFront();
     }

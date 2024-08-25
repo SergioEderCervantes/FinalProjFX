@@ -99,8 +99,6 @@ public class juegoController implements Initializable {
     @FXML
     ImageView backg1;
     @FXML
-    ImageView backg2;
-    @FXML
     ProgressBar BarraM;
     @FXML
     ProgressBar BarraP1;
@@ -456,7 +454,6 @@ public class juegoController implements Initializable {
         this.l3.toBack();
         this.l4.toBack();
         this.l5.toBack();
-        this.backg2.toBack();
         this.backg1.toBack();
         this.finalPanel.toFront();
         this.PausePane.toFront();
