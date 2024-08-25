@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.nio.file.Files;
 import java.util.Collections;
@@ -18,49 +17,7 @@ import java.util.List;
 public class FileUtils {
     private static final String directoryPath = "src/main/resources/songs/";
 
-    public static void MigrarSong(){
-        final ArrayList<String> lines = new ArrayList<>();
-        final String query = "SELECT * FROM song WHERE idSong = 11";
-        final String query2 = "SELECT numColor, tiempoInicio FROM teclas WHERE idSong = 11";
-        final MySqlConn conn = new MySqlConn();
-        conn.consult(query);
-        if (conn.rs != null){
-            try {
-                lines.add(conn.rs.getString("idSong"));
-                lines.add(conn.rs.getString("name"));
-                lines.add(conn.rs.getString("sourcePath"));
-                lines.add(conn.rs.getString("duracion"));
-            }catch (SQLException e){
-                e.printStackTrace();
-            }
-        }
-        conn.consult(query2);
-        int n = 0;
-        if (conn.rs != null){
-            try{
-                conn.rs.last();
-                n = conn.rs.getRow();
-                conn.rs.first();
 
-                for (int i = 0; i < n; i++){
-                    String aux = conn.rs.getString("numColor") +
-                            "-" + conn.rs.getString("tiempoInicio");
-                    lines.add(aux);
-                    conn.rs.next();
-                }
-            }catch (SQLException e){
-                e.printStackTrace();
-            }
-        }
-        final String targetRoot = "src/main/resources/song/03.txt";
-        try{
-            Files.write(Paths.get(targetRoot),lines);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        conn.closeRsStmt();
-
-    }
 
     public static Pair<String,String>[] loadSongsNames(){
         Pair<String,String>[] songs = null;
