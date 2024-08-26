@@ -1,7 +1,8 @@
 package org.Modules;
 
-import javafx.scene.shape.Shape;
+import javafx.scene.layout.Region;
 
-public class TeclaLarga extends Shape {
+
+public class TeclaLarga extends Region {
 
 }

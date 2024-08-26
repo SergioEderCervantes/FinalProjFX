@@ -17,7 +17,24 @@ import java.util.List;
 public class FileUtils {
     private static final String directoryPath = "src/main/resources/songs/";
 
-
+    private static void formatearTeclas(String songID){
+        final String strPath = directoryPath + songID + ".txt";
+        try {
+            List<String> lines = Files.readAllLines(Paths.get(strPath));
+            List<String> list = new ArrayList<>();
+            list.add(lines.get(0));
+            list.add(lines.get(1));
+            list.add(lines.get(2));
+            list.add(lines.get(3));
+            for (int i = 4; i < lines.size()-4; i++) {
+                StringBuilder line = new StringBuilder(lines.get(i));
+                String [] partes = line.toString().split("-");
+                line.append("-").append(partes[1]);
+                list.add(line.toString());
+            }
+            Files.write(Paths.get(strPath),list);
+        } catch (IOException ignored){}
+    }
 
     public static Pair<String,String>[] loadSongsNames(){
         Pair<String,String>[] songs = null;
@@ -89,7 +106,8 @@ public class FileUtils {
                     break;
             }
             String tiempoInicio = aux[1];
-            lines.add(numColor + "-" + tiempoInicio);
+            String tiempoFin = aux[2];
+            lines.add(numColor + "-" + tiempoInicio + "-" + tiempoFin);
         }
         Files.write(Paths.get(targetFile), lines);
 
@@ -120,7 +138,6 @@ public class FileUtils {
         //Validacion del ID y obtencion de los datos del archivo
         ArrayList<String> data = null;
         try {
-            int id = Integer.parseInt(idSong);  //could be better
             String strPath = directoryPath + idSong + ".txt";
             Path path = Paths.get(strPath);
             if (!Files.exists(path)){ throw new Exception("EL ARCHIVO NO EXISTE");}
@@ -131,14 +148,14 @@ public class FileUtils {
             System.out.println(idSong);
             System.exit(1);
         }
-        //setteo del objeto sond
+        //setteo del objeto song
         song.setName(data.get(1));
         song.setRuta(data.get(2));
         song.setDuracion(Double.parseDouble(data.get(3)));
         ArrayList<Tecla> teclas = new ArrayList<>();
         for (int i = 4; i < data.size()-4; i++) {
             String []partes = data.get(i).split("-");
-            teclas.add(new Tecla(i-3, Double.parseDouble(partes[1]), Integer.parseInt(partes[0])));
+            teclas.add(new Tecla(i-3, Double.parseDouble(partes[1]),Double.parseDouble(partes[2]), Integer.parseInt(partes[0])));
         }
         song.ConstruirGrafo(teclas);
         return song;
@@ -183,10 +200,14 @@ public class FileUtils {
         return target;
 
         //El formato de cada elemento del arrayList debe de ser:
-        //NumColor-TiempoInicio
+        //NumColor-TiempoInicio-TiempoFin
     }
 
     public static void main(String[] args) {
+        formatearTeclas("01");
+        formatearTeclas("02");
+        formatearTeclas("03");
+
     }
 
 }

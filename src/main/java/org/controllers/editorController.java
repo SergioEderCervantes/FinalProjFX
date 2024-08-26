@@ -262,7 +262,7 @@ public class editorController {
         double time = mediaPlayer.getCurrentTime().toMillis();
         time = redondearAlValorMasCercano(time);
 
-        String aux = switchColores(numColor) + "--" + time;
+        String aux = switchColores(numColor) + "-" + time + "-" + time;
 
         //TODO Hacer que la tecla que se agregue en el orden que debe, para que quede ordenada
         this.teclasExistentes.getItems().add(aux);

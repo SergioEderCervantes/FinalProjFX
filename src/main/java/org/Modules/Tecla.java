@@ -29,6 +29,13 @@ public class Tecla {
         this.aristasAdyacentes = new ArrayList<>();
     }
 
+    public Tecla(Integer tecla_ID,double tiempoInicio, double tiempoFin, int numColor){
+        this.tecla_ID = tecla_ID;
+        this.tiempoInicio = tiempoInicio;
+        this.tiempoFin = tiempoFin;
+        this.numColor = numColor;
+        this.aristasAdyacentes = new ArrayList<>();
+    }
 
     public Tecla (Tecla t) throws Exception {
         if (t != null && t != this){
