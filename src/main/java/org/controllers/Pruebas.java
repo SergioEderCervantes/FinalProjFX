@@ -13,8 +13,7 @@ import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
-
-import java.security.Key;
+import org.Modules.Rhomboid;
 
 
 public class Pruebas {
@@ -30,12 +29,13 @@ public class Pruebas {
     Timeline timeline;
     @FXML
     private void inicialLaAnimacion(){
-        this.ejemplo1();
+//        this.ejemplo1();
 //        this.ejemplo2();
-        this.ejemplo3();
-        this.ejemplo4();
-        this.ejemplo5();
-        this.ejemplo6();
+//        this.ejemplo3();
+//        this.ejemplo4();
+//        this.ejemplo5();
+//        this.ejemplo6();
+        this.ejemplo7();
     }
 
 
@@ -194,6 +194,26 @@ public class Pruebas {
         animateClipHeight(clipRect2, dropShadow,glow, 0, 200, 1000,
                 clipRect.getY(),clipRect.getY()+200);
     }
+    private long timeInicio;
+    private void ejemplo7(){
+        Rhomboid rb = new Rhomboid(-2,400,20,0);
+        timeInicio = System.currentTimeMillis();
+        Timeline tm = new Timeline(new KeyFrame(Duration.millis(16),event -> this.fisicas(rb)));
+        Principal.getChildren().add(rb.getRhomboid());
+        tm.setCycleCount(Timeline.INDEFINITE);
+        tm.setAutoReverse(false);
+        tm.play();
+
+    }
+    private void fisicas(Rhomboid rb){
+        long time_final = System.currentTimeMillis();
+        double dt = (double) (time_final - timeInicio) ;
+        timeInicio = time_final;
+        if (rb.getHeight() < 300)rb.growthRhomboid(dt);
+        else if (!(rb.getFloor() > Principal.getHeight() - 200)) rb.translateRhomboid(dt);
+        else rb.decreaseRhomboid(dt);
+    }
+
     private void animation(){
         if(!empezado){
             empezado = true;
