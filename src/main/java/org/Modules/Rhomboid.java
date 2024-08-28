@@ -28,16 +28,16 @@ public class Rhomboid {
      * @param width el ancho del romboide
      * @param numColor el color del romboide
      */
-    public Rhomboid(int Slope, int x,int width, int numColor) {
+    public Rhomboid(int Slope, double x,int width, int numColor) {
         rhomboid = new Polygon();
         X1 = new SimpleDoubleProperty(x);
-        Y1 = new SimpleDoubleProperty(0);
+        Y1 = new SimpleDoubleProperty(155);
         X2 = new SimpleDoubleProperty(x + width);
-        Y2 = new SimpleDoubleProperty(0);
+        Y2 = new SimpleDoubleProperty(155);
         X3 = new SimpleDoubleProperty(x+ width);
-        Y3 = new SimpleDoubleProperty(0);
+        Y3 = new SimpleDoubleProperty(155);
         X4 = new SimpleDoubleProperty(x);
-        Y4 = new SimpleDoubleProperty(0);
+        Y4 = new SimpleDoubleProperty(155);
         slope = Slope;
         height = 0;
         rhomboid.getPoints().addAll(
@@ -60,9 +60,14 @@ public class Rhomboid {
         rhomboid.setStroke(Color.TRANSPARENT);
         //TODO Agregar efectos bonitos al rhomboid
     }
+
+    public Rhomboid (Polygon rhomboid){
+        this.rhomboid = rhomboid;
+    }
+
     public void growthRhomboid(double dt){
         double factorY = dt/4;
-        double factorX = this.getFactorX(dt);
+        double factorX = this.getFactorX(factorY);
         X3.set(X3.get() + factorX);
         X4.set(X4.get() + factorX);
         Y3.set(Y3.get() + factorY);
@@ -71,7 +76,7 @@ public class Rhomboid {
     }
     public void translateRhomboid(double dt){
         double factorY = dt/4;
-        double factorX = this.getFactorX(dt);
+        double factorX = this.getFactorX(factorY);
         X1.set(X1.get() + factorX);
         Y1.set(Y1.get() + factorY);
         X2.set(X2.get() + factorX);
@@ -84,7 +89,7 @@ public class Rhomboid {
 
     public void  decreaseRhomboid(double dt){
         double factorY = dt/4;
-        double factorX = this.getFactorX(dt);
+        double factorX = this.getFactorX(factorY);
         X3.set(X3.get() - factorX);
         Y3.set(Y3.get() - factorY);
         X4.set(X4.get() - factorX);
@@ -94,7 +99,7 @@ public class Rhomboid {
         X2.set(X2.get() + factorX);
         Y2.set(Y2.get() + factorY);
 
-        height -= factorY;
+        height -= 2*factorY;
     }
     private double getFactorX(double dt){
         double factorX = 0;
@@ -124,5 +129,6 @@ public class Rhomboid {
     public double getFloor(){
         return Y3.get();
     }
+
 
 }

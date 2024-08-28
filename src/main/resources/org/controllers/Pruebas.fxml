@@ -4,9 +4,10 @@
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.paint.Color?>
+<?import javafx.scene.shape.Circle?>
 <?import javafx.scene.shape.Rectangle?>
 
-<AnchorPane fx:id="Principal" prefHeight="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.controllers.Pruebas">
+<AnchorPane fx:id="Principal" prefHeight="600.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.controllers.Pruebas">
    <children>
       <Button layoutX="57.0" layoutY="149.0" mnemonicParsing="false" onAction="#inicialLaAnimacion" text="Button" />
       <!-- Nota larga con efectos -->
@@ -19,5 +20,6 @@
                </color></DropShadow>
          </effect>
       </Rectangle>
+      <Circle fill="#00529e" layoutX="119.0" layoutY="411.0" radius="20.0" stroke="#06aff2" strokeWidth="3.0" />
    </children>
 </AnchorPane>

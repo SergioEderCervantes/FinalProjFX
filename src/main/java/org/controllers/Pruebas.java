@@ -13,14 +13,19 @@ import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
+import org.Modules.ESTADOS;
 import org.Modules.Rhomboid;
+import org.Modules.Tecla;
+import org.Modules.TeclaLarga;
+
+import java.util.ArrayList;
 
 
 public class Pruebas {
     @FXML
     public AnchorPane Principal;
     public Rectangle longNote;
-    public Glow glowEffect;
+    public Glow glowEffect = new Glow(0.8);
     public DropShadow dropShadow;
     enum AnimationMoments {CRECIENDO,TRASLADANDO,DECRECIENDO,ACABADO}
     AnimationMoments animation = AnimationMoments.CRECIENDO;
@@ -35,7 +40,8 @@ public class Pruebas {
 //        this.ejemplo4();
 //        this.ejemplo5();
 //        this.ejemplo6();
-        this.ejemplo7();
+//        this.ejemplo7();
+        this.ejemplo8();
     }
 
 
@@ -205,6 +211,31 @@ public class Pruebas {
         tm.play();
 
     }
+
+    ArrayList<TeclaLarga> tls = new ArrayList<>();
+    private void ejemplo8(){
+        tls.add(new TeclaLarga(0,460));
+        tls.add(new TeclaLarga(1,525));
+        tls.add(new TeclaLarga(2,600));
+        tls.add(new TeclaLarga(3,675));
+        tls.add(new TeclaLarga(4,740));
+
+        timeInicio = System.currentTimeMillis();
+        Timeline tm = new Timeline(new KeyFrame(Duration.millis(16), event -> fEjemplo8()));
+        Principal.getChildren().addAll(tls);
+
+        tm.setCycleCount(Timeline.INDEFINITE);
+        tm.setAutoReverse(false);
+        tm.play();
+    }
+    private void fEjemplo8(){
+        long timeFin = System.currentTimeMillis();
+        double dt = timeFin - timeInicio;
+        for(TeclaLarga t: tls){
+            t.fisicaTeclaLarga(30);
+        }
+    }
+
     private void fisicas(Rhomboid rb){
         long time_final = System.currentTimeMillis();
         double dt = (double) (time_final - timeInicio) ;

@@ -29,6 +29,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.StrokeType;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.Modules.*;
@@ -39,6 +40,8 @@ import static org.controllers.App.loadFXML;
 public class juegoController implements Initializable {
     public static final Color[] ColoresPosibles =
             {Color.RED, Color.BLUE, Color.YELLOW, Color.GREEN, Color.ORANGE};
+    public static final Color[] ColoresClaros = {Color.PINK, Color.LIGHTBLUE,
+            Color.LIGHTYELLOW, Color.LIGHTGREEN, Color.ORANGERED};
 
     private int puntaje=0;
     private int multiplicador=1;
@@ -116,19 +119,21 @@ public class juegoController implements Initializable {
 
     /**
      *Metodo de inicializacion para la Ventana juego, en la cual se settean varios parametros importantes para el juego
-     * como lo son la timeLine de la animacion, la inicializacion de los eventos de teclado y botones, la
-     * inicializacion de la cancion y finalmente se da una pausa de 2 segundos para que el jugador se prepare y despues
-     * se llama al metodo play de timeline para iniciar la animacion del juego,
+     * como la inicializacion de los eventos de teclado y botones,
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.initKeyboard();
         this.initButtons();
         this.t_inicio = System.currentTimeMillis();
-
-
     }
-    //TODO comentar que es esto
+
+    /**
+     * Metodo que termina de inicializar la ventana ya teniendo todos los recursos que necesita, como la cancion
+     * el mediaPlayer como lo son la timeLine de la animacion, la
+     * inicializacion de la cancion y finalmente se da una pausa de 2 segundos para que el jugador se prepare y despues
+     * se llama al metodo play de timeline para iniciar la animacion del juego,
+     */
     public void postInitialize(){
         this.initReproduction();
         this.initTimeline();
@@ -255,6 +260,9 @@ public class juegoController implements Initializable {
                     // un objeto TeclaLarga, si no se crea un circulo normal
 
                     Circle circle = new Circle(xDef, 155, 20, ColoresPosibles[i.destino().numColor]);
+                    circle.setStrokeWidth(3);
+                    circle.setStroke(ColoresClaros[i.destino().numColor]);
+                    circle.setStrokeType(StrokeType.CENTERED);
                     principal.getChildren().add(circle);
                     teclasEnPantalla.add(circle);
                     circle.toBack();
@@ -396,7 +404,7 @@ public class juegoController implements Initializable {
     }
 
 
-    @FXML //TODO Retorno al menu
+    @FXML
     public void back(ActionEvent event) throws IOException {
         Pane root = loadFXML("Menu");
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -468,9 +476,6 @@ public class juegoController implements Initializable {
     private void checkColitions(Rectangle rect){
 
         for (Circle circle : teclasEnPantalla) {
-
-
-//            System.out.println(band);
             if (rect.contains(circle.getCenterX(), circle.getCenterY()) ||
                     rect.contains(circle.getCenterX(), circle.getCenterY() + circle.getRadius()) ||
                     rect.contains(circle.getCenterX(), circle.getCenterY() - circle.getRadius())){
