@@ -90,16 +90,13 @@ public class Rhomboid {
     public void  decreaseRhomboid(double dt){
         double factorY = dt/4;
         double factorX = this.getFactorX(factorY);
-        X3.set(X3.get() - factorX);
-        Y3.set(Y3.get() - factorY);
-        X4.set(X4.get() - factorX);
-        Y4.set(Y4.get() - factorY);
         X1.set(X1.get() + factorX);
         Y1.set(Y1.get() + factorY);
         X2.set(X2.get() + factorX);
         Y2.set(Y2.get() + factorY);
 
-        height -= 2*factorY;
+
+        height -= factorY;
     }
     private double getFactorX(double dt){
         double factorX = 0;
