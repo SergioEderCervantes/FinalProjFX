@@ -21,5 +21,7 @@
          </effect>
       </Rectangle>
       <Circle fill="#00529e" layoutX="119.0" layoutY="411.0" radius="20.0" stroke="#06aff2" strokeWidth="3.0" />
+      <Button layoutX="57.0" layoutY="195.0" mnemonicParsing="false" onAction="#reset" text="Button" />
+
    </children>
 </AnchorPane>

@@ -41,7 +41,7 @@ public class juegoController implements Initializable {
     public static final Color[] ColoresPosibles =
             {Color.RED, Color.BLUE, Color.YELLOW, Color.GREEN, Color.ORANGE};
     public static final Color[] ColoresClaros = {Color.PINK, Color.LIGHTBLUE,
-            Color.LIGHTYELLOW, Color.LIGHTGREEN, Color.ORANGERED};
+            Color.LIGHTYELLOW, Color.LIGHTGREEN, Color.PEACHPUFF};
 
     private int puntaje=0;
     private int multiplicador=1;

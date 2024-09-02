@@ -1,22 +1,21 @@
 package org.controllers;
 
 import javafx.animation.*;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.effect.Blend;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Glow;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.LineTo;
-import javafx.scene.shape.MoveTo;
-import javafx.scene.shape.Path;
-import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.*;
 import javafx.util.Duration;
-import org.Modules.ESTADOS;
-import org.Modules.Rhomboid;
-import org.Modules.Tecla;
-import org.Modules.TeclaLarga;
+import org.Modules.*;
 
 import java.util.ArrayList;
 
@@ -34,6 +33,32 @@ public class Pruebas {
     Timeline timeline;
     @FXML
     private void inicialLaAnimacion(){
+
+        // Crear un círculo que siga al cursor
+        Circle follower = new Circle(10, Color.BLUE);
+        follower.setVisible(false); // Invisible al inicio
+
+        // Crear un cuadro de texto para mostrar las coordenadas
+        Label coordinatesLabel = new Label();
+        coordinatesLabel.setStyle("-fx-background-color: white; -fx-padding: 2px;");
+        coordinatesLabel.setLayoutX(20);
+        coordinatesLabel.setLayoutY(400);
+        // Agregar el círculo y el cuadro de texto al contenedor principal
+        Principal.getChildren().addAll(follower, coordinatesLabel);
+        Scene scene = Principal.getScene();
+        // Manejar el movimiento del cursor
+        scene.setOnMouseMoved(event -> {
+            // Mover el círculo al cursor
+            follower.setCenterX(event.getX());
+            follower.setCenterY(event.getY());
+//            follower.setVisible(true);
+
+            // Actualizar las coordenadas del cuadro de texto
+            coordinatesLabel.setText(String.format("(%.2f, %.2f)", event.getX(), event.getY()));
+//            coordinatesLabel.setLayoutX(event.getX() + 15);
+//            coordinatesLabel.setLayoutY(event.getY() - 10);
+        });
+
 //        this.ejemplo1();
 //        this.ejemplo2();
 //        this.ejemplo3();
@@ -42,9 +67,24 @@ public class Pruebas {
 //        this.ejemplo6();
 //        this.ejemplo7();
         this.ejemplo8();
+//        this.ejemplo9();
     }
 
-
+    @FXML
+    private void reset(){
+        Principal.getChildren().clear();
+        Button btn1 = new Button();
+        btn1.setOnAction(e -> inicialLaAnimacion());
+        Button btn2 = new Button();
+        btn2.setOnAction(e -> reset());
+        Principal.getChildren().addAll(btn1, btn2);
+        btn1.setLayoutX(57);
+        btn2.setLayoutX(57);
+        btn1.setLayoutY(150);
+        btn2.setLayoutY(200);
+        btn1.setText("Iniciar");
+        btn2.setText("Reiniciar");
+    }
 
     private void ejemplo1(){
         timeline = new Timeline(new KeyFrame(Duration.millis(16), event -> animation()));
@@ -163,8 +203,8 @@ public class Pruebas {
 
     private void ejemplo6(){
         // Dimensiones iniciales del contenedor
-        double rectWidth = 100;
-        double rectHeight = 200;
+        double rectWidth = 40;
+        double rectHeight = 500;
 
         // Crear la onda sinusoidal
         Path sineWave = createSineWave(rectWidth, rectHeight, rectWidth/5, 0.01, 0);
@@ -195,9 +235,9 @@ public class Pruebas {
 
 
 
-        animateClipHeight(clipRect, dropShadow,glow, 0, 200, 1000,
+        animateClipHeight(clipRect, dropShadow,glow, 0, 200, 500,
                 clipRect.getY(),clipRect.getY()+200);
-        animateClipHeight(clipRect2, dropShadow,glow, 0, 200, 1000,
+        animateClipHeight(clipRect2, dropShadow,glow, 0, 200, 500,
                 clipRect.getY(),clipRect.getY()+200);
     }
     private long timeInicio;
@@ -212,13 +252,16 @@ public class Pruebas {
 
     }
 
-    ArrayList<TeclaLarga> tls = new ArrayList<>();
+    ArrayList<TeclaLarga> tls;
     private void ejemplo8(){
-        tls.add(new TeclaLarga(0,460));
-        tls.add(new TeclaLarga(1,525));
-        tls.add(new TeclaLarga(2,600));
-        tls.add(new TeclaLarga(3,675));
-        tls.add(new TeclaLarga(4,740));
+        tls = new ArrayList<>();
+        tls.clear();
+        tls.add(new TeclaLarga(0,460, 500));
+        tls.add(new TeclaLarga(1,525,500));
+        tls.add(new TeclaLarga(2,600, 500));
+        tls.add(new TeclaLarga(3,675,500));
+        tls.add(new TeclaLarga(4,740,500));
+
 
         timeInicio = System.currentTimeMillis();
         Timeline tm = new Timeline(new KeyFrame(Duration.millis(16), event -> fEjemplo8()));
@@ -232,8 +275,14 @@ public class Pruebas {
         long timeFin = System.currentTimeMillis();
         double dt = timeFin - timeInicio;
         for(TeclaLarga t: tls){
-            t.fisicaTeclaLarga(30);
+            t.fisicaTeclaLarga(24);
         }
+    }
+
+    private void ejemplo9(){
+        EfectoOndaSinoidal onda = new EfectoOndaSinoidal(-2,200,460,0);
+        Principal.getChildren().add(onda.getSineWave1());
+        Principal.getChildren().add(onda.getSineWave2());
     }
 
     private void fisicas(Rhomboid rb){
@@ -356,7 +405,7 @@ public class Pruebas {
                         new KeyValue(dropShadow.colorProperty(), Color.DARKBLUE),
                         new KeyValue(glow.levelProperty(),0.8))
         );
-        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.setCycleCount(1);
         timeline.play();
     }
 }
