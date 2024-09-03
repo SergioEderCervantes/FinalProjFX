@@ -256,11 +256,11 @@ public class Pruebas {
     private void ejemplo8(){
         tls = new ArrayList<>();
         tls.clear();
-        tls.add(new TeclaLarga(0,460, 500));
-        tls.add(new TeclaLarga(1,525,500));
-        tls.add(new TeclaLarga(2,600, 500));
-        tls.add(new TeclaLarga(3,675,500));
-        tls.add(new TeclaLarga(4,740,500));
+        tls.add(new TeclaLarga(0,460, 200));
+        tls.add(new TeclaLarga(1,525,200));
+        tls.add(new TeclaLarga(2,600, 200));
+        tls.add(new TeclaLarga(3,675,200));
+        tls.add(new TeclaLarga(4,740,200));
 
 
         timeInicio = System.currentTimeMillis();
