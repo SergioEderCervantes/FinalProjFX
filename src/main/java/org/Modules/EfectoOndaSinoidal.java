@@ -42,7 +42,6 @@ public class EfectoOndaSinoidal {
         dsEffect = new DropShadow();
         glowEffect = new Glow(0.0);
 
-
         //Como al principio los efectos no se veran se crean en altura 0, ya despues crece esta altura para que se vaya
         //el efecto
         //esto va a fallar despues
