@@ -20,7 +20,10 @@ public class TeclaLarga extends Region {
     double totalHeight;
     int numColor;
 
+    public Circle getCircle(){
 
+        return circulo;
+    }
     public TeclaLarga(int numColor, double x, double totalHeight) {
         this.loadState1(numColor,x);
         this.getChildren().add(state1);
@@ -59,29 +62,29 @@ public class TeclaLarga extends Region {
                     break;
                 case TRANSITION:
                     rb.translateRhomboid(dt);
-                    if(rb.getFloor() > 550) estado = ESTADOS.DECREASE;
+                    if(rb.getFloor() > 700) estado = ESTADOS.DECREASE;
                     break;
                 case DECREASE:
                     rb.decreaseRhomboid(dt);
-                    this.toggleState();
+//                    this.toggleState();
                     if (rb.getHeight() <= 0) estado = ESTADOS.STOPPED;
                     break;
             }
         }else {
-            switch(estado){
-                case GROWTH:
-                    sineWaves.growthWave(dt);
-                    if(sineWaves.getHeight() > this.totalHeight) estado = ESTADOS.TRANSITION;
-                    break;
-                case TRANSITION:
-                    sineWaves.translateWave(dt);
-                    if(sineWaves.getFloor() > 550) estado = ESTADOS.DECREASE;
-                    break;
-                case DECREASE:
-                    sineWaves.decreaseWave(dt);
-                    if(sineWaves.getHeight() <= 0) estado = ESTADOS.STOPPED;
-                    break;
-            }
+//            switch(estado){
+//                case GROWTH:
+//                    sineWaves.growthWave(dt);
+//                    if(sineWaves.getHeight() > this.totalHeight) estado = ESTADOS.TRANSITION;
+//                    break;
+//                case TRANSITION:
+//                    sineWaves.translateWave(dt);
+//                    if(sineWaves.getFloor() > 550) estado = ESTADOS.DECREASE;
+//                    break;
+//                case DECREASE:
+//                    sineWaves.decreaseWave(dt);
+//                    if(sineWaves.getHeight() <= 0) estado = ESTADOS.STOPPED;
+//                    break;
+//            }
         }
     }
 

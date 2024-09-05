@@ -7,10 +7,13 @@ import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBase;
 import javafx.scene.control.Label;
 import javafx.scene.effect.Blend;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Glow;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
@@ -21,12 +24,24 @@ import java.util.ArrayList;
 
 
 public class Pruebas {
+    private CustomRunnable<Button,Color> effect;
     @FXML
     public AnchorPane Principal;
     public Rectangle longNote;
     public Glow glowEffect = new Glow(0.8);
     public DropShadow dropShadow;
-    enum AnimationMoments {CRECIENDO,TRASLADANDO,DECRECIENDO,ACABADO}
+    @FXML
+    public  Button RedButton;
+    @FXML
+    public  Button BlueButton;
+    @FXML
+    public  Button YellowButton;
+    @FXML
+    public  Button GreenButton;
+    @FXML
+    public  Button OrangeButton;
+
+    enum AnimationMoments {CRECIENDO,TRASLADANDO,DECRECIENDO,ACABADO;}
     AnimationMoments animation = AnimationMoments.CRECIENDO;
     boolean empezado = false;
     Rectangle rectangle;
@@ -35,29 +50,29 @@ public class Pruebas {
     private void inicialLaAnimacion(){
 
         // Crear un círculo que siga al cursor
-        Circle follower = new Circle(10, Color.BLUE);
-        follower.setVisible(false); // Invisible al inicio
-
-        // Crear un cuadro de texto para mostrar las coordenadas
-        Label coordinatesLabel = new Label();
-        coordinatesLabel.setStyle("-fx-background-color: white; -fx-padding: 2px;");
-        coordinatesLabel.setLayoutX(20);
-        coordinatesLabel.setLayoutY(400);
-        // Agregar el círculo y el cuadro de texto al contenedor principal
-        Principal.getChildren().addAll(follower, coordinatesLabel);
-        Scene scene = Principal.getScene();
-        // Manejar el movimiento del cursor
-        scene.setOnMouseMoved(event -> {
-            // Mover el círculo al cursor
-            follower.setCenterX(event.getX());
-            follower.setCenterY(event.getY());
-//            follower.setVisible(true);
-
-            // Actualizar las coordenadas del cuadro de texto
-            coordinatesLabel.setText(String.format("(%.2f, %.2f)", event.getX(), event.getY()));
-//            coordinatesLabel.setLayoutX(event.getX() + 15);
-//            coordinatesLabel.setLayoutY(event.getY() - 10);
-        });
+//        Circle follower = new Circle(10, Color.BLUE);
+//        follower.setVisible(false); // Invisible al inicio
+//
+//        // Crear un cuadro de texto para mostrar las coordenadas
+//        Label coordinatesLabel = new Label();
+//        coordinatesLabel.setStyle("-fx-background-color: white; -fx-padding: 2px;");
+//        coordinatesLabel.setLayoutX(20);
+//        coordinatesLabel.setLayoutY(400);
+//        // Agregar el círculo y el cuadro de texto al contenedor principal
+//        Principal.getChildren().addAll(follower, coordinatesLabel);
+//        Scene scene = Principal.getScene();
+//        // Manejar el movimiento del cursor
+//        scene.setOnMouseMoved(event -> {
+//            // Mover el círculo al cursor
+//            follower.setCenterX(event.getX());
+//            follower.setCenterY(event.getY());
+////            follower.setVisible(true);
+//
+//            // Actualizar las coordenadas del cuadro de texto
+//            coordinatesLabel.setText(String.format("(%.2f, %.2f)", event.getX(), event.getY()));
+////            coordinatesLabel.setLayoutX(event.getX() + 15);
+////            coordinatesLabel.setLayoutY(event.getY() - 10);
+//        });
 
 //        this.ejemplo1();
 //        this.ejemplo2();
@@ -251,9 +266,48 @@ public class Pruebas {
         tm.play();
 
     }
+    private void initButtons(Timeline tm){
+        this.RedButton.toFront();
+        this.BlueButton.toFront();
+        this.YellowButton.toFront();
+        this.GreenButton.toFront();
+        this.OrangeButton.toFront();
 
+        //Configurar el efecto de presionado de un boton
+        this.effect = (Button btn, Color color) -> {
+            Rectangle aux = new Rectangle();
+            aux.setWidth(btn.getWidth());
+            aux.setHeight(btn.getHeight());
+            aux.setArcWidth(30);
+            aux.setArcHeight(30);
+            aux.setFill(color.deriveColor(1,1,1,0.5));
+            aux.setX(btn.getLayoutX());
+            aux.setY(btn.getLayoutY());
+
+            Principal.getChildren().add(aux);
+
+            KeyValue kvWidth = new KeyValue(aux.widthProperty(), btn.getWidth() * 2);
+            KeyValue kvHeight = new KeyValue(aux.heightProperty(), btn.getHeight() * 2);
+            KeyValue kvX = new KeyValue(aux.xProperty(),btn.getLayoutX() - btn.getWidth() / 2);
+            KeyValue kvY = new KeyValue(aux.yProperty(),btn.getLayoutY() - btn.getHeight() / 2);
+            KeyValue kvOpacity = new KeyValue(aux.opacityProperty(), 0);
+            KeyFrame kf = new KeyFrame(Duration.millis(500), kvWidth, kvOpacity,kvX,kvHeight,kvY);
+
+            tm.getKeyFrames().add(kf);
+            tm.setOnFinished(event -> Principal.getChildren().remove(aux));
+            tm.play();
+
+
+        };
+
+    }
     ArrayList<TeclaLarga> tls;
     private void ejemplo8(){
+        timeInicio = System.currentTimeMillis();
+        Timeline tm = new Timeline(new KeyFrame(Duration.millis(16), event -> fEjemplo8()));
+
+        this.initKeyboard(tm);
+        this.initButtons(tm);
         tls = new ArrayList<>();
         tls.clear();
         tls.add(new TeclaLarga(0,460, 200));
@@ -262,29 +316,119 @@ public class Pruebas {
         tls.add(new TeclaLarga(3,675,200));
         tls.add(new TeclaLarga(4,740,200));
 
-
-        timeInicio = System.currentTimeMillis();
-        Timeline tm = new Timeline(new KeyFrame(Duration.millis(16), event -> fEjemplo8()));
-        Principal.getChildren().addAll(tls);
+       Principal.getChildren().addAll(tls);
 
         tm.setCycleCount(Timeline.INDEFINITE);
         tm.setAutoReverse(false);
         tm.play();
     }
+
     private void fEjemplo8(){
         long timeFin = System.currentTimeMillis();
         double dt = timeFin - timeInicio;
         for(TeclaLarga t: tls){
-            t.fisicaTeclaLarga(24);
+            t.fisicaTeclaLarga(10);
         }
     }
+    private void initKeyboard(Timeline tm){
+        this.Principal.addEventHandler(KeyEvent.KEY_PRESSED, keyEvent -> {
+            KeyCode code = keyEvent.getCode();
 
+            if(tm.getStatus() == Animation.Status.RUNNING) {
+                switch (code) {
+                    case Q:
+                        this.RedButton.setFocusTraversable(true);
+                        this.RedButton.fire();
+
+                        break;
+                    case W:
+                        this.BlueButton.setFocusTraversable(true);
+                        this.BlueButton.fire();
+                        break;
+                    case E:
+                        this.YellowButton.setFocusTraversable(true);
+                        this.YellowButton.fire();
+
+                        break;
+                    case O:
+                        this.GreenButton.setFocusTraversable(true);
+                        this.GreenButton.fire();
+
+                        break;
+                    case P:
+                        this.OrangeButton.setFocusTraversable(true);
+                        this.OrangeButton.fire();
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
+    }
+    private void checkColitions(Rectangle rect){
+
+        for (TeclaLarga t : tls) {
+            if (rect.contains(t.getCircle().getCenterX(), t.getCircle().getCenterY()) ||
+                    rect.contains(t.getCircle().getCenterX(), t.getCircle().getCenterY() + t.getCircle().getRadius()) ||
+                    rect.contains(t.getCircle().getCenterX(), t.getCircle().getCenterY() - t.getCircle().getRadius())){
+
+                //TODO sprite de explosion de circulo, aumentar el marcador
+                t.setVisible(false);
+
+                //Esto es mil veces mejor que destruirlo aqui
+                return;
+            }
+
+        }
+        //TODO Quitar puntos porque se presiono una tecla cuando no habia nada
+    }
     private void ejemplo9(){
         EfectoOndaSinoidal onda = new EfectoOndaSinoidal(-2,200,460,0);
         Principal.getChildren().add(onda.getSineWave1());
         Principal.getChildren().add(onda.getSineWave2());
     }
+    @FXML
+    private void btnRActivado(){
+        Rectangle rect = this.makeRect(RedButton);
+        checkColitions(rect);
+        effect.run(RedButton,Color.RED);
+    }
 
+
+    @FXML
+    private void btnBActivado(){
+        Rectangle rect = this.makeRect(BlueButton);
+        checkColitions(rect);
+        effect.run(BlueButton,Color.BLUE);
+    }
+
+
+    @FXML
+    private void btnYActivado(){
+        Rectangle rect = this.makeRect(YellowButton);
+        checkColitions(rect);
+        effect.run(YellowButton,Color.YELLOW);
+    }
+
+
+    @FXML
+    private void btnGActivado(){
+        Rectangle rect = this.makeRect(GreenButton);
+        checkColitions(rect);
+        effect.run(GreenButton,Color.GREEN);
+    }
+
+
+    @FXML
+    private void btnOActivado(){
+        Rectangle rect = this.makeRect(OrangeButton);
+        checkColitions(rect);
+        effect.run(OrangeButton,Color.ORANGE);
+    }
+
+    private Rectangle makeRect(Button btn){
+        return new Rectangle(btn.getLayoutX(), btn.getLayoutY(), btn.getWidth(), btn.getHeight());
+    }
     private void fisicas(Rhomboid rb){
         long time_final = System.currentTimeMillis();
         double dt = (double) (time_final - timeInicio) ;
