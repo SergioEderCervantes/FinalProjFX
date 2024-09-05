@@ -19,12 +19,7 @@
 
 <AnchorPane fx:id="principal" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1200.0" style="-fx-background-color: #000000;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.controllers.juegoController">
     <children>
-        <ImageView fx:id="backg1" fitHeight="600.0" fitWidth="1122.0" layoutX="-123.0" pickOnBounds="true" preserveRatio="true" smooth="false">
-            <image>
-                <Image url="@../../images/backgame.jpg" />
-            </image>
-        </ImageView>
-        <ImageView fx:id="backg2" fitHeight="600.0" fitWidth="1122.0" layoutX="133.0" pickOnBounds="true" preserveRatio="true" smooth="false">
+        <ImageView fx:id="backg1" fitHeight="698.0" fitWidth="1198.0" layoutX="-1.0" layoutY="-47.0" pickOnBounds="true" preserveRatio="true" smooth="false">
             <image>
                 <Image url="@../../images/backgame.jpg" />
             </image>
@@ -34,7 +29,7 @@
                 <Image url="@../../images/clipart3195115__1_-removebg-preview.png" />
             </image>
             <effect>
-                <ColorAdjust brightness="-0.02" hue="0.89" saturation="-0.16" />
+                <ColorAdjust brightness="-0.02" hue="0.47" saturation="-0.16" />
             </effect>
         </ImageView>
         <ImageView fitHeight="52.0" fitWidth="163.0" layoutX="761.0" layoutY="97.0" pickOnBounds="true" preserveRatio="true">
@@ -42,11 +37,11 @@
                 <Image url="@../../images/clipart3195115__1_-removebg-preview.png" />
             </image>
             <effect>
-                <ColorAdjust brightness="-0.02" hue="0.89" saturation="-0.16" />
+                <ColorAdjust brightness="-0.02" hue="0.47" saturation="-0.16" />
             </effect>
         </ImageView>
-        <ImageView fx:id="guitarra" fitHeight="79.0" fitWidth="108.0" layoutX="263.0" layoutY="49.0" pickOnBounds="true" preserveRatio="true" />
-        <ImageView fx:id="bateria" fitHeight="79.0" fitWidth="108.0" layoutX="787.0" layoutY="44.0" pickOnBounds="true" preserveRatio="true" />
+        <ImageView fx:id="guitarra" fitHeight="79.0" fitWidth="108.0" layoutX="263.0" layoutY="49.0" opacity="0.9" pickOnBounds="true" preserveRatio="true" />
+        <ImageView fx:id="bateria" fitHeight="79.0" fitWidth="108.0" layoutX="789.0" layoutY="32.0" opacity="0.9" pickOnBounds="true" preserveRatio="true" />
         <Rectangle fx:id="HorizontalRect" arcHeight="5.0" arcWidth="5.0" fill="#42484e" height="52.0" layoutX="343.0" layoutY="529.0" stroke="#42484e" strokeType="INSIDE" styleClass="panel" width="515.0" />
         <Ellipse layoutX="599.0" layoutY="555.0" radiusX="32.0" radiusY="23.0" stroke="BLACK" strokeType="INSIDE" />
         <Ellipse layoutX="496.0" layoutY="555.0" radiusX="32.0" radiusY="23.0" stroke="BLACK" strokeType="INSIDE" />
@@ -54,7 +49,7 @@
         <ProgressBar fx:id="BarraM" layoutX="287.0" layoutY="14.0" prefHeight="30.0" prefWidth="679.0" progress="0.0" styleClass="progressbar" />
         <Ellipse layoutX="712.0" layoutY="555.0" radiusX="32.0" radiusY="23.0" stroke="BLACK" strokeType="INSIDE" />
         <Ellipse layoutX="811.0" layoutY="555.0" radiusX="32.0" radiusY="23.0" stroke="BLACK" strokeType="INSIDE" />
-        <ProgressBar fx:id="BarraP1" layoutX="750.0" layoutY="335.0" prefHeight="30.0" prefWidth="402.0" progress="0.0" rotate="-90.0" styleClass="progressbar" />
+        <ProgressBar fx:id="BarraP1" layoutX="750.0" layoutY="335.0" opacity="0.85" prefHeight="30.0" prefWidth="402.0" progress="0.0" rotate="-90.0" styleClass="progressbar" />
         <Line endX="-58.0" layoutX="1027.0" layoutY="238.0" startX="-92.0" stroke="WHITE" strokeWidth="3.0" />
         <Line endX="-58.0" layoutX="1027.0" layoutY="350.0" startX="-92.0" stroke="WHITE" strokeWidth="3.0" />
         <Line endX="-58.0" layoutX="1027.0" layoutY="471.0" startX="-92.0" stroke="WHITE" strokeWidth="3.0" />
@@ -72,16 +67,16 @@
                 <Image url="@../../images/clipart3195115__1_-removebg-preview.png" />
             </image>
             <effect>
-                <ColorAdjust brightness="-0.02" hue="0.89" saturation="-0.16" />
+                <ColorAdjust brightness="-0.27" hue="0.47" saturation="-0.16" />
             </effect>
         </ImageView>
-        <ImageView fitHeight="68.0" fitWidth="69.0" layoutX="52.0" layoutY="271.0" pickOnBounds="true" preserveRatio="true">
+        <ImageView fitHeight="68.0" fitWidth="69.0" layoutX="52.0" layoutY="271.0" opacity="0.9" pickOnBounds="true" preserveRatio="true">
             <image>
                 <Image url="@../../images/tt.gif" />
             </image>
 
         </ImageView>
-        <ImageView fitHeight="52.0" fitWidth="85.0" layoutX="44.0" layoutY="289.0" pickOnBounds="true" preserveRatio="true">
+        <ImageView fitHeight="52.0" fitWidth="85.0" layoutX="44.0" layoutY="289.0" opacity="0.85" pickOnBounds="true" preserveRatio="true">
             <image>
                 <Image url="@../../images/tt5.gif" />
             </image>
@@ -92,7 +87,7 @@
                 <Image url="@../../images/clipart3195115__1_-removebg-preview.png" />
             </image>
             <effect>
-                <ColorAdjust brightness="-0.02" hue="0.89" saturation="-0.16" />
+                <ColorAdjust brightness="-0.27" hue="0.47" saturation="-0.16" />
             </effect>
         </ImageView>
         <ImageView fitHeight="46.0" fitWidth="30.0" layoutX="1056.0" layoutY="182.0" pickOnBounds="true" preserveRatio="true">
@@ -100,17 +95,17 @@
                 <Image url="@../../images/image(6).png" />
             </image>
         </ImageView>
-        <ImageView fitHeight="79.0" fitWidth="54.0" layoutX="1068.0" layoutY="160.0" pickOnBounds="true" preserveRatio="true">
+        <ImageView fitHeight="79.0" fitWidth="54.0" layoutX="1068.0" layoutY="160.0" opacity="0.9" pickOnBounds="true" preserveRatio="true">
             <image>
                 <Image url="@../../images/imag(4).png" />
             </image>
         </ImageView>
-        <ImageView fitHeight="40.0" fitWidth="65.0" layoutX="1045.0" layoutY="180.0" pickOnBounds="true" preserveRatio="true">
+        <ImageView fitHeight="40.0" fitWidth="65.0" layoutX="1045.0" layoutY="180.0" opacity="0.9" pickOnBounds="true" preserveRatio="true">
             <image>
                 <Image url="@../../images/image(5).png" />
             </image>
         </ImageView>
-        <ImageView fx:id="mano" fitHeight="40.0" fitWidth="31.0" layoutX="1082.0" layoutY="183.0" pickOnBounds="true" preserveRatio="true" />
+        <ImageView fx:id="mano" fitHeight="40.0" fitWidth="31.0" layoutX="1082.0" layoutY="183.0" opacity="0.9" pickOnBounds="true" preserveRatio="true" />
         <Line fx:id="l1" endX="-9.0" endY="565.0" layoutX="400.0" startX="53.0" startY="184.0" styleClass="track-line" />
         <Line fx:id="l2" endX="-10.0" endY="565.0" layoutX="500.0" startX="25.0" startY="184.0" styleClass="track-line" />
         <Line fx:id="l3" endY="565.0" layoutX="600.0" startY="184.0" styleClass="track-line" />
@@ -160,24 +155,24 @@
                 <Font size="28.0" />
             </font>
         </Label>
-        <Button fx:id="RedButton" layoutX="366.0" layoutY="535.0" minHeight="-Infinity" minWidth="48.0" mnemonicParsing="false" onAction="#btnRActivado" prefHeight="34.0" prefWidth="54.0">
+        <Button fx:id="RedButton" layoutX="366.0" layoutY="535.0" minHeight="-Infinity" minWidth="48.0" mnemonicParsing="false" onAction="#btnRActivado" opacity="0.82" prefHeight="34.0" prefWidth="54.0">
             <styleClass>
                 <String fx:value="track-button" />
                 <String fx:value="red" />
             </styleClass></Button>
-        <Button fx:id="BlueButton" layoutX="469.0" layoutY="535.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="48.0" mnemonicParsing="false" onAction="#btnBActivado" prefHeight="34.0" prefWidth="54.0">
+        <Button fx:id="BlueButton" layoutX="469.0" layoutY="535.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="48.0" mnemonicParsing="false" onAction="#btnBActivado" opacity="0.82" prefHeight="34.0" prefWidth="54.0">
             <styleClass>
                 <String fx:value="track-button" />
                 <String fx:value="blue" />
             </styleClass>
         </Button>
-        <Button fx:id="YellowButton" layoutX="572.0" layoutY="535.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="48.0" mnemonicParsing="false" onAction="#btnYActivado" prefHeight="34.0" prefWidth="54.0">
+        <Button fx:id="YellowButton" layoutX="572.0" layoutY="535.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="48.0" mnemonicParsing="false" onAction="#btnYActivado" opacity="0.82" prefHeight="34.0" prefWidth="54.0">
             <styleClass>
                 <String fx:value="track-button" />
                 <String fx:value="yellow" />
             </styleClass>
         </Button>
-        <Button fx:id="GreenButton" layoutX="685.0" layoutY="535.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="48.0" mnemonicParsing="false" onAction="#btnGActivado" prefHeight="34.0" prefWidth="54.0">
+        <Button fx:id="GreenButton" layoutX="685.0" layoutY="535.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="48.0" mnemonicParsing="false" onAction="#btnGActivado" opacity="0.82" prefHeight="34.0" prefWidth="54.0">
             <styleClass>
                 <String fx:value="track-button" />
                 <String fx:value="green" />
@@ -189,7 +184,7 @@
                 <String fx:value="orange" />
             </styleClass>
         </Button>
-        <ImageView fx:id="manos" fitHeight="117.0" fitWidth="161.0" layoutX="61.0" layoutY="247.0" pickOnBounds="true" preserveRatio="true" />
+        <ImageView fx:id="manos" fitHeight="117.0" fitWidth="161.0" layoutX="52.0" layoutY="247.0" opacity="0.88" pickOnBounds="true" preserveRatio="true" />
     </children>
     <stylesheets>
         <URL value="@../../css/juego.css" />

@@ -6,11 +6,9 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Paths;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-import com.sun.jdi.IntegerValue;
 import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -38,7 +36,6 @@ import org.Modules.*;
 import javafx.scene.layout.Pane;
 
 import static java.lang.Integer.parseInt;
-import static java.lang.Integer.valueOf;
 import static org.controllers.App.loadFXML;
 
 public class JuegoOnlineController implements Initializable {
@@ -105,8 +102,6 @@ public class JuegoOnlineController implements Initializable {
     @FXML
     ImageView guitarra;
 
-    @FXML
-    ImageView backg1;
     @FXML
     ImageView backg2;
     @FXML
@@ -453,7 +448,6 @@ public class JuegoOnlineController implements Initializable {
         this.l4.toBack();
         this.l5.toBack();
         this.backg2.toBack();
-        this.backg1.toBack();
         this.finalPanel.toFront();
     }
 
