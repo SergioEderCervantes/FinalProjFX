@@ -256,11 +256,11 @@ public class Pruebas {
     private void ejemplo8(){
         tls = new ArrayList<>();
         tls.clear();
-        tls.add(new TeclaLarga(0,460, 200));
-        tls.add(new TeclaLarga(1,525,200));
-        tls.add(new TeclaLarga(2,600, 200));
-        tls.add(new TeclaLarga(3,675,200));
-        tls.add(new TeclaLarga(4,740,200));
+//        tls.add(new TeclaLarga(0,460));
+//        tls.add(new TeclaLarga(1,525));
+//        tls.add(new TeclaLarga(2,600));
+//        tls.add(new TeclaLarga(3,675));
+//        tls.add(new TeclaLarga(4,740));
 
 
         timeInicio = System.currentTimeMillis();
@@ -275,7 +275,7 @@ public class Pruebas {
         long timeFin = System.currentTimeMillis();
         double dt = timeFin - timeInicio;
         for(TeclaLarga t: tls){
-            t.fisicaTeclaLarga(24);
+            t.fisica    (10);
         }
     }
 

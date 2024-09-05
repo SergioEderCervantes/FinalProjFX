@@ -15,7 +15,8 @@ import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 
-import static org.controllers.juegoController.ColoresPosibles;
+import static org.controllers.juegoController.ColoresClaros;
+
 
 public class EfectoOndaSinoidal {
     Rectangle clip1;
@@ -42,9 +43,11 @@ public class EfectoOndaSinoidal {
         dsEffect = new DropShadow();
         glowEffect = new Glow(0.0);
 
-        //Como al principio los efectos no se veran se crean en altura 0, ya despues crece esta altura para que se vaya
-        //el efecto
+
         //esto va a fallar despues
+        //No si lo puedo evitar
+        //Se puede que al entrar a este constructor, el totalHeight sea la altura que tiene actualmente el romboide antes
+        //de que se pulse la tecla
         clip1 = new Rectangle(60,totalHeight);
         clip2 = new Rectangle(60,totalHeight);
         configureSineWave(sineWave1,this.x,numColor,dsEffect,glowEffect,clip1,slope);
@@ -108,13 +111,12 @@ public class EfectoOndaSinoidal {
                                    Glow gEffect, Rectangle clip, int slope){
         sineWave.setLayoutX(x);
         sineWave.setLayoutY(Ylayout - totalHeight);
-        sineWave.setStrokeWidth(2);
-        sineWave.setStroke(ColoresPosibles[numColor]);
+        sineWave.setStrokeWidth(3);
+        sineWave.setStroke(ColoresClaros[numColor]);
 
         Blend combinedEffect = new Blend();
         combinedEffect.setBottomInput(dsEffect);
         combinedEffect.setTopInput(gEffect);
-
 
 
         sineWave.setClip(clip);
@@ -137,7 +139,6 @@ public class EfectoOndaSinoidal {
         }
         double centerX = sineWave.getBoundsInParent().getWidth() / 2;
         double centerY = sineWave.getBoundsInParent().getHeight() / 2;
-        System.out.println(rotateAngle);
         Rotate rotate = new Rotate(rotateAngle, centerX, centerY);
         sineWave.getTransforms().add(rotate);
     }
@@ -160,25 +161,6 @@ public class EfectoOndaSinoidal {
         clip2.setHeight(clip2.getHeight() - factor);
     }
 
-    public static double getFactorX(double dt, int slope){
-        double factorX = 0;
-        switch (slope){
-            case -2:
-                factorX = -dt/6;
-                break;
-            case -1:
-                factorX = -dt/12;
-                break;
-            case 1:
-                factorX = dt/12;
-                break;
-            case 2:
-                factorX = dt/6;
-                break;
-
-        }
-        return factorX;
-    }
 
     /**
      * Configura e inicia la timeline que crea los efectos visuales de las odnas, se repite indefinidamente
@@ -191,13 +173,13 @@ public class EfectoOndaSinoidal {
                         new KeyValue(dsEffect.radiusProperty(),10),
                         new KeyValue(dsEffect.colorProperty(), Color.NAVY),
                         new KeyValue(glowEffect.levelProperty(),0.0)),
-                new KeyFrame(Duration.millis(2000),
-                        new KeyValue(dsEffect.radiusProperty(),20),
+                new KeyFrame(Duration.millis(100),
+                        new KeyValue(dsEffect.radiusProperty(),5000),
                         new KeyValue(dsEffect.colorProperty(), Color.DARKBLUE),
-                        new KeyValue(glowEffect.levelProperty(),1.2))
+                        new KeyValue(glowEffect.levelProperty(),5))
         );
-        this.effectTimeline.setCycleCount(Timeline.INDEFINITE);
-        this.effectTimeline.setAutoReverse(true);
+        this.effectTimeline.setCycleCount(1);
+        this.effectTimeline.setAutoReverse(false);
         this.effectTimeline.play();
     }
 }

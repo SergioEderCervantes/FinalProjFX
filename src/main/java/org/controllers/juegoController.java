@@ -50,6 +50,7 @@ public class juegoController implements Initializable {
     public Timeline timeline;
     private Tecla aux;
     private final ArrayList<Circle> teclasEnPantalla = new ArrayList<>();
+    private final ArrayList<TeclaLarga> teclasLargasEnPantalla = new ArrayList<>();
     private long t_inicio;      //Tiempo global
     private boolean reproduciendo;
     //Delay necesario para que las teclas aparezcan on time, se modifica en funcion de la velocidad de bajada de las teclas
@@ -219,7 +220,11 @@ public class juegoController implements Initializable {
         multiplo.setVisible(multiplicador != 1);
         multiplo.setText("x" + multiplicador);
 
-        //Primero desplaza todas las que ya existen hacia abajo y elimina del ArrayList y el Panel las teclas que ya no se ven
+        //El tiempo actual el cual se encuentra la cancion, se usa adelante
+        double MediaPlayerCurrentTime = this.reproductor.getCurrentTime().toMillis();
+        //Primero desplaza todas las teclas, tanto normales como largas, evalua si ya estan demasiado abajo (ya no se
+        //presionaron) para mandar a borrarlas, tambien en las teclas largas se evalua si la tecla debe de seguir creciendo
+        //o cambia de estado a transladarse
         try{
             for (Circle circulo : teclasEnPantalla) {
                 fisicaCirculo(circulo, frameDt);
@@ -232,10 +237,31 @@ public class juegoController implements Initializable {
                     this.removeCircle(circulo);
                 }
             }
+            for (TeclaLarga teclaLarga : teclasLargasEnPantalla) {
+                //TODO esto va a fallar si la tecla es mas larga de lo que puede verse en pantalla (Calculo mas de 1.5 seg)
+                // se debe de cambiar por mas condiciones que controlen ese pedo
+                if (MediaPlayerCurrentTime > teclaLarga.getTiempoFin() - DELAY && teclaLarga.isState1()){
+                    teclaLarga.setEstado(ESTADOS.TRANSITION);
+                }
+                if (MediaPlayerCurrentTime > teclaLarga.getTiempoFin() - DELAY && teclaLarga.getEstado() == ESTADOS.STOPPED){
+                    teclaLarga.setEstado(ESTADOS.DECREASE);
+                }
+                teclaLarga.fisica(frameDt);
+                if (teclaLarga.getLayoutY() + teclaLarga.getHeight() - 15 > 620) {
+                    if(teclaLarga.isVisible()){
+                        multiplicador=1;
+                        cont = 0;
+                    }
+                    this.removeTeclaLarga(teclaLarga);
+                }
+                if(teclaLarga.getRhomboid().getHeight() <= 0){
+                    this.removeTeclaLarga(teclaLarga);
+                }
+            }
         }catch (Exception ignored){}
         //Agregamos las nuevas teclas si deben de aparecer
         if (aux.getNumAristasAdyacentes() != 0) {
-            if (aux.getTeclaSig().getTiempoInicio() - DELAY <= this.reproductor.getCurrentTime().toMillis()) {   //
+            if (aux.getTeclaSig().getTiempoInicio() - DELAY <= MediaPlayerCurrentTime) {
 
                 for (Arista i : aux.getAristasAdyacentes()) {
                     switch (i.destino().numColor) { //Dependiendo del color se inician en coordenadas en X diferentes
@@ -255,17 +281,22 @@ public class juegoController implements Initializable {
                             xDef = 740;
                             break;
                     }
-                    //TODO: aqui es donde se va a preguntar, si el nodo i.destino tiene un tiempofinal
-                    // diferente al tiempoInicio, quiere decir que es una tecla larga y se tiene que crear
-                    // un objeto TeclaLarga, si no se crea un circulo normal
-
-                    Circle circle = new Circle(xDef, 155, 20, ColoresPosibles[i.destino().numColor]);
-                    circle.setStrokeWidth(3);
-                    circle.setStroke(ColoresClaros[i.destino().numColor]);
-                    circle.setStrokeType(StrokeType.CENTERED);
-                    principal.getChildren().add(circle);
-                    teclasEnPantalla.add(circle);
-                    circle.toBack();
+                    if (i.destino().getTiempoFin() - i.destino().getTiempoInicio() == 0 ){
+                        Circle circle = new Circle(xDef, 155, 20, ColoresPosibles[i.destino().numColor]);
+                        circle.setStrokeWidth(3);
+                        circle.setStroke(ColoresClaros[i.destino().numColor]);
+                        circle.setStrokeType(StrokeType.CENTERED);
+                        principal.getChildren().add(circle);
+                        teclasEnPantalla.add(circle);
+                        circle.toBack();
+                    }else {
+                        boolean largerThanScreen = (i.destino().getTiempoFin() - i.destino().getTiempoInicio() > DELAY);
+                        TeclaLarga teclaLarga = new TeclaLarga(i.destino().numColor,xDef, i.destino().getTiempoFin(),
+                                largerThanScreen);
+                        principal.getChildren().add(teclaLarga);
+                        teclasLargasEnPantalla.add(teclaLarga);
+                        teclaLarga.toBack();
+                    }
                     lastTecla = i.destino();
                 }
                 aux = lastTecla;
@@ -283,8 +314,16 @@ public class juegoController implements Initializable {
             principal.getChildren().remove(circle);
             teclasEnPantalla.remove(circle);
         });
-
     }
+
+    private void removeTeclaLarga(TeclaLarga teclaLarga){
+        Platform.runLater(() -> {
+            principal.getChildren().remove(teclaLarga);
+            teclasLargasEnPantalla.remove(teclaLarga);
+            teclaLarga.clearAll();
+        });
+    }
+
     /**
      * KeyListener para los eventos del teclado, cuando se presiona una tecla realiza un switch para ver si se
      * Presiono una tecla de interes, en caso de que si, acciona los eventos de la GUI Necesarios, los cuales son
@@ -413,9 +452,6 @@ public class juegoController implements Initializable {
         stage.show();
         reproductor.stop();
         timeline.stop();
-
-
-
     }
     @FXML
     private void btnRActivado(){
@@ -446,6 +482,16 @@ public class juegoController implements Initializable {
         Rectangle rect = this.makeRect(GreenButton);
         checkColitions(rect);
         effect.run(GreenButton,Color.GREEN);
+        TeclaLarga aux =  this.teclasLargasEnPantalla.get(0);
+        aux.toggleState();
+        if (aux.isLargerThanScreen()){
+            System.out.println("PARADOOOO");
+            aux.setEstado(ESTADOS.STOPPED);
+        }else {
+            System.out.println("DECRECE 222");
+            aux.setEstado(ESTADOS.DECREASE);
+        }
+
     }
 
 
@@ -524,6 +570,7 @@ public class juegoController implements Initializable {
             circulo.setCenterX(circulo.getCenterX() + factor2);
         }
     }
+
     private void updateProgress() {
         if (reproductor != null && reproductor.getStatus() == MediaPlayer.Status.PLAYING) {
             double currentTime = reproductor.getCurrentTime().toMillis();

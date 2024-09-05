@@ -66,6 +66,10 @@ public class Tecla {
         return tiempoInicio;
     }
 
+    public double getTiempoFin(){
+        return tiempoFin;
+    }
+
     public List<Arista> getAristasAdyacentes() {
         return aristasAdyacentes;
     }
