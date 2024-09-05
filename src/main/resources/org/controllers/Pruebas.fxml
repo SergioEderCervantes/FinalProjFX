@@ -7,7 +7,7 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.shape.Rectangle?>
 
-<AnchorPane fx:id="Principal" prefHeight="600.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.controllers.Pruebas">
+<AnchorPane fx:id="Principal" prefHeight="600.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.controllers.Pruebas">
    <children>
       <Button layoutX="57.0" layoutY="149.0" mnemonicParsing="false" onAction="#inicialLaAnimacion" text="Button" />
       <!-- Nota larga con efectos -->
@@ -22,6 +22,11 @@
       </Rectangle>
       <Circle fill="#00529e" layoutX="119.0" layoutY="411.0" radius="20.0" stroke="#06aff2" strokeWidth="3.0" />
       <Button layoutX="57.0" layoutY="195.0" mnemonicParsing="false" onAction="#reset" text="Button" />
+      <Button fx:id="RedButton" layoutX="366.0" layoutY="535.0" mnemonicParsing="false" onAction="#btnRActivado" prefHeight="34.0" prefWidth="54.0" text="Button" />
+      <Button fx:id="OrangeButton" layoutX="784.0" layoutY="535.0" mnemonicParsing="false" onAction="#btnOActivado" prefHeight="34.0" prefWidth="54.0" text="Button" />
+      <Button fx:id="GreenButton" layoutX="685.0" layoutY="535.0" mnemonicParsing="false" onAction="#btnGActivado" prefHeight="34.0" prefWidth="54.0" text="Button" />
+      <Button fx:id="YellowButton" layoutX="572.0" layoutY="535.0" mnemonicParsing="false" onAction="#btnYActivado" prefHeight="34.0" prefWidth="54.0" text="Button" />
+      <Button fx:id="BlueButton" layoutX="469.0" layoutY="535.0" mnemonicParsing="false" onAction="#btnBActivado" prefHeight="34.0" prefWidth="54.0" text="Button" />
 
    </children>
 </AnchorPane>

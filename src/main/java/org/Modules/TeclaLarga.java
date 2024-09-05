@@ -6,8 +6,6 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.StrokeType;
 import org.controllers.juegoController;
-
-
 import static org.controllers.juegoController.ColoresClaros;
 import static org.controllers.juegoController.ColoresPosibles;
 
@@ -24,11 +22,13 @@ public class TeclaLarga extends Region {
     int numColor;
     boolean largerThanScreen;
 
-
+    public Circle getCircle(){
+        return circulo;
+    }
     public TeclaLarga(int numColor, double x, double tiempoFin, boolean largerThanScreen) {
         this.loadState1(numColor,x);
         this.getChildren().add(state1);
-        //TODO lo z
+        //TODO lo largo del romboide y de las ondas esta dado por el delta t total de la tecla / 4
         this.x = x;
         this.numColor = numColor;
         this.tiempoFin = tiempoFin;
@@ -92,19 +92,11 @@ public class TeclaLarga extends Region {
                 rb.decreaseRhomboid(dt);
                 break;
         }
-
     }
 
 
     public void toggleState(){
         this.rb.getRhomboid().setFill(ColoresClaros[numColor]);
-//        this.getChildren().clear();
-//        if (isState1){
-//            if (state2 == null) this.loadState2();
-//            this.getChildren().add(state2);
-//        }
-//        else
-//            this.getChildren().add(state1);
         isState1 = !isState1;
     }
 
