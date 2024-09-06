@@ -1,4 +1,6 @@
 package org.Modules;
+//TODO borrar esta clase si finalmente concordamos que no la vamos a utilizar
+
 
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;

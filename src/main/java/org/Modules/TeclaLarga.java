@@ -3,7 +3,6 @@ package org.Modules;
 import javafx.scene.Group;
 import javafx.scene.layout.Region;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Polygon;
 import javafx.scene.shape.StrokeType;
 import org.controllers.juegoController;
 import static org.controllers.juegoController.ColoresClaros;
@@ -28,7 +27,6 @@ public class TeclaLarga extends Region {
     public TeclaLarga(int numColor, double x, double tiempoFin, boolean largerThanScreen) {
         this.loadState1(numColor,x);
         this.getChildren().add(state1);
-        //TODO lo largo del romboide y de las ondas esta dado por el delta t total de la tecla / 4
         this.x = x;
         this.numColor = numColor;
         this.tiempoFin = tiempoFin;
@@ -77,9 +75,6 @@ public class TeclaLarga extends Region {
     }
 
     public void fisica(double dt){
-        //TODO cuando se integre en el juego principal, es mejor que las condiciones de cambio de estado esten afuera
-        // de este metodo
-
         if (estado != ESTADOS.DECREASE && estado != ESTADOS.STOPPED) juegoController.fisicaCirculo(circulo, dt);
         switch (estado) {
             case GROWTH:

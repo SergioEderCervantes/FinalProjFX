@@ -7,7 +7,6 @@ import java.net.URL;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
-
 import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -236,8 +235,7 @@ public class juegoController implements Initializable {
                 }
             }
             for (TeclaLarga teclaLarga : teclasLargasEnPantalla) {
-                //TODO esto va a fallar si la tecla es mas larga de lo que puede verse en pantalla (Calculo mas de 1.5 seg)
-                // se debe de cambiar por mas condiciones que controlen ese pedo
+                //TODO more test
                 if (MediaPlayerCurrentTime > teclaLarga.getTiempoFin() - DELAY && teclaLarga.isState1()){
                     teclaLarga.setEstado(ESTADOS.TRANSITION);
                 }
@@ -480,15 +478,15 @@ public class juegoController implements Initializable {
         Rectangle rect = this.makeRect(GreenButton);
         checkColitions(rect);
         effect.run(GreenButton,Color.GREEN);
-        TeclaLarga aux =  this.teclasLargasEnPantalla.get(0);
-        aux.toggleState();
-        if (aux.isLargerThanScreen()){
-            System.out.println("PARADOOOO");
-            aux.setEstado(ESTADOS.STOPPED);
-        }else {
-            System.out.println("DECRECE 222");
-            aux.setEstado(ESTADOS.DECREASE);
-        }
+//        TeclaLarga aux =  this.teclasLargasEnPantalla.get(0);
+//        aux.toggleState();
+//        if (aux.isLargerThanScreen()){
+//            System.out.println("PARADOOOO");
+//            aux.setEstado(ESTADOS.STOPPED);
+//        }else {
+//            System.out.println("DECRECE 222");
+//            aux.setEstado(ESTADOS.DECREASE);
+//        }
 
     }
 
@@ -523,6 +521,9 @@ public class juegoController implements Initializable {
                     rect.contains(circle.getCenterX(), circle.getCenterY() + circle.getRadius()) ||
                     rect.contains(circle.getCenterX(), circle.getCenterY() - circle.getRadius())){
 
+                //Condicion para arreglar el pedo de que si se deja pulsada la tecla el marcador empieza a explotar
+                if (!circle.isVisible()) break;
+
                 puntaje = puntaje+(multiplicador * 15);
                 cont++;
 
@@ -539,15 +540,15 @@ public class juegoController implements Initializable {
                         }
                     }
                 }
-                //TODO sprite de explosion de circulo, aumentar el marcador
                 circle.setVisible(false);
 
                     //Esto es mil veces mejor que destruirlo aqui
                 return;
             }
-
         }
-        //TODO Quitar puntos porque se presiono una tecla cuando no habia nada
+        System.out.println("HOLAAA");
+        multiplicador=1;
+        cont = 0;
     }
 
     public static void fisicaCirculo(Circle circulo,double dt){

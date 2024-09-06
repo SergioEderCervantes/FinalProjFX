@@ -1,14 +1,9 @@
 package org.controllers;
 
 import javafx.animation.*;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonBase;
-import javafx.scene.control.Label;
 import javafx.scene.effect.Blend;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Glow;
@@ -21,6 +16,8 @@ import javafx.util.Duration;
 import org.Modules.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 
 public class Pruebas {
@@ -46,34 +43,9 @@ public class Pruebas {
     boolean empezado = false;
     Rectangle rectangle;
     Timeline timeline;
+    PauseTransition longPressPauseTransition;
     @FXML
     private void inicialLaAnimacion(){
-
-        // Crear un círculo que siga al cursor
-//        Circle follower = new Circle(10, Color.BLUE);
-//        follower.setVisible(false); // Invisible al inicio
-//
-//        // Crear un cuadro de texto para mostrar las coordenadas
-//        Label coordinatesLabel = new Label();
-//        coordinatesLabel.setStyle("-fx-background-color: white; -fx-padding: 2px;");
-//        coordinatesLabel.setLayoutX(20);
-//        coordinatesLabel.setLayoutY(400);
-//        // Agregar el círculo y el cuadro de texto al contenedor principal
-//        Principal.getChildren().addAll(follower, coordinatesLabel);
-//        Scene scene = Principal.getScene();
-//        // Manejar el movimiento del cursor
-//        scene.setOnMouseMoved(event -> {
-//            // Mover el círculo al cursor
-//            follower.setCenterX(event.getX());
-//            follower.setCenterY(event.getY());
-////            follower.setVisible(true);
-//
-//            // Actualizar las coordenadas del cuadro de texto
-//            coordinatesLabel.setText(String.format("(%.2f, %.2f)", event.getX(), event.getY()));
-////            coordinatesLabel.setLayoutX(event.getX() + 15);
-////            coordinatesLabel.setLayoutY(event.getY() - 10);
-//        });
-
 //        this.ejemplo1();
 //        this.ejemplo2();
 //        this.ejemplo3();
@@ -330,49 +302,105 @@ public class Pruebas {
             t.fisica    (10);
         }
     }
+
+    private final Set<KeyCode> pressedKeys = new HashSet<>();
+
     private void initKeyboard(Timeline tm){
-        this.Principal.addEventHandler(KeyEvent.KEY_PRESSED, keyEvent -> {
+        this.Principal.addEventHandler(KeyEvent.KEY_PRESSED, keyEvent -> handleKeyPressed(keyEvent,tm));
+        this.Principal.addEventHandler(KeyEvent.KEY_RELEASED, keyEvent -> handleKeyReleased(keyEvent,tm));
+    }
+
+    /**
+     * Metodo para manejar el evento de keyPressed, el cual primero revisa si el juego esta activo, despues checa si
+     * la tecla pulsada no estaba previamente pulsada (Ya que cuando se deja una tecla pulsada el SO manda una secuencia
+     * de caracteres que estorba en el manejo del evento) si no estaba pulsada la agrega al set de teclas pulsadas y crea
+     * un pausetransition que dura 250 millis, si no se suelta la tecla antes de que termine el pause transition quiere
+     * decir que es una tecla larga, si se suelta antes es una tecla corta y se borra el pauseTransition
+     * (en handleKeyReleased)
+     */
+    private void handleKeyPressed(KeyEvent keyEvent, Timeline tm){
+        {
+            if(tm.getStatus() != Animation.Status.RUNNING) return;
             KeyCode code = keyEvent.getCode();
-
-            if(tm.getStatus() == Animation.Status.RUNNING) {
-                switch (code) {
+            if(pressedKeys.contains(code)){
+                return;
+            }
+            System.out.println("Pressed " + code);
+            pressedKeys.add(code);
+            longPressPauseTransition = new PauseTransition(Duration.millis(250));
+            longPressPauseTransition.setOnFinished(event -> {
+                switch (code){
+                    //todos los eventos para manejar las teclas largas deben de ir aqui
                     case Q:
-                        this.RedButton.setFocusTraversable(true);
-                        this.RedButton.fire();
-
+                        System.out.println("TECLA LARGA ROJA PRESIONADA");
                         break;
                     case W:
-                        this.BlueButton.setFocusTraversable(true);
-                        this.BlueButton.fire();
+                        System.out.println("TECLA LARGA AZUL PRESIONADA");
                         break;
                     case E:
-                        this.YellowButton.setFocusTraversable(true);
-                        this.YellowButton.fire();
-
+                        System.out.println("TECLA LARGA AMARILLA PRESIONADA");
                         break;
                     case O:
-                        this.GreenButton.setFocusTraversable(true);
-                        this.GreenButton.fire();
-
+                        System.out.println("TECLA LARGA VERDE PRESIONADA");
                         break;
                     case P:
-                        this.OrangeButton.setFocusTraversable(true);
-                        this.OrangeButton.fire();
-                        break;
-                    default:
-                        break;
+                        System.out.println("TECLA LARGA NARANJA PRESIONADA");
                 }
-            }
-        });
+                longPressPauseTransition = null;
+            });
+            longPressPauseTransition.play();
+        }
     }
+
+    /**
+     * Manejo de la liberacion de tecla, lo cual primero evalua si el juego esta corriendo, luego quita la tecla del set
+     * para que pueda volver a ser pulsada y si se solto antes que el pausetransition acabara su vida, significa que es
+     * una tecla corta y enciende los eventos de la dicha
+     */
+    private void handleKeyReleased(KeyEvent keyEvent, Timeline tm){
+        if(tm.getStatus() != Animation.Status.RUNNING) return;
+        KeyCode code = keyEvent.getCode();
+        System.out.println("Released " + code);
+        pressedKeys.remove(code);
+        if (longPressPauseTransition != null && longPressPauseTransition.getStatus() == Animation.Status.RUNNING) {
+            longPressPauseTransition.stop();
+            longPressPauseTransition = null;
+            //Teclas cortas presionadas
+            switch (code) {
+                case Q:
+                    this.RedButton.setFocusTraversable(true);
+                    System.out.println("TECLA CORTA ROJA PRESIONADA");
+                    break;
+                case W:
+                    this.BlueButton.setFocusTraversable(true);
+                    System.out.println("TECLA CORTA AZUL PRESIONADA");
+                    break;
+                case E:
+                    this.YellowButton.setFocusTraversable(true);
+                    System.out.println("TECLA CORTA AMARILLA PRESIONADA");
+                    break;
+                case O:
+                    this.GreenButton.setFocusTraversable(true);
+                    System.out.println("TECLA CORTA VERDE PRESIONADA");
+                    break;
+                case P:
+                    this.OrangeButton.setFocusTraversable(true);
+                    System.out.println("TECLA CORTA NARANJA PRESIONADA");
+                    break;
+            }
+        }
+
+    }
+
+    //Este check colitions solo jala para teclas largas vdd?
     private void checkColitions(Rectangle rect){
 
         for (TeclaLarga t : tls) {
-            if (rect.contains(t.getCircle().getCenterX(), t.getCircle().getCenterY()) ||
-                    rect.contains(t.getCircle().getCenterX(), t.getCircle().getCenterY() + t.getCircle().getRadius()) ||
-                    rect.contains(t.getCircle().getCenterX(), t.getCircle().getCenterY() - t.getCircle().getRadius())){
+            Circle aux = t.getCircle();
+            if (rect.contains(aux.getCenterX(), aux.getCenterY()) ||
+                    rect.contains(aux.getCenterX(), aux.getCenterY() + aux.getRadius()) ||
+                    rect.contains(aux.getCenterX(), aux.getCenterY() - aux.getRadius())){
 
-                //TODO sprite de explosion de circulo, aumentar el marcador
                 t.setVisible(false);
 
                 //Esto es mil veces mejor que destruirlo aqui
@@ -380,20 +408,19 @@ public class Pruebas {
             }
 
         }
-        //TODO Quitar puntos porque se presiono una tecla cuando no habia nada
     }
     private void ejemplo9(){
         EfectoOndaSinoidal onda = new EfectoOndaSinoidal(-2,200,460,0);
         Principal.getChildren().add(onda.getSineWave1());
         Principal.getChildren().add(onda.getSineWave2());
     }
+
     @FXML
     private void btnRActivado(){
         Rectangle rect = this.makeRect(RedButton);
         checkColitions(rect);
         effect.run(RedButton,Color.RED);
     }
-
 
     @FXML
     private void btnBActivado(){
