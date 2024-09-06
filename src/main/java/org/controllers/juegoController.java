@@ -5,8 +5,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.ResourceBundle;
+import java.util.*;
+
 import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -55,6 +55,12 @@ public class juegoController implements Initializable {
     //Delay necesario para que las teclas aparezcan on time, se modifica en funcion de la velocidad de bajada de las teclas
     private MediaPlayer reproductor;
     private CustomRunnable<Button,Color> effect;
+    private long test_time_inicio;
+    Sprite sprite;
+    Sprite guitar;
+    Sprite bate;
+    Sprite man;
+    private final Map<KeyCode,PauseTransition> pausaTeclas = new HashMap<>();
 
     //Variables de componentes del FXML
     @FXML
@@ -104,12 +110,6 @@ public class juegoController implements Initializable {
     ProgressBar BarraM;
     @FXML
     ProgressBar BarraP1;
-    //Test
-    private long test_time_inicio;
-    Sprite sprite;
-    Sprite guitar;
-    Sprite bate;
-    Sprite man;
 
     public void setCancionSeleccionada(Song cancionSeleccionada) {
         this.cancionSeleccionada = cancionSeleccionada;
@@ -320,6 +320,7 @@ public class juegoController implements Initializable {
         });
     }
 
+    //TODO actualizar esta descripcion
     /**
      * KeyListener para los eventos del teclado, cuando se presiona una tecla realiza un switch para ver si se
      * Presiono una tecla de interes, en caso de que si, acciona los eventos de la GUI Necesarios, los cuales son
@@ -327,42 +328,106 @@ public class juegoController implements Initializable {
      * si se pulsa la tecla ESC
      */
     private void initKeyboard(){
-        this.principal.addEventHandler(KeyEvent.KEY_PRESSED, keyEvent -> {
+        this.principal.addEventHandler(KeyEvent.KEY_PRESSED, this::handleKeyPressed);
+        this.principal.addEventHandler(KeyEvent.KEY_RELEASED, this::handleKeyReleased);
+    }
+
+    /**
+     * Metodo para manejar el evento de keyPressed, el cual primero revisa si el juego esta activo, checa si no es pausa,
+     * checa si esa tecla no estaba ya pulsada y si no la guarda en el set, despues inicia todos los eventos y animaciones
+     */
+    private void handleKeyPressed(KeyEvent keyEvent){
+        {
+            if(this.timeline.getStatus() != Animation.Status.RUNNING) return;
             KeyCode code = keyEvent.getCode();
-
-            if(this.timeline.getStatus() == Animation.Status.RUNNING) {
-                switch (code) {
-                    case Q:
-                        this.RedButton.setFocusTraversable(true);
-                        this.RedButton.fire();
-
+            if (code == KeyCode.ESCAPE) {
+                this.pause();
+            }
+            if (pausaTeclas.containsKey(code)){
+                return;
+            }
+            //Preparamos el pauseTransition
+            PauseTransition aux = new PauseTransition(Duration.millis(250));
+            //TODO usar el SetOnFisished para darle un aspecto lindo al boton cuando se pulso
+            //Accionamos todas las teclas
+            switch (code) {
+                case Q:
+                    this.RedButton.setFocusTraversable(true);
+                    this.RedButton.fire();
+//                    aux.setOnFinished(event -> botonRojoEfectoBoninto);
                     break;
                 case W:
                     this.BlueButton.setFocusTraversable(true);
                     this.BlueButton.fire();
+//                    aux.setOnFinished(event -> botonAzulEfectoBoninto);
                     break;
                 case E:
                     this.YellowButton.setFocusTraversable(true);
                     this.YellowButton.fire();
-
+//                    aux.setOnFinished(event -> botonAmarilloEfectoBoninto);
                     break;
                 case O:
                     this.GreenButton.setFocusTraversable(true);
                     this.GreenButton.fire();
-
+//                    aux.setOnFinished(event -> botonVerdeEfectoBoninto);
                     break;
                 case P:
                     this.OrangeButton.setFocusTraversable(true);
                     this.OrangeButton.fire();
-                    break;
-                case ESCAPE:
-                    pause();
+//                    aux.setOnFinished(event -> botonNaranjaEfectoBoninto);
                     break;
                 default:
                     break;
-                }
             }
-        });
+
+
+            pausaTeclas.put(code, aux);
+            aux.play();
+        }
+    }
+
+
+    /**
+     * Manejo de la liberacion de tecla, lo cual primero evalua si el juego esta corriendo, luego quita la tecla del set
+     * para que pueda volver a ser pulsada y checa si hay una tecla larga en su posicion que todavia no  deja de ser
+     * pulsada
+     */
+    private void handleKeyReleased(KeyEvent keyEvent){
+        if(this.timeline.getStatus() != Animation.Status.RUNNING) return;
+        KeyCode code = keyEvent.getCode();
+        PauseTransition aux = pausaTeclas.get(code);
+        pausaTeclas.remove(code);
+
+        //Fue una tecla corta, no hagas nada
+        if (aux != null && aux.getStatus() == Animation.Status.RUNNING) {
+            aux.stop();
+        }
+            //todos los eventos para manejar las teclas largas deben de ir aqui
+        System.out.println("AQUI");
+        switch (code) {
+            case Q:
+                this.RedButton.setFocusTraversable(true);
+                checkColitionsForKeyRelease(makeRect(this.RedButton));
+                break;
+            case W:
+                this.BlueButton.setFocusTraversable(true);
+                checkColitionsForKeyRelease(makeRect(this.BlueButton));
+                break;
+            case E:
+                this.YellowButton.setFocusTraversable(true);
+                checkColitionsForKeyRelease(makeRect(this.YellowButton));
+                break;
+            case O:
+                this.GreenButton.setFocusTraversable(true);
+                checkColitionsForKeyRelease(makeRect(this.GreenButton));
+                break;
+            case P:
+                this.OrangeButton.setFocusTraversable(true);
+                checkColitionsForKeyRelease(makeRect(this.OrangeButton));
+                break;
+            default:
+                break;
+        }
     }
 
     private void initButtons(){
@@ -478,16 +543,6 @@ public class juegoController implements Initializable {
         Rectangle rect = this.makeRect(GreenButton);
         checkColitions(rect);
         effect.run(GreenButton,Color.GREEN);
-//        TeclaLarga aux =  this.teclasLargasEnPantalla.get(0);
-//        aux.toggleState();
-//        if (aux.isLargerThanScreen()){
-//            System.out.println("PARADOOOO");
-//            aux.setEstado(ESTADOS.STOPPED);
-//        }else {
-//            System.out.println("DECRECE 222");
-//            aux.setEstado(ESTADOS.DECREASE);
-//        }
-
     }
 
 
@@ -515,40 +570,74 @@ public class juegoController implements Initializable {
     }
 
     private void checkColitions(Rectangle rect){
-
         for (Circle circle : teclasEnPantalla) {
-            if (rect.contains(circle.getCenterX(), circle.getCenterY()) ||
-                    rect.contains(circle.getCenterX(), circle.getCenterY() + circle.getRadius()) ||
-                    rect.contains(circle.getCenterX(), circle.getCenterY() - circle.getRadius())){
-
-                //Condicion para arreglar el pedo de que si se deja pulsada la tecla el marcador empieza a explotar
-                if (!circle.isVisible()) break;
-
-                puntaje = puntaje+(multiplicador * 15);
-                cont++;
-
-                if(cont>10 && cont<16){
-                    multiplicador=2;
+            if (checkCircle(rect,circle)) return;
+        }
+        for (TeclaLarga t : teclasLargasEnPantalla) {
+            Circle aux = t.getCircle();
+            if (checkCircle(rect,aux)) {
+                t.toggleState();
+                if (t.isLargerThanScreen()){
+                    System.out.println("PARADOOOO");
+                    t.setEstado(ESTADOS.STOPPED);
+                }else {
+                    System.out.println("DECRECE 222");
+                    t.setEstado(ESTADOS.DECREASE);
                 }
-                else {
-                    if (cont >= 16 && cont < 35) {
-                        multiplicador = 4;
-                    }
-                    else {
-                        if (cont >= 35) {
-                            multiplicador = 8;
-                        }
-                    }
-                }
-                circle.setVisible(false);
-
-                    //Esto es mil veces mejor que destruirlo aqui
                 return;
             }
         }
-        System.out.println("HOLAAA");
         multiplicador=1;
         cont = 0;
+    }
+
+    private boolean checkCircle(Rectangle rect, Circle circle){
+        if (rect.contains(circle.getCenterX(), circle.getCenterY()) ||
+                rect.contains(circle.getCenterX(), circle.getCenterY() + circle.getRadius()) ||
+                rect.contains(circle.getCenterX(), circle.getCenterY() - circle.getRadius())){
+
+            puntaje = puntaje+(multiplicador * 15);
+            cont++;
+
+            if(cont>10 && cont<16){
+                multiplicador=2;
+            }
+            else {
+                if (cont >= 16 && cont < 35) {
+                    multiplicador = 4;
+                }
+                else {
+                    if (cont >= 35) {
+                        multiplicador = 8;
+                    }
+                }
+            }
+            circle.setVisible(false);
+
+            //Esto es mil veces mejor que destruirlo aqui
+            return true;
+        }
+        return false;
+    }
+
+    private void checkColitionsForKeyRelease(Rectangle rect){
+        TeclaLarga choosenOne = null;
+        for (TeclaLarga t : teclasLargasEnPantalla) {
+            Circle aux = t.getCircle();
+            if (rect.contains(aux.getCenterX(), aux.getCenterY()) ||
+                    rect.contains(aux.getCenterX(), aux.getCenterY() + aux.getRadius()) ||
+                    rect.contains(aux.getCenterX(), aux.getCenterY() - aux.getRadius())){
+                if (t.getRhomboid().getHeight() >= 30){
+                    multiplicador=1;
+                    cont = 0;
+                    choosenOne = t;
+                    break;
+                }
+            }
+        }
+        if (choosenOne != null) {
+            this.removeTeclaLarga(choosenOne);
+        }
     }
 
     public static void fisicaCirculo(Circle circulo,double dt){
