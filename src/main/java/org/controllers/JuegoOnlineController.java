@@ -456,7 +456,6 @@ public class JuegoOnlineController implements Initializable {
         for (Circle circle : teclasEnPantalla) {
 
 
-//            System.out.println(band);
             if (rect.contains(circle.getCenterX(), circle.getCenterY()) ||
                     rect.contains(circle.getCenterX(), circle.getCenterY() + circle.getRadius()) ||
                     rect.contains(circle.getCenterX(), circle.getCenterY() - circle.getRadius())){

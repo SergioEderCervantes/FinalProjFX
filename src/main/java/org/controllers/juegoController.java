@@ -575,10 +575,8 @@ public class juegoController implements Initializable {
             if (checkCircle(rect,aux)) {
                 t.toggleState();
                 if (t.isLargerThanScreen()){
-                    System.out.println("PARADOOOO");
                     t.setEstado(ESTADOS.STOPPED);
                 }else {
-                    System.out.println("DECRECE 222");
                     t.setEstado(ESTADOS.DECREASE);
                 }
                 return;

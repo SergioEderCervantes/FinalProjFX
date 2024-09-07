@@ -41,7 +41,6 @@ public class EsperandoSeleccionController {
     }
     private void switchToJuegoOnline(String id){
         try{
-            System.out.println("JOLA");
             FXMLLoader loader = new FXMLLoader(getClass().getResource("juegoOnline.fxml"));
             Pane root = loader.load();
             JuegoOnlineController controller = loader.getController();

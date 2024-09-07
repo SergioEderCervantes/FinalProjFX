@@ -295,7 +295,6 @@ public class juegoLocalController implements Initializable{
                  }
                  if (!teclaLarga.isState1()){
                      puntaje = puntaje+(multiplicador * 3);
-                     System.out.println(puntaje);
                  }
                  if(teclaLarga.getRhomboid().getHeight() <= 0){
                      this.removeTeclaLarga(teclaLarga);
@@ -882,10 +881,8 @@ public class juegoLocalController implements Initializable{
             if (checkCircle(rect,aux)) {
                 t.toggleState();
                 if (t.isLargerThanScreen()){
-                    System.out.println("PARADOOOO");
                     t.setEstado(ESTADOS.STOPPED);
                 }else {
-                    System.out.println("DECRECE 222");
                     t.setEstado(ESTADOS.DECREASE);
                 }
                 return;
@@ -903,10 +900,8 @@ public class juegoLocalController implements Initializable{
             if (checkCircle2(rect,aux)) {
                 t.toggleState();
                 if (t.isLargerThanScreen()){
-                    System.out.println("PARADOOOO");
                     t.setEstado(ESTADOS.STOPPED);
                 }else {
-                    System.out.println("DECRECE 222");
                     t.setEstado(ESTADOS.DECREASE);
                 }
                 return;
