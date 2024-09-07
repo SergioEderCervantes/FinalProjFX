@@ -893,7 +893,7 @@ public class juegoLocalController implements Initializable{
     }
     private void checkColitions2(Rectangle rect){
         for (Circle circle : teclasEnPantalla2) {
-            if (checkCircle(rect,circle)) return;
+            if (checkCircle2(rect,circle)) return;
         }
         for (TeclaLarga t : teclasLargasEnPantalla2) {
             Circle aux = t.getCircle();
