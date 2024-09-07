@@ -164,9 +164,32 @@ public class MenuEditorController {
 
             this.cancionSeleccion = selectedFile.getName();
             AcceptPista.setDisable(false);
-            String pathChida = changePath(selectedFile.getName(),selectedFile.getPath());
-            Media media = new Media(new File(pathChida).toURI().toString());
-            this.pistaSeleccion = new MediaPlayer(media);
+
+
+            String pathChida = changePath(selectedFile.getName(), selectedFile.getPath());
+                File archivoCopiado = new File(pathChida);
+            if (!archivoCopiado.exists()) {
+                System.out.println("Error: El archivo copiado no existe.");
+            } else {
+                try {
+                    System.out.println(pathChida);
+                    System.out.println(archivoCopiado.toURI().toString());
+                    // Convertir la ruta del archivo a un URI válido para el MediaPlayer
+                    Media media = new Media(archivoCopiado.toURI().toString());
+                    this.pistaSeleccion = new MediaPlayer(media);
+
+                    // Eventos de error, listo y fin de la reproducción
+                    pistaSeleccion.setOnError(() -> System.out.println("Error: " + pistaSeleccion.getError()));
+                    pistaSeleccion.setOnReady(() -> System.out.println("MediaPlayer ready to play."));
+                    pistaSeleccion.setOnEndOfMedia(() -> System.out.println("MediaPlayer finished playing."));
+
+                    // Reproducir el archivo
+                    pistaSeleccion.play();
+
+                } catch (Exception e) {
+                    System.out.println("Error al cargar el archivo de audio: " + e.getMessage());
+                }
+            }
             this.teclasSeleccion = new ArrayList<>();
         }
         else {
@@ -306,7 +329,9 @@ public class MenuEditorController {
         try {
             Media media = new Media(file.toURI().toString());
             MediaPlayer mediaPlayer = new MediaPlayer(media);
+            mediaPlayer.play();
         } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
         return true;
@@ -318,16 +343,21 @@ public class MenuEditorController {
      * @param path ruta absoluta donde se encuentra actualmente el archivo
      * @return  String de la ruta relativa al proyecto despues de hacer la copia
      */
-    private static String changePath(String name,String path){
-        final String target = "src/main/resources/songs/" + File.separator + name;
+    private static String changePath(String name, String path) {
+        // Ruta donde se copiará el archivo
+        final String target = "src/main/resources/music" + File.separator + name;
+
+        // Usar Paths para manejar la copia del archivo
         Path rutaAntigua = Paths.get(path);
         Path rutaNueva = Paths.get(target);
+
         try {
-            Files.copy(rutaAntigua,rutaNueva, StandardCopyOption.REPLACE_EXISTING);
-        }catch (IOException e){
+            Files.copy(rutaAntigua, rutaNueva, StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
             System.out.println("IOException: " + e.getMessage());
         }
-        return target;
+
+        return rutaNueva.toString();  // Devolver la ruta absoluta nueva
     }
 
 }

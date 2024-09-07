@@ -45,6 +45,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import static org.controllers.App.loadFXML;
 
@@ -88,6 +89,7 @@ public class editorController {
     private Button saveBtn;
     @FXML
     private ImageView Animacion;
+    private final HashMap<KeyCode, Double> PressedKeys = new HashMap<>();
 
 
     public void setMediaPlayer(MediaPlayer mediaPlayer) {
@@ -134,6 +136,8 @@ public class editorController {
             timeline.setOnFinished(e -> principal.getChildren().remove(aux));
             this.principal.requestFocus();
             timeline.play();
+
+
         };
 
         this.sprite = new Sprite(Animacion,16,4,240,136,1500);
@@ -164,6 +168,7 @@ public class editorController {
                     sprite.pause();
                 }
                 else {
+                    System.out.println(mediaPlayer);
                     mediaPlayer.play();
                     enReproduccion = true;
                     animacionReproduccion.play();
@@ -230,44 +235,75 @@ public class editorController {
         }
 
     }
+
     @FXML
-    private void agregarTecla(ActionEvent event){
-        int numColor = 0;
-        Button btn = (Button) event.getSource();
+    private void Reset(ActionEvent event){
+        this.teclasExistentes.getItems().clear();
+        mediaPlayer.stop();
+        enReproduccion = false;
+        animacionReproduccion.stop();
+        actualizarSlider(0.1);
+    }
 
-        int xSelected = (int)((Button) event.getSource()).getLayoutX();
-        switch (xSelected){
-            case 200:
-                effect.run(btn,Color.RED);
-                break;
-            case 320:
-                numColor = 1;
-                effect.run(btn,Color.BLUE);
-                break;
-            case 440:
-                numColor = 2;
-                effect.run(btn,Color.YELLOW);
-                break;
-            case 560:
-                numColor = 3;
-                effect.run(btn,Color.GREEN);
-                break;
-            case 680:
-                numColor = 4;
-                effect.run(btn,Color.ORANGE);
-                break;
-
-
+    private void handleKeyPressed(KeyEvent keyEvent){
+        KeyCode code = keyEvent.getCode();
+        if (!PressedKeys.containsKey(code)){
+            double timeInit = this.mediaPlayer.getCurrentTime().toMillis();
+            PressedKeys.put(code,timeInit);
         }
-        double time = mediaPlayer.getCurrentTime().toMillis();
-        time = redondearAlValorMasCercano(time);
+        switch (code){
+            case Q:
+                effect.run(this.qBtn,Color.RED);
+                break;
+            case W:
+                effect.run(this.wBtn,Color.BLUE);
+                break;
+            case E:
+                effect.run(this.eBtn,Color.YELLOW);
+                break;
+            case O:
+                effect.run(this.oBtn,Color.GREEN);
+                break;
+            case P:
+                effect.run(this.pBtn,Color.ORANGE);
+                break;
+        }
 
-        String aux = switchColores(numColor) + "-" + time + "-" + time;
+    }
 
-        //TODO Hacer que la tecla que se agregue en el orden que debe, para que quede ordenada
+    private void handleKeyReleased(KeyEvent keyEvent){
+        double timeFin = this.mediaPlayer.getCurrentTime().toMillis();
+        KeyCode code = keyEvent.getCode();
+        int numColor = 0;
+        switch (code){
+            case Q:
+                break;
+            case W:
+                numColor = 1;
+                break;
+            case E:
+                numColor = 2;
+                break;
+            case O:
+                numColor = 3;
+                break;
+            case P:
+                numColor = 4;
+                break;
+            default:
+                PressedKeys.remove(code);
+                return;
+        }
+
+        agregarTecla(PressedKeys.get(code),timeFin, numColor);
+    }
+
+    private void agregarTecla(double timeInicio, double timeFin, int numColor){
+        if (timeFin - timeInicio < 500){
+            timeFin = timeInicio;
+        }
+        String aux = switchColores(numColor) + "-" + timeInicio + "-" + timeFin;
         this.teclasExistentes.getItems().add(aux);
-
-
     }
 
     @FXML
@@ -437,31 +473,8 @@ public class editorController {
         principal.getChildren().add(bigFor);
     }
     private void initKeyboard(){
-        this.principal.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
-            KeyCode code = event.getCode();
-            switch (code){
-                case Q:
-                    this.qBtn.setFocusTraversable(true);
-                    this.qBtn.fire();
-                    break;
-                case W:
-                    this.wBtn.setFocusTraversable(true);
-                    this.wBtn.fire();
-                    break;
-                case E:
-                    this.eBtn.setFocusTraversable(true);
-                    this.eBtn.fire();
-                    break;
-                case O:
-                    this.oBtn.setFocusTraversable(true);
-                    this.oBtn.fire();
-                    break;
-                case P:
-                    this.pBtn.setFocusTraversable(true);
-                    this.pBtn.fire();
-                    break;
-            }
-        });
+        this.principal.addEventHandler(KeyEvent.KEY_PRESSED, this::handleKeyPressed);
+        this.principal.addEventHandler(KeyEvent.KEY_RELEASED, this::handleKeyReleased);
     }
 
     /** Metodo que sera llamado cuando se quiera probar la cancion que se esta editando en estos momentos,

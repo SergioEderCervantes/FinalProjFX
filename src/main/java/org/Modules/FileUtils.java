@@ -86,7 +86,9 @@ public class FileUtils {
         lines.add(songName);
         lines.add(songPath);
 
-        for (String item : items) {
+        ArrayList<String> sortedItems = ordenarPorSegundoElemento(new ArrayList<>(items));
+
+        for (String item : sortedItems) {
             String[] aux = item.split("-");
             String numColor = "0";
             switch (aux[0]) {
@@ -201,6 +203,24 @@ public class FileUtils {
 
         //El formato de cada elemento del arrayList debe de ser:
         //NumColor-TiempoInicio-TiempoFin
+    }
+
+    private static ArrayList<String> ordenarPorSegundoElemento(ArrayList<String> lista) {
+        // Ordenar usando un Comparator personalizado
+        lista.sort((s1, s2) -> {
+            // Separar los elementos por guión
+            String[] partes1 = s1.split("-");
+            String[] partes2 = s2.split("-");
+
+            // Convertir el segundo elemento a Double
+            Double segundoElemento1 = Double.parseDouble(partes1[1]);
+            Double segundoElemento2 = Double.parseDouble(partes2[1]);
+
+            // Comparar los valores
+            return segundoElemento1.compareTo(segundoElemento2);
+        });
+
+        return lista; // Devolver la lista ya ordenada
     }
 
     public static void main(String[] args) {
