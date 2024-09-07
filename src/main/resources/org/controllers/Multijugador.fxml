@@ -8,9 +8,9 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="600.0" prefWidth="1200.0" stylesheets="@../../css/styles.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.controllers.multijugadorController">
+<AnchorPane prefHeight="600.0" prefWidth="1200.0"  style="-fx-background-color: #052c46;" stylesheets="@../../css/styles.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.controllers.multijugadorController">
    <children>
-      <ImageView fitHeight="600.0" fitWidth="1200.0" pickOnBounds="true">
+      <ImageView fitHeight="500.0" fitWidth="1200.0" layoutY="100.0" pickOnBounds="true">
          <image>
             <Image url="@../../images/6d7832d7-5cb0-4b94-b69b-045bc29e3a0d.jpg" />
          </image>
