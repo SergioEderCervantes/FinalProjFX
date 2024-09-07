@@ -299,7 +299,7 @@ public class Pruebas {
         long timeFin = System.currentTimeMillis();
         double dt = timeFin - timeInicio;
         for(TeclaLarga t: tls){
-            t.fisica    (10);
+            t.fisica(10,1);
         }
     }
 

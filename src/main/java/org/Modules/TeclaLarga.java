@@ -5,6 +5,8 @@ import javafx.scene.layout.Region;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.StrokeType;
 import org.controllers.juegoController;
+import org.controllers.juegoLocalController;
+
 import static org.controllers.juegoController.ColoresClaros;
 import static org.controllers.juegoController.ColoresPosibles;
 
@@ -74,8 +76,16 @@ public class TeclaLarga extends Region {
         return isState1;
     }
 
-    public void fisica(double dt){
-        if (estado != ESTADOS.DECREASE && estado != ESTADOS.STOPPED) juegoController.fisicaCirculo(circulo, dt);
+    public void fisica(double dt, int mode){
+        if (estado != ESTADOS.DECREASE && estado != ESTADOS.STOPPED){
+            if (mode == 1){
+                juegoController.fisicaCirculo(circulo, dt);
+            }else if (mode == 2){
+                juegoLocalController.fisicaCirculo(circulo,dt);
+            }else{
+                juegoLocalController.fisicaCirculo2(circulo,dt);
+            }
+        }
         switch (estado) {
             case GROWTH:
                 rb.growthRhomboid(dt);

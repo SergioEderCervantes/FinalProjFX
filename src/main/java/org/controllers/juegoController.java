@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.*;
-
 import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -190,7 +189,7 @@ public class juegoController implements Initializable {
             Media media = new Media(mediaUrl);
             this.reproductor = new MediaPlayer(media);
             this.reproduciendo = false;
-        }catch(Exception e) { 
+        }catch(Exception e) {
             System.out.println(mediaUrl);
         }
     }
@@ -238,7 +237,7 @@ public class juegoController implements Initializable {
                 if (MediaPlayerCurrentTime > teclaLarga.getTiempoFin() - DELAY && teclaLarga.getEstado() == ESTADOS.STOPPED){
                     teclaLarga.setEstado(ESTADOS.DECREASE);
                 }
-                teclaLarga.fisica(frameDt);
+                teclaLarga.fisica(frameDt,1);
                 if (teclaLarga.getLayoutY() + teclaLarga.getHeight() - 15 > 620) {
                     if(teclaLarga.isVisible()){
                         multiplicador=1;
@@ -305,6 +304,7 @@ public class juegoController implements Initializable {
             }
         }
     }
+
     public void removeCircle(Circle circle) {
         Platform.runLater(() -> {
             principal.getChildren().remove(circle);
@@ -462,6 +462,7 @@ public class juegoController implements Initializable {
         };
 
     }
+
     private void pantallaFinal(){
         timeline.pause();
         RedButton.setDisable(true);

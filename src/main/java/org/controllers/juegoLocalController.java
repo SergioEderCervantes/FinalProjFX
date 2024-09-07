@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import javafx.animation.*;
@@ -29,6 +31,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.StrokeType;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.Modules.*;
@@ -39,7 +42,8 @@ public class juegoLocalController implements Initializable{
 
     public static final Color[] ColoresPosibles =
             {Color.RED, Color.BLUE, Color.YELLOW, Color.GREEN, Color.ORANGE};
-
+    public static final Color[] ColoresClaros = {Color.PINK, Color.LIGHTBLUE,
+            Color.LIGHTYELLOW, Color.LIGHTGREEN, Color.PEACHPUFF};
     private int puntaje=0;
     private int puntaje1=0;
     private int multiplicador=1;
@@ -53,11 +57,21 @@ public class juegoLocalController implements Initializable{
     private Tecla aux2;
     private final ArrayList<Circle> teclasEnPantalla = new ArrayList<>();
     private final ArrayList<Circle> teclasEnPantalla2 = new ArrayList<>();
-    private CustomRunnable<Button,Color> effect;
+    private final ArrayList<TeclaLarga> teclasLargasEnPantalla = new ArrayList<>();
+    private final ArrayList<TeclaLarga> teclasLargasEnPantalla2 = new ArrayList<>();
     private long t_inicio;      //Tiempo global
     private boolean reproduciendo;
     //Delay necesario para que las teclas aparezcan on time, se modifica en funcion de la velocidad de bajada de las teclas
     private MediaPlayer reproductor;
+    private CustomRunnable<Button,Color> effect;
+    private long test_time_inicio1;
+    private long test_time_inicio2;
+    Sprite sprite;
+    Sprite guitar;
+    Sprite bate;
+    Sprite man;
+    private final Map<KeyCode,PauseTransition> pausaTeclas = new HashMap<>();
+
 
     //Variables de componentes del FXML
     @FXML
@@ -141,22 +155,14 @@ public class juegoLocalController implements Initializable{
     @FXML
     ProgressBar BarraP2;
 
-    //Test
-    private long test_time_inicio1;
-    private long test_time_inicio2;
-    Sprite sprite;
-    Sprite guitar;
-    Sprite bate;
-    Sprite man;
+
     public void setCancionSeleccionada(Song cancionSeleccionada) {
         this.cancionSeleccionada = cancionSeleccionada;
     }
 
     /**
      *Metodo de inicializacion para la Ventana juego, en la cual se settean varios parametros importantes para el juego
-     * como lo son la timeLine de la animacion, la inicializacion de los eventos de teclado y botones, la
-     * inicializacion de la cancion y finalmente se da una pausa de 2 segundos para que el jugador se prepare y despues
-     * se llama al metodo play de timeline para iniciar la animacion del juego,
+     * como la inicializacion de los eventos de teclado y botones,
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -234,7 +240,6 @@ public class juegoLocalController implements Initializable{
         Media media = new Media(mediaUrl);
         this.reproductor = new MediaPlayer(media);
         this.reproduciendo = false;
-        this.reproductor.setVolume(0.5);
     }
 
     private void print() {
@@ -256,8 +261,12 @@ public class juegoLocalController implements Initializable{
         multiplo.setVisible(multiplicador != 1);
         multiplo.setText("x" + multiplicador);
 
-        //Primero desplaza todas las que ya existen hacia abajo y elimina del ArrayList y el Panel las teclas que ya no se ven
-        try{
+        //El tiempo actual el cual se encuentra la cancion, se usa adelante
+        double MediaPlayerCurrentTime = this.reproductor.getCurrentTime().toMillis();
+        //Primero desplaza todas las teclas, tanto normales como largas, evalua si ya estan demasiado abajo (ya no se
+        //presionaron) para mandar a borrarlas, tambien en las teclas largas se evalua si la tecla debe de seguir creciendo
+        //o cambia de estado a transladarse
+         try{
             for (Circle circulo : teclasEnPantalla) {
                 fisicaCirculo(circulo, frameDt);
 
@@ -269,6 +278,30 @@ public class juegoLocalController implements Initializable{
                     this.removeCircle(circulo);
                 }
             }
+             for (TeclaLarga teclaLarga : teclasLargasEnPantalla) {
+                 if (MediaPlayerCurrentTime > teclaLarga.getTiempoFin() - DELAY && teclaLarga.isState1()){
+                     teclaLarga.setEstado(ESTADOS.TRANSITION);
+                 }
+                 if (MediaPlayerCurrentTime > teclaLarga.getTiempoFin() - DELAY && teclaLarga.getEstado() == ESTADOS.STOPPED){
+                     teclaLarga.setEstado(ESTADOS.DECREASE);
+                 }
+                 teclaLarga.fisica(frameDt,2);
+                 if (teclaLarga.getLayoutY() + teclaLarga.getHeight() - 15 > 620) {
+                     if(teclaLarga.isVisible()){
+                         multiplicador=1;
+                         cont = 0;
+                     }
+                     this.removeTeclaLarga(teclaLarga);
+                 }
+                 if (!teclaLarga.isState1()){
+                     puntaje = puntaje+(multiplicador * 3);
+                     System.out.println(puntaje);
+                 }
+                 if(teclaLarga.getRhomboid().getHeight() <= 0){
+                     this.removeTeclaLarga(teclaLarga);
+                 }
+             }
+
         }catch (Exception ignored){}
         //Agregamos las nuevas teclas si deben de aparecer
         if (aux.getNumAristasAdyacentes() != 0) {
@@ -292,10 +325,22 @@ public class juegoLocalController implements Initializable{
                             xDef = 406;
                             break;
                     }
-                    Circle circle = new Circle(xDef, 155, 20, ColoresPosibles[i.destino().numColor]);
-                    principal.getChildren().add(circle);
-                    teclasEnPantalla.add(circle);
-                    circle.toBack();
+                    if (i.destino().getTiempoFin() - i.destino().getTiempoInicio() == 0 ){
+                        Circle circle = new Circle(xDef, 155, 20, ColoresPosibles[i.destino().numColor]);
+                        circle.setStrokeWidth(3);
+                        circle.setStroke(ColoresClaros[i.destino().numColor]);
+                        circle.setStrokeType(StrokeType.CENTERED);
+                        principal.getChildren().add(circle);
+                        teclasEnPantalla.add(circle);
+                        circle.toBack();
+                    }else {
+                        boolean largerThanScreen = (i.destino().getTiempoFin() - i.destino().getTiempoInicio() > DELAY);
+                        TeclaLarga teclaLarga = new TeclaLarga(i.destino().numColor,xDef, i.destino().getTiempoFin(),
+                                largerThanScreen);
+                        principal.getChildren().add(teclaLarga);
+                        teclasLargasEnPantalla.add(teclaLarga);
+                        teclaLarga.toBack();
+                    }
                     lastTecla = i.destino();
                 }
                 aux = lastTecla;
@@ -308,6 +353,7 @@ public class juegoLocalController implements Initializable{
             }
         }
     }
+
     private void print2() {
         long test_time_fin = System.currentTimeMillis();
         double frameDt2 = test_time_fin - test_time_inicio2;
@@ -326,7 +372,11 @@ public class juegoLocalController implements Initializable{
         multiplo1.setVisible(multiplicador1 != 1);
         multiplo1.setText("x" + multiplicador1);
 
-        //Primero desplaza todas las que ya existen hacia abajo y elimina del ArrayList y el Panel las teclas que ya no se ven
+        //El tiempo actual el cual se encuentra la cancion, se usa adelante
+        double MediaPlayerCurrentTime = this.reproductor.getCurrentTime().toMillis();
+        //Primero desplaza todas las teclas, tanto normales como largas, evalua si ya estan demasiado abajo (ya no se
+        //presionaron) para mandar a borrarlas, tambien en las teclas largas se evalua si la tecla debe de seguir creciendo
+        //o cambia de estado a transladarse
         try{
             for (Circle circulo : teclasEnPantalla2) {
                 fisicaCirculo2(circulo, frameDt2);
@@ -337,6 +387,28 @@ public class juegoLocalController implements Initializable{
                         cont2 = 0;
                     }
                     this.removeCircle2(circulo);
+                }
+            }
+            for (TeclaLarga teclaLarga : teclasLargasEnPantalla2) {
+                if (MediaPlayerCurrentTime > teclaLarga.getTiempoFin() - DELAY && teclaLarga.isState1()){
+                    teclaLarga.setEstado(ESTADOS.TRANSITION);
+                }
+                if (MediaPlayerCurrentTime > teclaLarga.getTiempoFin() - DELAY && teclaLarga.getEstado() == ESTADOS.STOPPED){
+                    teclaLarga.setEstado(ESTADOS.DECREASE);
+                }
+                teclaLarga.fisica(frameDt2,3);
+                if (teclaLarga.getLayoutY() + teclaLarga.getHeight() - 15 > 620) {
+                    if(teclaLarga.isVisible()){
+                        multiplicador1=1;
+                        cont2 = 0;
+                    }
+                    this.removeTeclaLarga2(teclaLarga);
+                }
+                if (!teclaLarga.isState1()){
+                    puntaje1 = puntaje1+(multiplicador1 * 3);
+                }
+                if(teclaLarga.getRhomboid().getHeight() <= 0){
+                    this.removeTeclaLarga2(teclaLarga);
                 }
             }
         }catch (Exception ignored){}
@@ -362,10 +434,22 @@ public class juegoLocalController implements Initializable{
                             xDef = 1031;
                             break;
                     }
-                    Circle circle = new Circle(xDef, 155, 20, ColoresPosibles[i.destino().numColor]);
-                    principal.getChildren().add(circle);
-                    teclasEnPantalla2.add(circle);
-                    circle.toBack();
+                    if (i.destino().getTiempoFin() - i.destino().getTiempoInicio() == 0 ){
+                        Circle circle = new Circle(xDef, 155, 20, ColoresPosibles[i.destino().numColor]);
+                        circle.setStrokeWidth(3);
+                        circle.setStroke(ColoresClaros[i.destino().numColor]);
+                        circle.setStrokeType(StrokeType.CENTERED);
+                        principal.getChildren().add(circle);
+                        teclasEnPantalla2.add(circle);
+                        circle.toBack();
+                    }else {
+                        boolean largerThanScreen = (i.destino().getTiempoFin() - i.destino().getTiempoInicio() > DELAY);
+                        TeclaLarga teclaLarga = new TeclaLarga(i.destino().numColor,xDef, i.destino().getTiempoFin(),
+                                largerThanScreen);
+                        principal.getChildren().add(teclaLarga);
+                        teclasLargasEnPantalla2.add(teclaLarga);
+                        teclaLarga.toBack();
+                    }
                     lastTecla = i.destino();
                 }
                 aux2 = lastTecla;
@@ -378,6 +462,7 @@ public class juegoLocalController implements Initializable{
             }
         }
     }
+
     public void removeCircle(Circle circle) {
         Platform.runLater(() -> {
             principal.getChildren().remove(circle);
@@ -385,79 +470,181 @@ public class juegoLocalController implements Initializable{
         });
 
     }
+
     public void removeCircle2(Circle circle) {
         Platform.runLater(() -> {
             principal.getChildren().remove(circle);
             teclasEnPantalla2.remove(circle);
         });
-
     }
-    /**
-     * KeyListener para los eventos del teclado, cuando se presiona una tecla realiza un switch para ver si se
-     * Presiono una tecla de interes, en caso de que si, acciona los eventos de la GUI Necesarios, los cuales son
-     * darle focus al boton, accionarlo y realizar la animacion de que se pulsó (pulsado y liberado)
-     * si se pulsa la tecla ESC
-     */
-    private void initKeyboard(){
-        this.principal.addEventHandler(KeyEvent.KEY_PRESSED, keyEvent -> {
-            KeyCode code = keyEvent.getCode();
 
-            if(this.timeline.getStatus() == Animation.Status.RUNNING) {
-                switch (code) {
-                    case Q:
-                        this.RedButton.setFocusTraversable(true);
-                        this.RedButton.fire();
-
-                        break;
-                    case W:
-                        this.BlueButton.setFocusTraversable(true);
-                        this.BlueButton.fire();
-                        break;
-                    case E:
-                        this.YellowButton.setFocusTraversable(true);
-                        this.YellowButton.fire();
-
-                        break;
-                    case S:
-                        this.GreenButton.setFocusTraversable(true);
-                        this.GreenButton.fire();
-
-                        break;
-                    case D:
-                        this.OrangeButton.setFocusTraversable(true);
-                        this.OrangeButton.fire();
-                        break;
-                    case I:
-                        this.RedButton1.setFocusTraversable(true);
-                        this.RedButton1.fire();
-                        break;
-                    case O:
-                        this.BlueButton1.setFocusTraversable(true);
-                        this.BlueButton1.fire();
-                        break;
-                    case P:
-                        this.YellowButton1.setFocusTraversable(true);
-                        this.YellowButton1.fire();
-
-                        break;
-                    case L:
-                        this.GreenButton1.setFocusTraversable(true);
-                        this.GreenButton1.fire();
-
-                        break;
-                    case K:
-                        this.OrangeButton1.setFocusTraversable(true);
-                        this.OrangeButton1.fire();
-                        break;
-                    case ESCAPE:
-                        pause();
-                        break;
-                    default:
-                        break;
-                }
-            }
+    public void removeTeclaLarga(TeclaLarga teclaLarga){
+        Platform.runLater(() -> {
+            principal.getChildren().remove(teclaLarga);
+            teclasLargasEnPantalla.remove(teclaLarga);
+            teclaLarga.clearAll();
         });
     }
+
+    public void removeTeclaLarga2(TeclaLarga teclaLarga){
+        Platform.runLater(() -> {
+            principal.getChildren().remove(teclaLarga);
+            teclasLargasEnPantalla2.remove(teclaLarga);
+            teclaLarga.clearAll();
+        });
+    }
+
+    /**
+     * KeyListener para los eventos del teclado, registra 2, cuando la tecla se presiona, el cual maneja en general los
+     * eventos, y cuando se suelta que manera la logica de cuando se sueltan las teclas largas
+     */
+    private void initKeyboard(){
+        this.principal.addEventHandler(KeyEvent.KEY_PRESSED, this::handleKeyPressed);
+        this.principal.addEventHandler(KeyEvent.KEY_RELEASED, this::handleKeyReleased);
+    }
+
+    /**
+     * Metodo para manejar el evento de keyPressed, el cual primero revisa si el juego esta activo, checa si no es pausa,
+     * checa si esa tecla no estaba ya pulsada y si no la guarda en el set, despues inicia todos los eventos y animaciones
+     */
+    private void handleKeyPressed(KeyEvent keyEvent){
+        {
+            if(this.timeline.getStatus() != Animation.Status.RUNNING) return;
+            KeyCode code = keyEvent.getCode();
+            if (code == KeyCode.ESCAPE) {
+                this.pause();
+            }
+            if (pausaTeclas.containsKey(code)){
+                return;
+            }
+            //Preparamos el pauseTransition
+            PauseTransition aux = new PauseTransition(Duration.millis(250));
+            //TODO usar el SetOnFisished para darle un aspecto lindo al boton cuando se pulso
+            //Accionamos todas las teclas
+            switch (code) {
+                case Q:
+                    this.RedButton.setFocusTraversable(true);
+                    this.RedButton.fire();
+//                    aux.setOnFinished(event -> botonRojoEfectoBoninto);
+                    break;
+                case W:
+                    this.BlueButton.setFocusTraversable(true);
+                    this.BlueButton.fire();
+                    //aux.setOnFinished(event -> botonAzulEfectoBoninto);
+                    break;
+                case E:
+                    this.YellowButton.setFocusTraversable(true);
+                    this.YellowButton.fire();
+//                    aux.setOnFinished(event -> botonAmarilloEfectoBoninto);
+                    break;
+                case O:
+                    this.GreenButton.setFocusTraversable(true);
+                    this.GreenButton.fire();
+//                    aux.setOnFinished(event -> botonVerdeEfectoBoninto);
+                    break;
+                case P:
+                    this.OrangeButton.setFocusTraversable(true);
+                    this.OrangeButton.fire();
+                    break;
+                case A:
+                    this.RedButton1.setFocusTraversable(true);
+                    this.RedButton1.fire();
+                    //aux.setOnFinished(event -> botonRojoEfectoBoninto);
+                    break;
+                case S:
+                    this.BlueButton1.setFocusTraversable(true);
+                    this.BlueButton1.fire();
+                    //aux.setOnFinished(event -> botonAzulEfectoBoninto);
+                    break;
+                case D:
+                    this.YellowButton1.setFocusTraversable(true);
+                    this.YellowButton1.fire();
+//                    aux.setOnFinished(event -> botonAmarilloEfectoBoninto);
+                    break;
+                case K:
+                    this.GreenButton1.setFocusTraversable(true);
+                    this.GreenButton1.fire();
+//                    aux.setOnFinished(event -> botonVerdeEfectoBoninto);
+                    break;
+                case L:
+                    this.OrangeButton1.setFocusTraversable(true);
+                    this.OrangeButton1.fire();
+//                    aux.setOnFinished(event -> botonNaranjaEfectoBoninto);
+                    break;
+                default:
+                    break;
+            }
+
+
+            pausaTeclas.put(code, aux);
+            aux.play();
+        }
+    }
+
+    /**
+     * Manejo de la liberacion de tecla, lo cual primero evalua si el juego esta corriendo, luego quita la tecla del set
+     * para que pueda volver a ser pulsada y checa si hay una tecla larga en su posicion que todavia no  deja de ser
+     * pulsada
+     */
+    private void handleKeyReleased(KeyEvent keyEvent){
+        if(this.timeline.getStatus() != Animation.Status.RUNNING) return;
+        KeyCode code = keyEvent.getCode();
+        PauseTransition aux = pausaTeclas.get(code);
+        pausaTeclas.remove(code);
+
+        //Fue una tecla corta, no hagas nada
+        if (aux != null && aux.getStatus() == Animation.Status.RUNNING) {
+            aux.stop();
+        }
+        //todos los eventos para manejar las teclas largas deben de ir aqui
+        switch (code) {
+            case Q:
+                this.RedButton.setFocusTraversable(true);
+                checkColitionsForKeyRelease(makeRect(this.RedButton));
+                break;
+            case W:
+                this.BlueButton.setFocusTraversable(true);
+                checkColitionsForKeyRelease(makeRect(this.BlueButton));
+                break;
+            case E:
+                this.YellowButton.setFocusTraversable(true);
+                checkColitionsForKeyRelease(makeRect(this.YellowButton));
+                break;
+            case O:
+                this.GreenButton.setFocusTraversable(true);
+                checkColitionsForKeyRelease(makeRect(this.GreenButton));
+                break;
+            case P:
+                this.OrangeButton.setFocusTraversable(true);
+                checkColitionsForKeyRelease(makeRect(this.OrangeButton));
+                break;
+            case A:
+                this.RedButton1.setFocusTraversable(true);
+                checkColitionsForKeyRelease(makeRect(this.RedButton1));
+                break;
+            case S:
+                this.BlueButton1.setFocusTraversable(true);
+                checkColitionsForKeyRelease(makeRect(this.BlueButton1));
+                break;
+            case D:
+                this.YellowButton1.setFocusTraversable(true);
+                checkColitionsForKeyRelease(makeRect(this.YellowButton1));
+                break;
+            case K:
+                this.GreenButton1.setFocusTraversable(true);
+                checkColitionsForKeyRelease(makeRect(this.GreenButton1));
+                break;
+            case L:
+
+                this.OrangeButton1.setFocusTraversable(true);
+                checkColitionsForKeyRelease(makeRect(this.OrangeButton1));
+                break;
+            default:
+                break;
+        }
+    }
+
+
 
     private void initButtons(){
         this.RedButton.toFront();
@@ -495,6 +682,7 @@ public class juegoLocalController implements Initializable{
             timeline.play();
         };
     }
+
     private void pantallaFinal(){
         if(puntaje > puntaje1){
             Ganador.setText("Player 1");
@@ -558,7 +746,6 @@ public class juegoLocalController implements Initializable{
         reproductor.play();
     }
 
-
     @FXML
     public void back(ActionEvent event) throws IOException {
         Pane root = loadFXML("Menu");
@@ -570,6 +757,7 @@ public class juegoLocalController implements Initializable{
         timeline.stop();
         timeline2.stop();
     }
+
     @FXML
     private void btnRActivado(){
         Rectangle rect = this.makeRect(RedButton);
@@ -686,71 +874,144 @@ public class juegoLocalController implements Initializable{
     }
 
     private void checkColitions(Rectangle rect){
-
         for (Circle circle : teclasEnPantalla) {
-            if (rect.contains(circle.getCenterX(), circle.getCenterY()) ||
-                    rect.contains(circle.getCenterX(), circle.getCenterY() + circle.getRadius()) ||
-                    rect.contains(circle.getCenterX(), circle.getCenterY() - circle.getRadius())){
-
-                puntaje = puntaje+(multiplicador * 15);
-                cont++;
-
-                if(cont>10 && cont<16){
-                    multiplicador=2;
+            if (checkCircle(rect,circle)) return;
+        }
+        for (TeclaLarga t : teclasLargasEnPantalla) {
+            Circle aux = t.getCircle();
+            if (checkCircle(rect,aux)) {
+                t.toggleState();
+                if (t.isLargerThanScreen()){
+                    System.out.println("PARADOOOO");
+                    t.setEstado(ESTADOS.STOPPED);
+                }else {
+                    System.out.println("DECRECE 222");
+                    t.setEstado(ESTADOS.DECREASE);
                 }
-                else {
-                    if (cont >= 16 && cont < 35) {
-                        multiplicador = 4;
-                    }
-                    else {
-                        if (cont >= 35) {
-                            multiplicador = 8;
-                        }
-                    }
-                }
-                circle.setVisible(false);
-
-                //Esto es mil veces mejor que destruirlo aqui
                 return;
             }
-
         }
-        //TODO Quitar puntos porque se presiono una tecla cuando no habia nada
+        multiplicador=1;
+        cont = 0;
     }
     private void checkColitions2(Rectangle rect){
-
-        for (Circle circle1 : teclasEnPantalla2) {
-
-
-//            System.out.println(band);
-            if (rect.contains(circle1.getCenterX(), circle1.getCenterY()) ||
-                    rect.contains(circle1.getCenterX(), circle1.getCenterY() + circle1.getRadius()) ||
-                    rect.contains(circle1.getCenterX(), circle1.getCenterY() - circle1.getRadius())){
-
-                puntaje1 = puntaje1+(multiplicador1 * 15);
-                cont2++;
-
-                if(cont2>10 && cont2<16){
-                    multiplicador1=2;
+        for (Circle circle : teclasEnPantalla2) {
+            if (checkCircle(rect,circle)) return;
+        }
+        for (TeclaLarga t : teclasLargasEnPantalla2) {
+            Circle aux = t.getCircle();
+            if (checkCircle2(rect,aux)) {
+                t.toggleState();
+                if (t.isLargerThanScreen()){
+                    System.out.println("PARADOOOO");
+                    t.setEstado(ESTADOS.STOPPED);
+                }else {
+                    System.out.println("DECRECE 222");
+                    t.setEstado(ESTADOS.DECREASE);
                 }
-                else {
-                    if (cont2 >= 16 && cont2 < 35) {
-                        multiplicador1 = 4;
-                    }
-                    else {
-                        if (cont2 >= 35) {
-                            multiplicador1 = 8;
-                        }
-                    }
-                }
-                circle1.setVisible(false);
-
-                //Esto es mil veces mejor que destruirlo aqui
                 return;
             }
-
         }
-        //TODO Quitar puntos porque se presiono una tecla cuando no habia nada
+        multiplicador1=1;
+        cont2 = 0;
+    }
+
+    private boolean checkCircle(Rectangle rect, Circle circle){
+        if (rect.contains(circle.getCenterX(), circle.getCenterY()) ||
+                rect.contains(circle.getCenterX(), circle.getCenterY() + circle.getRadius()) ||
+                rect.contains(circle.getCenterX(), circle.getCenterY() - circle.getRadius())){
+
+            puntaje = puntaje+(multiplicador * 15);
+            cont++;
+
+            if(cont>10 && cont<16){
+                multiplicador=2;
+            }
+            else {
+                if (cont >= 16 && cont < 35) {
+                    multiplicador = 4;
+                }
+                else {
+                    if (cont >= 35) {
+                        multiplicador = 8;
+                    }
+                }
+            }
+            circle.setVisible(false);
+
+            //Esto es mil veces mejor que destruirlo aqui
+            return true;
+        }
+        return false;
+    }
+
+    private boolean checkCircle2(Rectangle rect, Circle circle){
+        if (rect.contains(circle.getCenterX(), circle.getCenterY()) ||
+                rect.contains(circle.getCenterX(), circle.getCenterY() + circle.getRadius()) ||
+                rect.contains(circle.getCenterX(), circle.getCenterY() - circle.getRadius())){
+
+            puntaje1 = puntaje1+(multiplicador1 * 15);
+            cont2++;
+
+            if(cont2>10 && cont2<16){
+                multiplicador1=2;
+            }
+            else {
+                if (cont2 >= 16 && cont2 < 35) {
+                    multiplicador1 = 4;
+                }
+                else {
+                    if (cont2 >= 35) {
+                        multiplicador1 = 8;
+                    }
+                }
+            }
+            circle.setVisible(false);
+
+            //Esto es mil veces mejor que destruirlo aqui
+            return true;
+        }
+        return false;
+    }
+
+    private void checkColitionsForKeyRelease(Rectangle rect){
+        TeclaLarga choosenOne = null;
+        for (TeclaLarga t : teclasLargasEnPantalla) {
+            Circle aux = t.getCircle();
+            if (rect.contains(aux.getCenterX(), aux.getCenterY()) ||
+                    rect.contains(aux.getCenterX(), aux.getCenterY() + aux.getRadius()) ||
+                    rect.contains(aux.getCenterX(), aux.getCenterY() - aux.getRadius())){
+                if (t.getRhomboid().getHeight() >= 30){
+                    multiplicador=1;
+                    cont = 0;
+                    choosenOne = t;
+                    break;
+                }
+            }
+        }
+        if (choosenOne != null) {
+            this.removeTeclaLarga(choosenOne);
+        }
+    }
+
+    private void checkColitionsForKeyRelease2(Rectangle rect){
+        TeclaLarga choosenOne = null;
+        for (TeclaLarga t : teclasLargasEnPantalla2) {
+            Circle aux = t.getCircle();
+            if (rect.contains(aux.getCenterX(), aux.getCenterY()) ||
+                    rect.contains(aux.getCenterX(), aux.getCenterY() + aux.getRadius()) ||
+                    rect.contains(aux.getCenterX(), aux.getCenterY() - aux.getRadius())){
+                if (t.getRhomboid().getHeight() >= 30){
+                    multiplicador1=1;
+                    cont2 = 0;
+                    choosenOne = t;
+                    break;
+                }
+            }
+        }
+        if (choosenOne != null) {
+            this.removeTeclaLarga2(choosenOne);
+        }
     }
 
     public static void fisicaCirculo(Circle circulo,double dt){
@@ -770,6 +1031,7 @@ public class juegoLocalController implements Initializable{
             circulo.setCenterX(circulo.getCenterX() + factor2);
         }
     }
+
     public static void fisicaCirculo2(Circle circulo,double dt){
         double factor = dt / 4 ;
         double factor1 = factor / 6;
@@ -787,6 +1049,7 @@ public class juegoLocalController implements Initializable{
             circulo.setCenterX(circulo.getCenterX() + factor2);
         }
     }
+
     private void updateProgress() {
         if (reproductor != null && reproductor.getStatus() == MediaPlayer.Status.PLAYING) {
             double currentTime = reproductor.getCurrentTime().toMillis();
@@ -804,5 +1067,3 @@ public class juegoLocalController implements Initializable{
     }
 
 }
-
-
