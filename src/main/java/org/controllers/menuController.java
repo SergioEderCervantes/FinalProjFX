@@ -7,6 +7,11 @@ package org.controllers;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
+import javafx.animation.Transition;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import org.Modules.Sprite;
+
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -40,7 +45,9 @@ public class menuController {
     private Rectangle bar3;
     @FXML
     private Rectangle bar4;
-
+    @FXML
+    ImageView memo;
+    Sprite memor;
     @FXML
     private Rectangle bar8;
     @FXML
@@ -54,8 +61,13 @@ public class menuController {
         music();
         // Aplicar estilo CSS al título
         title.getStyleClass().add("title");
-
-        // Iniciar la animación de las barras
+        Image img = new Image(Paths.get("src/main/resources/images/memo.png").toUri().toString());
+        memo.setImage(img);
+        this.memor = new Sprite(memo,2,2,(int)69.5,36,1200);
+        this.memor.setCycleCount(Transition.INDEFINITE);
+        this.memor.resetAnimation();
+        this.memor.setAutoReverse(true);
+        memor.play();        // Iniciar la animación de las barras
         Timeline barTimeline = new Timeline(new KeyFrame(Duration.millis(100), e -> updateBars()));
         barTimeline.setCycleCount(Timeline.INDEFINITE);
         barTimeline.play();
