@@ -67,7 +67,7 @@ public class FileUtils {
         return aux < 10 ? "0" + String.valueOf(aux) : String.valueOf(aux);
     }
     public static void saveSong(boolean editado, String songName, String songPath,
-                                 ObservableList<String> items) throws IOException {
+                                 ObservableList<String> items, double duracion) throws IOException {
         final String idFile = FileUtils.getIDByName(songName);
         final String targetFile = directoryPath + idFile + ".txt";
         final ArrayList<String> lines = new ArrayList<>();
@@ -85,6 +85,7 @@ public class FileUtils {
         lines.add(idFile);
         lines.add(songName);
         lines.add(songPath);
+        lines.add(String.valueOf(duracion));
 
         ArrayList<String> sortedItems = ordenarPorSegundoElemento(new ArrayList<>(items));
 

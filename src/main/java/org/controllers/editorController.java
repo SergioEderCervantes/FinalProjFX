@@ -227,7 +227,8 @@ public class editorController {
                 break;
             case "s":
                 try{
-                    FileUtils.saveSong(this.editado,this.songName.getText(), this.songPath, this.teclasExistentes.getItems());
+                    FileUtils.saveSong(this.editado,this.songName.getText(), this.songPath, this.teclasExistentes.getItems(),
+                            this.mediaPlayer.getTotalDuration().toMillis());
                 } catch (IOException e){
                     System.out.println(e.getMessage());
                 }
@@ -320,7 +321,8 @@ public class editorController {
 
     @FXML
     private void probarSong(ActionEvent event) throws IOException{
-        FileUtils.saveSong(this.editado,this.songName.getText(), this.songPath, this.teclasExistentes.getItems());
+        FileUtils.saveSong(this.editado,this.songName.getText(), this.songPath, this.teclasExistentes.getItems(),
+                this.mediaPlayer.getTotalDuration().toMillis());
         Song nuevaCancion = construirSong();
         //Switch de escena con el nuevo argumento
         FXMLLoader loader = new FXMLLoader(App.class.getResource("juego.fxml"));
