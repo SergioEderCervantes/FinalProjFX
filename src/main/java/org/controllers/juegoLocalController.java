@@ -165,8 +165,12 @@ public class juegoLocalController implements Initializable{
         this.t_inicio = System.currentTimeMillis();
         this.Ganador.setText("");
     }
-
-    //TODO comentar que es esto
+    /**
+     * Metodo que termina de inicializar la ventana ya teniendo todos los recursos que necesita, como la cancion
+     * el mediaPlayer como lo son la timeLine de la animacion, la
+     * inicializacion de la cancion y finalmente se da una pausa de 2 segundos para que el jugador se prepare y despues
+     * se llama al metodo play de timeline para iniciar la animacion del juego,
+     */
     public void postInitialize(){
         this.initReproduction();
         this.initTimeline();
@@ -204,8 +208,6 @@ public class juegoLocalController implements Initializable{
         this.man.resetAnimation();
         this.man.setAutoReverse(true);
         man.play();
-
-
     }
 
 
@@ -223,9 +225,6 @@ public class juegoLocalController implements Initializable{
     }
 
     private void initReproduction(){
-        //TODO tomar el ID de la cancion seleccionada y cargar toda la cancion para guardarla en un objeto Song, puede ser:
-
-//        this.cancionSeleccionada = TestGraph.RealizarTest();
         this.aux = cancionSeleccionada.getTeclas_pulsadas().getVertice(0);
         this.aux2 = cancionSeleccionada.getTeclas_pulsadas().getVertice(0);
 
@@ -249,12 +248,12 @@ public class juegoLocalController implements Initializable{
         long t_final = System.currentTimeMillis();
         //Esto sera en milisegundos
         final long DELAY = 1580;
-        if (t_final - t_inicio > DELAY && !reproduciendo) {//no
+        if (t_final - t_inicio > DELAY && !reproduciendo) {
             reproduciendo = true;
             reproductor.play();
         }
 
-        multiplo.setVisible(multiplicador != 1);//no
+        multiplo.setVisible(multiplicador != 1);
         multiplo.setText("x" + multiplicador);
 
         //Primero desplaza todas las que ya existen hacia abajo y elimina del ArrayList y el Panel las teclas que ya no se ven
@@ -319,12 +318,12 @@ public class juegoLocalController implements Initializable{
         long t_final = System.currentTimeMillis();
         //Esto sera en milisegundos
         final long DELAY = 1580;
-        if (t_final - t_inicio > DELAY && !reproduciendo) {//no
+        if (t_final - t_inicio > DELAY && !reproduciendo) {
             reproduciendo = true;
             reproductor.play();
         }
 
-        multiplo1.setVisible(multiplicador1 != 1);//no
+        multiplo1.setVisible(multiplicador1 != 1);
         multiplo1.setText("x" + multiplicador1);
 
         //Primero desplaza todas las que ya existen hacia abajo y elimina del ArrayList y el Panel las teclas que ya no se ven
@@ -560,7 +559,7 @@ public class juegoLocalController implements Initializable{
     }
 
 
-    @FXML //TODO Retorno al menu
+    @FXML
     public void back(ActionEvent event) throws IOException {
         Pane root = loadFXML("Menu");
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -570,16 +569,12 @@ public class juegoLocalController implements Initializable{
         reproductor.stop();
         timeline.stop();
         timeline2.stop();
-
-
-
     }
     @FXML
     private void btnRActivado(){
         Rectangle rect = this.makeRect(RedButton);
         checkColitions(rect);
         effect.run(RedButton,Color.RED);
-
     }
 
 
@@ -693,9 +688,6 @@ public class juegoLocalController implements Initializable{
     private void checkColitions(Rectangle rect){
 
         for (Circle circle : teclasEnPantalla) {
-
-
-//            System.out.println(band);
             if (rect.contains(circle.getCenterX(), circle.getCenterY()) ||
                     rect.contains(circle.getCenterX(), circle.getCenterY() + circle.getRadius()) ||
                     rect.contains(circle.getCenterX(), circle.getCenterY() - circle.getRadius())){
@@ -716,7 +708,6 @@ public class juegoLocalController implements Initializable{
                         }
                     }
                 }
-                //TODO sprite de explosion de circulo, aumentar el marcador
                 circle.setVisible(false);
 
                 //Esto es mil veces mejor que destruirlo aqui
@@ -752,7 +743,6 @@ public class juegoLocalController implements Initializable{
                         }
                     }
                 }
-                //TODO sprite de explosion de circulo, aumentar el marcador
                 circle1.setVisible(false);
 
                 //Esto es mil veces mejor que destruirlo aqui

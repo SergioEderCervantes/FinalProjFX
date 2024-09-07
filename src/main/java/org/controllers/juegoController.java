@@ -193,9 +193,6 @@ public class juegoController implements Initializable {
         }catch(Exception e) { 
             System.out.println(mediaUrl);
         }
-        
-        
-//        this.reproductor.setVolume(0.5);
     }
 
     private void print() {
@@ -235,7 +232,6 @@ public class juegoController implements Initializable {
                 }
             }
             for (TeclaLarga teclaLarga : teclasLargasEnPantalla) {
-                //TODO more test
                 if (MediaPlayerCurrentTime > teclaLarga.getTiempoFin() - DELAY && teclaLarga.isState1()){
                     teclaLarga.setEstado(ESTADOS.TRANSITION);
                 }
@@ -249,6 +245,10 @@ public class juegoController implements Initializable {
                         cont = 0;
                     }
                     this.removeTeclaLarga(teclaLarga);
+                }
+                if (!teclaLarga.isState1()){
+                    puntaje = puntaje+(multiplicador * 3);
+                    System.out.println(puntaje);
                 }
                 if(teclaLarga.getRhomboid().getHeight() <= 0){
                     this.removeTeclaLarga(teclaLarga);
@@ -320,12 +320,9 @@ public class juegoController implements Initializable {
         });
     }
 
-    //TODO actualizar esta descripcion
     /**
-     * KeyListener para los eventos del teclado, cuando se presiona una tecla realiza un switch para ver si se
-     * Presiono una tecla de interes, en caso de que si, acciona los eventos de la GUI Necesarios, los cuales son
-     * darle focus al boton, accionarlo y realizar la animacion de que se pulsó (pulsado y liberado)
-     * si se pulsa la tecla ESC
+     * KeyListener para los eventos del teclado, registra 2, cuando la tecla se presiona, el cual maneja en general los
+     * eventos, y cuando se suelta que manera la logica de cuando se sueltan las teclas largas
      */
     private void initKeyboard(){
         this.principal.addEventHandler(KeyEvent.KEY_PRESSED, this::handleKeyPressed);
@@ -403,7 +400,6 @@ public class juegoController implements Initializable {
             aux.stop();
         }
             //todos los eventos para manejar las teclas largas deben de ir aqui
-        System.out.println("AQUI");
         switch (code) {
             case Q:
                 this.RedButton.setFocusTraversable(true);
