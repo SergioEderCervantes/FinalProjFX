@@ -75,7 +75,7 @@
          <children>
             <ImageView fx:id="ocho" fitHeight="270.0" fitWidth="261.0" layoutX="478.0" layoutY="49.0" pickOnBounds="true">
                <image>
-                  <Image url="@../../images/default.jpg" />
+                  <Image url="@../../images/kirbo.png" />
                </image></ImageView>
          </children>
       </Pane>
