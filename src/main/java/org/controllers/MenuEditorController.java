@@ -235,7 +235,9 @@ public class MenuEditorController {
      */
     @FXML
     private void accetpFile(ActionEvent event) {
+
         FXMLLoader loader = new FXMLLoader(App.class.getResource("Editor.fxml"));
+
         try {
             Pane root = loader.load();
             editorController controller = loader.getController();
@@ -326,14 +328,7 @@ public class MenuEditorController {
         if (file == null || !file.getName().endsWith(".mp3") || !file.exists() || !file.canRead()) {
             return false;
         }
-        try {
-            Media media = new Media(file.toURI().toString());
-            MediaPlayer mediaPlayer = new MediaPlayer(media);
-            mediaPlayer.play();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
+
         return true;
     }
 

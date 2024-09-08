@@ -297,6 +297,7 @@ public class editorController {
         }
 
         agregarTecla(PressedKeys.get(code),timeFin, numColor);
+        PressedKeys.remove(code);
     }
 
     private void agregarTecla(double timeInicio, double timeFin, int numColor){
@@ -343,7 +344,7 @@ public class editorController {
      */
     private void back(ActionEvent event) {
         try{
-
+            mediaPlayer.stop();
             Pane root = loadFXML("Menu");
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             Scene scene = new Scene(root);
