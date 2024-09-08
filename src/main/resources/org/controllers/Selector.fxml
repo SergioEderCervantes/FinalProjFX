@@ -41,7 +41,7 @@
       </Pane>
       <Pane prefHeight="551.0" prefWidth="1200.0" styleClass="customPane">
          <children>
-            <ImageView fx:id="cuatro" fitHeight="270.0" fitWidth="265.0" layoutX="474.0" layoutY="49.0" pickOnBounds="true">
+            <ImageView fx:id="cuatro" fitHeight="270.0" fitWidth="261.0" layoutX="478.0" layoutY="49.0" pickOnBounds="true">
                <image>
                   <Image url="@../../images/kids.jpg" />
                </image></ImageView>
@@ -49,7 +49,7 @@
       </Pane>
       <Pane prefHeight="551.0" prefWidth="1200.0" styleClass="customPane">
          <children>
-            <ImageView fx:id="cinco" fitHeight="270.0" fitWidth="265.0" layoutX="474.0" layoutY="49.0" pickOnBounds="true">
+            <ImageView fx:id="cinco" fitHeight="270.0" fitWidth="261.0" layoutX="478.0" layoutY="49.0" pickOnBounds="true">
                <image>
                   <Image url="@../../images/rainbw.jpg" />
                </image></ImageView>
@@ -57,9 +57,9 @@
       </Pane>
       <Pane prefHeight="551.0" prefWidth="1200.0" styleClass="customPane">
          <children>
-            <ImageView fx:id="seis" fitHeight="270.0" fitWidth="265.0" layoutX="474.0" layoutY="49.0" pickOnBounds="true">
+            <ImageView fx:id="seis" fitHeight="270.0" fitWidth="261.0" layoutX="478.0" layoutY="49.0" pickOnBounds="true">
                <image>
-                  <Image url="@../../images/default.jpg" />
+                  <Image url="@../../images/dbz.jpg" />
                </image></ImageView>
          </children>
       </Pane>
